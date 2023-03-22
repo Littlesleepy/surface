@@ -1,0 +1,367 @@
+{
+  "content": [{
+    "minFrequency": 87000000,
+    "maxFrequency": 108000000,
+    "mode": "WFM",
+    "step": 100000,
+    "color": "rgba(255, 0, 0, 0.4)",
+    "name": "FM广播"
+  }, {
+    "minFrequency": 108000000,
+    "maxFrequency": 118000000,
+    "mode": "AM",
+    "step": 5000,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "航空导航"
+  }, {
+    "minFrequency": 118000000,
+    "maxFrequency": 137000000,
+    "mode": "AM",
+    "step": 5000,
+    "color": "rgba(175, 0, 175, 0.4)",
+    "name": "航空语音"
+  }, {
+    "minFrequency": 121000000,
+    "maxFrequency": 122000000,
+    "mode": "NONE",
+    "step": 12500,
+    "color": "rgba(255, 0, 0, 0.4)",
+    "name": "紧急"
+  }, {
+    "minFrequency": 136000000,
+    "maxFrequency": 174000000,
+    "mode": "NONE",
+    "step": 12500,
+    "color": "rgba(0, 128, 0, 0.4)",
+    "name": "对讲"
+  }, {
+    "minFrequency": 161000000,
+    "maxFrequency": 162000000,
+    "mode": "GMSK",
+    "step": 1000,
+    "color": "rgba(255, 0, 0, 0.4)",
+    "name": "AIS"
+  }, {
+    "minFrequency": 400000000,
+    "maxFrequency": 470000000,
+    "mode": "NONE",
+    "step": 12500,
+    "color": "rgba(0, 128, 0, 0.4)",
+    "name": "对讲"
+  }, {
+    "minFrequency": 405000000,
+    "maxFrequency": 407000000,
+    "mode": "NONE",
+    "step": 12500,
+    "color": "rgba(255, 0, 0, 0.4)",
+    "name": "紧急"
+  }, {
+    "minFrequency": 351000000,
+    "maxFrequency": 358000000,
+    "mode": "NFM",
+    "step": 12500,
+    "color": "rgba(175, 0, 175, 0.4)",
+    "name": "集群对讲"
+  }, {
+    "minFrequency": 361000000,
+    "maxFrequency": 368000000,
+    "mode": "NFM",
+    "step": 12500,
+    "color": "rgba(175, 0, 175, 0.4)",
+    "name": "集群对讲"
+  }, {
+    "minFrequency": 372000000,
+    "maxFrequency": 379000000,
+    "mode": "NFM",
+    "step": 12500,
+    "color": "rgba(175, 0, 175, 0.4)",
+    "name": "集群对讲"
+  }, {
+    "minFrequency": 382000000,
+    "maxFrequency": 389000000,
+    "mode": "NFM",
+    "step": 12500,
+    "color": "rgba(175, 0, 175, 0.4)",
+    "name": "集群对讲"
+  }, {
+    "minFrequency": 534000000,
+    "maxFrequency": 542000000,
+    "mode": "NFM",
+    "step": 12500,
+    "color": "rgba(175, 0, 175, 0.4)",
+    "name": "数字电视"
+  }, {
+    "minFrequency": 622000000,
+    "maxFrequency": 630000000,
+    "mode": "NFM",
+    "step": 12500,
+    "color": "rgba(175, 0, 175, 0.4)",
+    "name": "数字电视"
+  }, {
+    "minFrequency": 806000000,
+    "maxFrequency": 821000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(175, 0, 175, 0.4)",
+    "name": "数字集群上行(TETRA)"
+  }, {
+    "minFrequency": 825000000,
+    "maxFrequency": 840000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "CDMA上行(CT)"
+  }, {
+    "minFrequency": 851000000,
+    "maxFrequency": 866000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(255, 255, 0, 0.4)",
+    "name": "数字集群下行(TETRA)"
+  }, {
+    "minFrequency": 870000000,
+    "maxFrequency": 880000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "CDMA下行(CT)"
+  }, {
+    "minFrequency": 885000000,
+    "maxFrequency": 889000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 0, 255, 0.4)",
+    "name": "GSM-R上行"
+  }, {
+    "minFrequency": 889000000,
+    "maxFrequency": 909000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(221, 221, 0, 0.4)",
+    "name": "GSM上行(CM)"
+  }, {
+    "minFrequency": 909000000,
+    "maxFrequency": 915000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "GSM上行(CU)"
+  }, {
+    "minFrequency": 917000000,
+    "maxFrequency": 925000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(221, 221, 0, 0.4)",
+    "name": "立体声广播"
+  }, {
+    "minFrequency": 930000000,
+    "maxFrequency": 934000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 0, 255, 0.4)",
+    "name": "GSM-R下行"
+  }, {
+    "minFrequency": 934000000,
+    "maxFrequency": 954000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(221, 221, 0, 0.4)",
+    "name": "GSM下行(CM)"
+  }, {
+    "minFrequency": 954000000,
+    "maxFrequency": 960000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "GSM下行(CU)"
+  }, {
+    "minFrequency": 1085000000,
+    "maxFrequency": 1095000000,
+    "mode": "NFM",
+    "step": 1000,
+    "color": "rgba(255, 0, 0, 0.4)",
+    "name": "ADSB"
+  }, {
+    "minFrequency": 1447000000,
+    "maxFrequency": 1467000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "政务公安LTE专网"
+  }, {
+    "minFrequency": 1710000000,
+    "maxFrequency": 1735000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(221, 221, 0, 0.4)",
+    "name": "DCS上行(CM)"
+  }, {
+    "minFrequency": 1735000000,
+    "maxFrequency": 1755000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "DCS上行(CU)"
+  }, {
+    "minFrequency": 1755000000,
+    "maxFrequency": 1785000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "LTE上行(CT)"
+  }, {
+    "minFrequency": 1785000000,
+    "maxFrequency": 1805000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "交通LTE专网"
+  }, {
+    "minFrequency": 1805000000,
+    "maxFrequency": 1830000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(221, 221, 0, 0.4)",
+    "name": "DCS下行(CM)"
+  }, {
+    "minFrequency": 1830000000,
+    "maxFrequency": 1850000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "DCS下行(CU)"
+  }, {
+    "minFrequency": 1850000000,
+    "maxFrequency": 1880000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "FDD下行(CT)"
+  }, {
+    "minFrequency": 1880000000,
+    "maxFrequency": 1920000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(221, 221, 0, 0.4)",
+    "name": "TD(CM)"
+  }, {
+    "minFrequency": 1920000000,
+    "maxFrequency": 1935000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "CDMAEVDO上行(CT)"
+  }, {
+    "minFrequency": 1935000000,
+    "maxFrequency": 1955000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "WCDMA上行(CU)"
+  }, {
+    "minFrequency": 1955000000,
+    "maxFrequency": 1980000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "LTE上行(CU)"
+  }, {
+    "minFrequency": 2010000000,
+    "maxFrequency": 2025000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(221, 221, 0, 0.4)",
+    "name": "TD(CM)"
+  }, {
+    "minFrequency": 2110000000,
+    "maxFrequency": 2125000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "CDMAEVDO下行(CT)"
+  }, {
+    "minFrequency": 2130000000,
+    "maxFrequency": 2145000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(237, 78, 0, 0.4)",
+    "name": "WCDMA下行(CU)"
+  }, {
+    "minFrequency": 2145000000,
+    "maxFrequency": 2170000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "FDD下行(CT)"
+  }, {
+    "minFrequency": 2300000000,
+    "maxFrequency": 2320000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "LTE(CU)"
+  }, {
+    "minFrequency": 2320000000,
+    "maxFrequency": 2370000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "LTE(CM)"
+  }, {
+    "minFrequency": 2370000000,
+    "maxFrequency": 2400000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "LTE(CT)"
+  }, {
+    "minFrequency": 2400000000,
+    "maxFrequency": 2500000000,
+    "mode": "NFM",
+    "step": 12500,
+    "color": "rgba(255, 0, 0, 0.4)",
+    "name": "ISM 2.4G{WIFI,BT,无人机}"
+  }, {
+    "minFrequency": 2555000000,
+    "maxFrequency": 2575000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "LTE(CU)"
+  }, {
+    "minFrequency": 2575000000,
+    "maxFrequency": 2635000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "LTE(CM)"
+  }, {
+    "minFrequency": 2635000000,
+    "maxFrequency": 2655000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "LTE(CT)"
+  }, {
+    "minFrequency": 3300000000,
+    "maxFrequency": 3600000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "5G(Test)"
+  }, {
+    "minFrequency": 4800000000,
+    "maxFrequency": 5000000000,
+    "mode": "NFM",
+    "step": 6250,
+    "color": "rgba(0, 110, 255, 0.4)",
+    "name": "5G(Test)"
+  }, {
+    "minFrequency": 5725000000,
+    "maxFrequency": 5875500000,
+    "mode": "NFM",
+    "step": 12500,
+    "color": "rgba(255, 0, 0, 0.4)",
+    "name": "ISM 5G{WIFI,无人机}"
+  }]
+}

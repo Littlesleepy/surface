@@ -1,0 +1,13 @@
+/* 地图控件公共样式 */
+.mapControl{
+  cursor: pointer;
+  padding: 3px 6px;
+  border: 1px solid rgb(139, 164, 220);
+  border-radius: 3px;
+  background-color: #ffffff;
+  font-size: 12px;
+  box-shadow: rgba(0, 0, 0, .35) 2px 2px 3px;
+}
+.mapControl:hover{
+  background-color: rgb(139, 164, 220);
+}

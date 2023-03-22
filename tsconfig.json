@@ -11,9 +11,23 @@
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "types":["vite/client"],
+    "baseUrl": "./",
+    "paths": {
+      "@/*":["src/*"],
+      "views/*":["src/views/*"],
+      "store/*":["src/store/*"],
+      "cp/*":["src/components/*"],
+      "images/*":["src/assets/images/*"],
+      "helper/*":["src/helper/*"],
+      "types/*":["src/types/*"],
+      "storage/*":["src/storage/*"],
+      "mcharts/*":["src/packages/*"]
+    },
+    "noImplicitAny": false
   },
-  "include": ["src"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "references": [
     { "path": "./tsconfig.node.json" }
   ]

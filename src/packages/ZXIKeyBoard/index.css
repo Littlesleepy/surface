@@ -1,0 +1,12 @@
+.numeric-theme {
+  width: 270px;
+}
+
+.numeric-theme .enter {
+  background-color: rgb(64,158,255);
+}
+
+.numeric-theme .my-button {
+  height: 45px!important;
+  font-size: 16px;
+}

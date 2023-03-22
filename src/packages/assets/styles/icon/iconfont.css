@@ -1,0 +1,75 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3921481 */
+  src: url('iconfont.woff2?t=1677563323769') format('woff2'),
+       url('iconfont.woff?t=1677563323769') format('woff'),
+       url('iconfont.ttf?t=1677563323769') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-iconfontjiantou:before {
+  content: "\e638";
+}
+
+.icon-jiantouarrowhead7:before {
+  content: "\e6bc";
+}
+
+.icon-chizi:before {
+  content: "\e624";
+}
+
+.icon-jia:before {
+  content: "\e620";
+}
+
+.icon-shezhi-:before {
+  content: "\e608";
+}
+
+.icon-sanjiaoxing:before {
+  content: "\e6bd";
+}
+
+.icon-qingkong:before {
+  content: "\e62a";
+}
+
+.icon-jiantou-shang:before {
+  content: "\e719";
+}
+
+.icon-guanbi:before {
+  content: "\e63d";
+}
+
+.icon-jiantou:before {
+  content: "\e63c";
+}
+
+.icon-fullScreen:before {
+  content: "\e627";
+}
+
+.icon-jian:before {
+  content: "\e62c";
+}
+
+.icon-ketuozhuai:before {
+  content: "\e641";
+}
+
+.icon-dingwei:before {
+  content: "\ec32";
+}
+
+.icon-suoding:before {
+  content: "\e617";
+}
+

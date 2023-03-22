@@ -2,7 +2,7 @@
  * @see https://www.electron.build/configuration/configuration
  */
 {
-  "appId": "YourAppID",
+  "appId": "zxi.pm360.app",
   "asar": true,
   "icon": "public/favicon.ico",
   "directories": {
@@ -11,6 +11,11 @@
   "files": [
     "dist-electron",
     "dist"
+  ],
+  "extraFiles": [
+    {
+      "from": "public/config.json"
+    }
   ],
   "mac": {
     "artifactName": "${productName}_${version}.${ext}",
