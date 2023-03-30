@@ -1,4 +1,5 @@
 import { IClientPosition } from '../Overlay/PopupMenu'
+import { Tag } from '../ViewHCI'
 /**
  * @description: 相对容器偏移
  */
@@ -118,7 +119,7 @@ export class Listen {
     }
   }
   
-  private eventBind (e: MouseEvent | KeyboardEvent | WheelEvent | TouchEvent | Event, name: string, type?: string) {
+  private eventBind(e: MouseEvent | KeyboardEvent | WheelEvent | TouchEvent | Event, name: string, type?: string) {
     for (const event of this[name]) {
       if (type !== undefined) {
         event(e, type)
@@ -151,6 +152,7 @@ export class Listen {
   }
 
   dblclick = new Set<(e: MouseEvent | TouchEvent, type: string) => void>()
+
   private _dblclick = (e: MouseEvent) => {
     this.setMouseEvent(e)
 
@@ -241,7 +243,7 @@ export class Listen {
       if (this.touchStartTime === undefined) {
         this.touchStartTime = now
       } else {
-        if (now - this.touchStartTime < 400) {
+        if (now - this.touchStartTime < 300) {
           this.eventBind(e, Listen.DBLCLICK, Listen.TOUCH)
           this.touchStartTime = undefined
         } else {

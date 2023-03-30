@@ -22,10 +22,22 @@ export interface IToolTipOptions {
   transverseTag?: {
     backgroundColor?: string
     width?: number
+    lock?: {
+      show?: boolean
+      icon?: string
+      fontSize?: number
+      color?: string
+    }
   }
   verticalTag?: {
     backgroundColor?: string
     width?: number
+    lock?: {
+      show?: boolean
+      icon?: string
+      fontSize?: number
+      color?: string
+    }
   }
   infoTag?: IInfoTagOptions
   throttle?: number
@@ -34,6 +46,7 @@ export interface IToolTipOptions {
 interface ITag  {
   instance: Tag
   removed: boolean
+  lock?: HTMLElement
 }
 
 export class ToolTip implements IViewHCI {
@@ -72,10 +85,22 @@ export class ToolTip implements IViewHCI {
     transverseTag: {
       backgroundColor: string
       width: number
+      lock: {
+        show: boolean
+        icon: string
+        fontSize: number
+        color: string
+      }
     }
     verticalTag: {
       backgroundColor: string
       width: number
+      lock: {
+        show: boolean
+        icon: string
+        fontSize: number
+        color: string
+      }
     }
     infoTag: {
       width: number
@@ -96,15 +121,27 @@ export class ToolTip implements IViewHCI {
     type: ToolTip.VERTICAL,
     transverseTag: {
       backgroundColor: UseTheme.theme.var.color,
-      width: 1
+      width: 1,
+      lock: {
+        show: false,
+        icon: 'icon-suoding',
+        fontSize: 30,
+        color: UseTheme.theme.var.tagBgColor
+      }
     },
     verticalTag: {
       backgroundColor: UseTheme.theme.var.color,
-      width: 1
+      width: 1,
+      lock: {
+        show: false,
+        icon: 'icon-suoding',
+        fontSize: 30,
+        color: UseTheme.theme.var.tagBgColor
+      }
     },
     infoTag: {
-      width: 300,
-      height: 76,
+      width: 420,
+      height: 0,
       backgroundColor: UseTheme.theme.var.tipBgColor,
       borderRadius: '10px',
       color: UseTheme.theme.var.tipColor,
@@ -174,7 +211,11 @@ export class ToolTip implements IViewHCI {
 
     const verticalTag = {
       instance: new Tag(this.container, this.options.verticalTag),
-      removed: true
+      removed: true,
+      lock: this.createLock(this.options.verticalTag.lock)
+    }
+    if (verticalTag.lock !== undefined) {
+      verticalTag.instance.el.appendChild(verticalTag.lock)
     }
     // 设置为none以免影响双击
     verticalTag.instance.el.style.pointerEvents = 'none'
@@ -186,7 +227,11 @@ export class ToolTip implements IViewHCI {
     }
     const transverseTag = {
       instance: new Tag(this.container, transverseTagOptions),
-      removed: true
+      removed: true,
+      lock: this.createLock(this.options.transverseTag.lock)
+    }
+    if (transverseTag.lock !== undefined) {
+      transverseTag.instance.el.appendChild(transverseTag.lock)
     }
     // 设置为none以免影响双击
     transverseTag.instance.el.style.pointerEvents = 'none'
@@ -411,11 +456,15 @@ export class ToolTip implements IViewHCI {
     if (this.options.lock) return
     this.mouseOrTouch = Listen.TOUCH
 
-    if (!this.touchMoved) {
-      this.end()
+    // if (!this.touchMoved) {
+    //   this.end()
 
-      this.endByLink()
-    }
+    //   this.endByLink()
+    // }
+
+    this.end()
+
+    this.endByLink()
 
     if (this.event.touchPosition.size === 1) {
       const position = this.event.touchPosition.get(0)!
@@ -489,9 +538,9 @@ export class ToolTip implements IViewHCI {
     this.oldTouchMOvePosition = undefined
 
     if (this.touchMoved) {
-      this.end()
+      // this.end()
 
-      this.endByLink()
+      // this.endByLink()
     }
 
     if (this.scene.zoomTrans) {
@@ -667,5 +716,48 @@ export class ToolTip implements IViewHCI {
     for (const [, source] of this.linkManager) {
       source.target.end()
     }
+  }
+  /**
+   * @description: 创建一个可点击元素
+   * @return {*}
+   */  
+  private createLock(options: {
+    show: boolean
+    icon: string
+    fontSize: number
+    color: string
+  }) {
+    if (options.show) {
+      const link = document.createElement('i')
+      link.classList.add(...['iconfont', options.icon])
+      const bottom = this.options.type === Fence.VERTICAL ? 'bottom' : 'left'
+      const left = this.options.type === Fence.VERTICAL ? 'left' : 'top'
+      link.style.cssText = `
+        color: ${options.color};
+        font-size: ${options.fontSize}px;
+        position: absolute;
+        padding: 10px 10px 0 10px;
+        ${bottom}: 0;
+        ${left}: -${Math.floor(options.fontSize / 2) + 10}px;
+        pointer-events: auto;
+      `
+      if (this.options.type === Fence.TRANSVERSE) {
+        // 旋转锁icon
+        link.style.transformOrigin = 'center'
+        link.style.transform = 'rotate(90deg)'
+      }
+
+      link.addEventListener(Listen.TOUCHSTART, (e) => {
+        e.stopPropagation()
+      })
+
+      link.addEventListener(Listen.MOUSEDOWN, (e) => {
+        e.stopPropagation()
+      })
+
+      return link
+    }
+
+    return undefined
   }
 }

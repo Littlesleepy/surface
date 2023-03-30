@@ -22,6 +22,8 @@ const props = defineProps({
 
 <template>
   <div class="container">
+    <!-- 禁用遮罩 -->
+    <span class="marker" :style="$attrs.disabled ? { opacity: 1 } : { opacity: 0 }" />
     <!-- 名称 -->
     <div class="name" v-if="name">{{ name }}</div>
     <el-select class="zxi-select" popper-class="zxi-popper-class" v-bind="$attrs" >
@@ -35,7 +37,7 @@ const props = defineProps({
 </template>
 
 <style lang="less">
-@import url('../assets/styles/them.less');
+@import url('../assets/styles/theme.less');
 .zxi-popper-class {
   .el-select-dropdown__item{
     font-size: @fontSize;
@@ -44,13 +46,19 @@ const props = defineProps({
 </style>
 
 <style scoped lang="less">
-@import url('../assets/styles/them.less');
+@import url('../assets/styles/theme.less');
 
 .container{
   width: 100%;
   display: flex;
-  padding: 0 10px;
+  padding: 0 1rem;
   background-color: @btnBgColor;
+  align-items: center;
+  box-sizing: border-box;
+  position: relative;
+  .marker{
+    .marker-disabled();
+  }
   :deep(.zxi-select){
     width: 0px;
     flex: auto;
@@ -72,6 +80,7 @@ const props = defineProps({
   }
   .name{
     color: @color;
+    font-size: calc(@fontSize * 0.7);
   }
 }
 </style>

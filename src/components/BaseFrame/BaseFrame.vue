@@ -14,12 +14,16 @@ export default {
 
 <script setup lang="ts">
 import { ESwitchState } from '@/packages';
-import { useFrameStore } from '@/store';
-import { computed, ref } from 'vue';
+import { useFrameStore, useMainStore } from '@/store';
+import { computed, onBeforeUnmount, ref, toRaw, watch } from 'vue';
 import BaseTopFrame from '../BaseTopFrame/BaseTopFrame.vue'
 import BaseNavigation from '../BaseNavigation/BaseNavigation.vue'
-import { useRoute } from 'vue-router';
-import { ReceiveData } from '@/server';
+import { useRoute, useRouter } from 'vue-router';
+import { ReceiveData, ReceiveDataOptions } from '@/server';
+import { ZAudio } from 'mcharts/index'
+import { IServerAudioData } from '@/types';
+import * as Helper from '@/helper'
+import { ElMessageBox, ElNotification } from 'element-plus';
 
 const route = useRoute()
 
@@ -49,8 +53,68 @@ function handleNavigation () {
   navigationShow.value = !navigationShow.value
 }
 
+/**......................................数据接收...................................... */
+// 音频播放部分
+let audio = new ZAudio()
+/**
+ * @description: 音频数据播放
+ * @param {IServerAudioData} data
+ * @return {*}
+ */
+function audioControl(data: IServerAudioData) {
+  if (audio && frameStore.s_playButton === ESwitchState.open) {
+    audio.play(toRaw(data.audioData), data.sampleRate, data.channel, data.bits)
+  }
+}
+// 添加公共数据监听
+const options: ReceiveDataOptions = new Map([
+  [ReceiveData.key.AUDIO, {
+    canDelete: false,
+    control: audioControl
+  }],
+  [ReceiveData.key.ERROR, {
+    canDelete: false,
+    control: (data: any) => {
+      ElNotification({ type: 'error', title: '错误', message: data }) // 出错
+      frameStore.m_playButton(ESwitchState.off)
+    }
+  }],
+  [ReceiveData.key.WARNING, {
+    canDelete: false,
+    control: (data: any) => {
+      ElNotification({ type: 'warning', title: '警告', message: data })
+    }
+  }]
+])
+
+const optionsChild: ReceiveDataOptions = new Map()
+// 音频数据二层接收
+optionsChild.set(ReceiveData.key.AUDIO, {
+  canDelete: false,
+  control: audioControl
+})
+
+options.set('DATA', { children: optionsChild })
+
+ReceiveData.add(options)
+
+watch(() => frameStore.s_playButton, (btn) => {
+  if (audio) {
+    if (btn === ESwitchState.off) {
+      audio.dispose()
+    } else {
+      audio.activate()
+    }
+  }
+})
 // 监测功能开启数据监听，子组件不再需要run
 ReceiveData.run()
+
+const mainStore = useMainStore()
+
+onBeforeUnmount(() => {
+  mainStore.rootDispose()
+})
 
 </script>
 
@@ -76,18 +140,18 @@ ReceiveData.run()
           <!-- 按钮区域 -->
           <div class="button-area">
             <!-- 导航 -->
-            <button @click="handleNavigation">
+            <BaseButton @click="handleNavigation">
               <i class="iconfont icon-gongneng"></i>
               <span>{{ title }}</span>
-            </button>
-            <!-- 参数表单 -->
-            <button @click="handleForm">
-              <i class="iconfont icon-zhongduancanshuguanli" />
-            </button>
+            </BaseButton>
             <!-- 启动 -->
-            <button @click="handleStart">
+            <BaseButton @click="handleStart">
               <i :class="startBtnClass" />
-            </button>
+            </BaseButton>
+            <!-- 参数表单 -->
+            <BaseButton @click="handleForm">
+              <i class="iconfont icon-zhongduancanshuguanli" />
+            </BaseButton>
           </div>
           <!-- 插槽 -->
           <div class="header-center">
@@ -121,7 +185,7 @@ ReceiveData.run()
 }
 .navigation{
   width: 100%;
-  height: 400px;
+  height: 65vh;
 }
 .container{
   width: 100%;
@@ -137,15 +201,6 @@ ReceiveData.run()
     display: flex;
     flex-direction: column;
     padding: 0 5px 5px 5px;
-    >button{
-      display: flex;
-      .btnStyle();
-      padding: 0px;
-      .iconfont{
-        margin: auto;
-        font-size: 20px;
-      }
-    }
     .slot{
       flex: auto;
     }
@@ -153,24 +208,20 @@ ReceiveData.run()
   .control{
     height: 100%;
     display: flex;
+    -webkit-app-region: none;
     .button-area{
       display: flex;
-      padding: 5px;
+      padding: 0.5rem 0 0.5rem 0.5rem;
       :nth-child(2n){
         margin: 0 @btnSpace;
       }
-      >button{
-        display: flex;
-        .btnStyle();
-        padding: 0 8px 0 8px;
-        .iconfont{
-          margin: auto;
-          font-size: 60px;
-        }
-        span{
-          font-size: 40px;
-          align-self: center;
-        }
+      .iconfont{
+        margin: auto;
+        font-size: 4.5rem;
+      }
+      span{
+        font-size: 2.5rem;
+        align-self: center;
       }
     }
     .header-center{

@@ -33,6 +33,9 @@ export interface IAxisOptions {
    */  
   scaleNum?: {
     width?: number
+    /**
+     * @description: 字体大小rem
+     */
     fontSize?: number
     color?: string
   }
@@ -83,8 +86,8 @@ export class Axis {
         splitLength: 0.5
       },
       scaleNum: {
-        width: 30,
-        fontSize: 12,
+        width: 40,
+        fontSize: 20,
         color: UseTheme.theme.var.color
       },
       lock: false,
@@ -129,7 +132,6 @@ export class Axis {
       _container.appendChild(_scaleUlContainer)
 
       container.style.flexDirection = 'column'
-      _scaleUlContainer.style.height = '15px'
       canvasContainer.style.height = `${_options.scaleLength}px`
     } else {
       _container.appendChild(_scaleUlContainer)
@@ -315,9 +317,9 @@ export class Axis {
         const oldValue = state.scaleNum
         if (state.direction === Fence.TRANSVERSE) {
           const width = _container.clientWidth
-          if (width <= 400) {
+          if (width <= 800) {
             state.scaleNum = 3
-          } else if (width > 400 && width <= 800) {
+          } else if (width > 800 && width <= 1100) {
             state.scaleNum = 5
           } else {
             state.scaleNum = 7

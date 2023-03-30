@@ -112,9 +112,9 @@ export class Regions {
         show: true,
         color: UseTheme.theme.var.color,
         className: 'icon-guanbi',
-        fontSize: '16px',
-        top: '-18px',
-        right: '-18px',
+        fontSize: '30px',
+        top: '-32px',
+        right: '-32px',
         zIndex: '100'
       }
     },
@@ -129,7 +129,7 @@ export class Regions {
       show: true,
       color: UseTheme.theme.var.color,
       className: 'icon-guanbi',
-      fontSize: '25px',
+      fontSize: '40px',
       top: '10px',
       right: '10px',
       zIndex: '100'

@@ -365,7 +365,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .eye-image-container{
   width: 100%;
   height: 100%;

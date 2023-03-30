@@ -69,7 +69,7 @@ const props = defineProps({
   name: { type: String, default: '' },
   capacity: { default: 0.1 },
   scaleNumWidthY: {
-    default: 30
+    default: 40
   },
   toolTip: {
     default: () => {
@@ -159,12 +159,6 @@ const enableControl = computed(() => {
   return true
 })
 
-const headerStyle = computed(() => {
-  if (legends.value.length > 1) return {}
-  if (props.name !== '') return { height: '25px' }
-  return { height: '5px' }
-})
-
 function axisYChange (obj: IAxisYValue) {
   spectrumYvalue.value = obj
 }
@@ -238,26 +232,22 @@ defineExpose({
 <template>
   <div ref="root">
     <div class="container">
-      <div class="header" :style="headerStyle">
+      <div class="header">
         <!-- 工具部分 -->
-        <div class="wrapper">
-          <ZXIControlBtn
-            class="control"
-            v-if="enableControl"
-            :controlStyle="{ wrapper: { width: '240px' } }">
-            <el-tooltip v-for="(legend, index) in legends" :key="index" effect="dark" :content="legend.name" placement="right" >
-              <div class="legend">
-                <span :style="{ backgroundColor: legend.backgroundColor }" />
-                <p>{{ legend.name }}</p>
-              </div>
-            </el-tooltip>
-          </ZXIControlBtn>
-          <div class="header-info" v-if="name !== ''">
-            <span>{{name}}</span>
-          </div>
-          <div calss="header-slot">
-            <slot></slot>
-          </div>
+        <ZXIControlBtn
+          class="control"
+          v-if="enableControl"
+          :controlStyle="{ wrapper: { width: '240px' } }">
+          <el-tooltip v-for="(legend, index) in legends" :key="index" effect="dark" :content="legend.name" placement="right" >
+            <div class="legend">
+              <span :style="{ backgroundColor: legend.backgroundColor }" />
+              <p>{{ legend.name }}</p>
+            </div>
+          </el-tooltip>
+        </ZXIControlBtn>
+        <span v-if="name" class="name">{{ name }}</span>
+        <div class="header-slot">
+          <slot></slot>
         </div>
       </div>
       <!-- 第二行 -->
@@ -303,7 +293,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .container{
   width: 100%;
   height: 100%;
@@ -315,51 +305,40 @@ defineExpose({
   /* 头部信息面板 */
   .header{
     width: 100%;
-    height: @headerHeight;
-    position: relative;
     color: v-bind('UseTheme.theme.var.color');
-    .wrapper{
-      position: absolute;
-      left: 10px;
-      top: 2px;
-      display: flex;
-      .control{
-        height: 100%;
-        width: 25px;
-        z-index: 2;
-        .legend{
-          width: 100%;
-          padding-top: 5px;
-          display: flex;
-          line-height: 14px;
-          color: v-bind('UseTheme.theme.var.tipColor');
-          span{
-            width: 60px;
-            height: 5px;
-            margin: auto 0;
-          }
-          p{
-            flex: 1;
-            padding-left: 5px;
-            width: 0;
-            .textOverflow();
-            font-size: 12px;
-          }
-        }
-      }
-      .header-info{
-        height: 100%;
-        box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    .control{
+      height: 100%;
+      z-index: 99999;
+      width: 60px;
+      .legend{
+        width: 100%;
+        padding-top: 5px;
         display: flex;
+        line-height: @font20;
+        color: v-bind('UseTheme.theme.var.tipColor');
         span{
-          font-size: 12px;
-          line-height: 20px;
+          width: 60px;
+          height: 5px;
           margin: auto 0;
         }
+        p{
+          flex: 1;
+          padding-left: 5px;
+          width: 0;
+          .textOverflow();
+          font-size: @font20;
+        }
       }
-      .header-slot{
-        height: 100%;
-      }
+    }
+
+    .name{
+      font-size: @font20;
+      padding-left: 10px;
+    }
+    .header-slot{
+      flex: auto;
     }
   }
   .second-row{
@@ -368,7 +347,7 @@ defineExpose({
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 28px;
+      padding-bottom: 30px;
     }
     .second-column{
       flex: auto;

@@ -211,24 +211,21 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .container{
   width: 100%;
-  height: 28px;
+  height: 30px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .cut-marker{
     position: relative;
-    height: 3px;
-    padding-bottom: 2px;
     border-bottom: 1px solid v-bind('UseTheme.theme.var.color');
-    box-sizing: border-box;
     span{
       display: block;
       position: absolute;
-      height: 25px;
+      height: 29px;
       bottom: 0;
       background-color: v-bind('UseTheme.theme.var.color');
       opacity: 0.25;

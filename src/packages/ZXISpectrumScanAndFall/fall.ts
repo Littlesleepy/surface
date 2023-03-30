@@ -692,8 +692,8 @@ export function fall (
       const toolTipOptions: IToolTipOptions = {
         type: ToolTip.CROSS,
         infoTag: {
-          width: 270,
-          height: 96
+          width: 410,
+          height: 104
         }
       }
       toolTip = new ToolTip(fallScene.value, toolTipOptions)

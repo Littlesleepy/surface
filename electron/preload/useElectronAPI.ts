@@ -14,7 +14,8 @@ import { contextBridge, ipcRenderer } from 'electron'
 export function useElectronAPI () {
   contextBridge.exposeInMainWorld('electronAPI', {
     readConfig: () => ipcRenderer.invoke(PreloadName.readConfig),
-    controlApp: (status: 'min' | 'max' | 'close') => ipcRenderer.send(PreloadName.controlApp, status)
+    controlApp: (status: 'min' | 'max' | 'close') => ipcRenderer.send(PreloadName.controlApp, status),
+    toggleDevTools: () => ipcRenderer.send(PreloadName.toggleDevTools)
   })
 }
 
@@ -27,4 +28,8 @@ export class PreloadName {
    * @description: 控制app的状态，最大化、最小化、退出
    */  
   static controlApp = 'controlApp'
+  /** 
+   * @description: 打开调试工具
+   */
+  static toggleDevTools = 'toggleDevTools'
 }

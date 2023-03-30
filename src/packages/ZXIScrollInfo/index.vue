@@ -13,6 +13,7 @@ import { UseTheme } from '../styles'
 const props = defineProps({
   inputData: { type: Array as PropType<Array<{ style?: CSSProperties, message: string } | string>>, default: () => { return [] } },
   maxCount: { type: Number, default: 50 },
+  color: { default: UseTheme.theme.var.textInfoColor },
   clear: { type: Boolean, default: false },
   goBottom: { type: Boolean, default: true },
   scrollbar: {
@@ -80,7 +81,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .wrapper{
   width: 100%;
   height: 100%;
@@ -90,7 +91,7 @@ defineExpose({
     height: @headerHeight;
     line-height: @headerHeight;
     color: v-bind('UseTheme.theme.var.color');
-    font-size: 12px;
+    font-size: @font20;
     background-color: v-bind('UseTheme.theme.var.backgroundColor');
     padding: 0 10px;
   }
@@ -104,11 +105,12 @@ defineExpose({
       box-sizing: border-box;
       .text{
         width: 100%;
-        color: v-bind('UseTheme.theme.var.color');
+        color: v-bind(color);
         pre{
           line-height: 17px;
           padding: 5px 10px;
           letter-spacing: 2px;
+          font-size: @font20;;
           box-sizing: border-box;
           width: 100%;
           word-wrap: break-word;

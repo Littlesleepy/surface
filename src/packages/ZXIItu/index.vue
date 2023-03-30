@@ -55,7 +55,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 :deep(.header-cell-class){
   background-color: v-bind('UseTheme.theme.var.textInfoBgColor')!important;
   color: v-bind('UseTheme.theme.var.textInfoColor');

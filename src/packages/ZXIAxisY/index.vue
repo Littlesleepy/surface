@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<ZXIAxisYProps>(), {
       open: true
     }
   },
-  scaleNumWidth: 30
+  scaleNumWidth: 40
 })
 
 /** emits */
@@ -196,13 +196,13 @@ defineExpose({
       @touchmove.stop="touchMove">
       <div class="control" v-show="controlBtn">
         <div>
-          <button><i class="iconfont icon-jia" @touchstart="maxAdd" @click="maxAdd" /></button>
-          <button><i class="iconfont icon-jian" @touchstart="maxReduce" @click="maxReduce" /></button>
+          <button @touchstart="maxAdd" @click="maxAdd"><i class="iconfont icon-jia" /></button>
+          <button @touchstart="maxReduce" @click="maxReduce"><i class="iconfont icon-jian" /></button>
         </div>
         <span v-show="true">{{ scale.unit }}</span>
         <div>
-          <button><i class="iconfont icon-jia" @touchstart="maxAdd" @click="minAdd" /></button>
-          <button><i class="iconfont icon-jian" @touchstart="maxReduce" @click="minReduce" /></button>
+          <button @touchstart="minAdd" @click="minAdd"><i class="iconfont icon-jia" /></button>
+          <button @touchstart="minReduce" @click="minReduce"><i class="iconfont icon-jian" /></button>
         </div>
       </div>
       <div ref="axisDom" />
@@ -219,7 +219,7 @@ defineExpose({
   cursor: pointer;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .control{
-    width: 40px;
+    width: 60px;
     color: v-bind('UseTheme.theme.var.color');
     display: flex;
     flex-direction: column;
@@ -231,14 +231,14 @@ defineExpose({
       justify-content: space-between;
       button{
         margin: 0 5px;
-        width: 30px;
-        height: 30px;
-        border-radius: 30px;
+        width: 40px;
+        height: 40px;
         background-color: rgba(0, 0, 0, 0);
         transition: background-color .2s;
         cursor: pointer;
         border: none;
         .iconfont{
+          font-size: 30px;
           color: v-bind('UseTheme.theme.var.color');
         }
         &:hover{
@@ -253,7 +253,7 @@ defineExpose({
     span{
       margin: auto;
       color: v-bind('UseTheme.theme.var.color');
-      font-size: 12px;
+      font-size: 20px;
     }
   }
 }

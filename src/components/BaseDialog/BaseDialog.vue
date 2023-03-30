@@ -6,6 +6,11 @@
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseDialog\BaseDialog.vue
  * @Description: 
  -->
+<script lang="ts">
+export default {
+  name: 'BaseDialog'
+}
+</script>
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue';
 
@@ -106,9 +111,9 @@ watch(show, () => {
     box-shadow: var(--el-box-shadow);
     border-radius: var(--el-border-radius-small);
     .header {
-      padding: 20px;
-      padding-bottom: 10px;
-      margin-right: 16px;
+      padding: 2rem;
+      padding-bottom: 1rem;
+      margin-right: 1.6rem;
       .mock-header{
         display: flex;
         flex-direction: row;
@@ -116,7 +121,7 @@ watch(show, () => {
       }
     }
     .body {
-      padding: 30px 20px;
+      padding: 3rem 2rem;
       color: @color;
     }
   }

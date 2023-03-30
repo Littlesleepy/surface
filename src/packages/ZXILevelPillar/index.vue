@@ -56,7 +56,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .container{
   width: 70px;
   height: 100%;

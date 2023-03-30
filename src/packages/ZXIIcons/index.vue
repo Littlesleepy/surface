@@ -89,8 +89,8 @@ function setPosition () {
       li.message = 'message' in item ? item.message : ''
 
       // 设置样式
-      let peakWidth = 120
-      li.style = { width: '120px', color: UseTheme.theme.Icons.color }
+      let peakWidth = 410
+      li.style = { width: '410px', color: UseTheme.theme.Icons.color }
       if ('style' in item) {
         if ('width' in item.style!) {
           li.style.width = item.style.width + 'px'
@@ -137,6 +137,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
+@import url("../assets/styles/theme.less");
 .target-icon-container{
   width: 100%;
   height: 100%;
@@ -147,9 +148,13 @@ defineExpose({
     display: flex;
     flex-direction: column;
     pre{
-      font-size: 12px;
+      font-size: @font20;
       margin: 0;
       text-align: center;
+    }
+    img{
+      max-width: 210px;
+      margin: 0 auto;
     }
   }
 }

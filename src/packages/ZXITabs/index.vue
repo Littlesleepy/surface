@@ -22,7 +22,8 @@ const props = defineProps({
   contentStyle: {
     type: Object,
     default: () => { return { backgroundColor: 'rgb(255, 255, 255)' } }
-  }
+  },
+  hidHeader: { default: false }
 })
 
 const emit = defineEmits<{
@@ -94,7 +95,7 @@ function getHeaderText () {
   })
   headerText.value = arr
 
-  if (arr.length > 0 && currentTab.value !== undefined) {
+  if (arr.length > 0 && currentTab.value === undefined) {
     currentTab.value = arr[0].id
     current = arr[0].id
   }
@@ -154,7 +155,7 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <div class="base-tabs-container" :style="wrapperStyle">
-      <ul class="tabs-header">
+      <ul class="tabs-header" v-show="!hidHeader">
         <li
           v-for="item in headerText"
           :key="item.id"
@@ -173,6 +174,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="less">
+@import url("../assets/styles/theme.less");
 .base-tabs-container{
   width: 100%;
   height: 100%;
@@ -183,20 +185,17 @@ onBeforeUnmount(() => {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .12), 0 0 6px 0 rgba(0, 0, 0, .04);
   .tabs-header{
     width: 100%;
-    height: 35px;
+    height: 45px;
     display: flex;
     justify-content: flex-start;
     background-color: v-bind('UseTheme.theme.Tabs.notSelectBgColor');
     >li{
       box-sizing: border-box;
       padding: 10px 15px 10px 15px;
-      font-size: 14px;
+      font-size: @font20;
       border-bottom: 1px solid v-bind('UseTheme.theme.Tabs.borderColor');
       cursor: pointer;
       transition: all 0.3s cubic-bezier(.645, .045, .355, 1);
-      &:hover{
-        color: #409eff!important;
-      }
     }
     >li:last-child{
       flex: 1;
@@ -204,7 +203,6 @@ onBeforeUnmount(() => {
   }
   .base-content{
     width: 100%;
-    padding: 15px;
     box-sizing: border-box;
     flex: auto;
     .base-content-wrapper{

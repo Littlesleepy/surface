@@ -122,8 +122,8 @@ export class Measure {
       ])
     },
     infoTag: {
-      width: 250,
-      height: 96,
+      width: 380,
+      height: 104,
       backgroundColor: UseTheme.theme.var.tipBgColor,
       color:  UseTheme.theme.var.tipColor,
       borderRadius: '10px'
@@ -132,7 +132,7 @@ export class Measure {
       show: true,
       color: UseTheme.theme.var.color,
       className: 'icon-guanbi',
-      fontSize: '25px',
+      fontSize: '40px',
       top: '10px',
       right: '10px',
       zIndex: '100'

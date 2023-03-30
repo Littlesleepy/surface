@@ -77,6 +77,9 @@ props.controls.forEach(item => {
   }
 })
 
+// 瀑布图保存加倍
+const fallSaveOptions = [{ label: '1倍', value: 1 }, { label: '2倍', value: 2 }, { label: '3倍', value: 3 }, { label: '4倍', value: 4 }, { label: '5倍', value: 5 }]
+
 onBeforeUnmount(() => {
   stopWatch.forEach(stop => stop())
   window.removeEventListener(Listen.MOUSEDOWN, hidden)
@@ -111,7 +114,7 @@ defineExpose({
             :key="item.paramName"
             :prop="item.paramName"
             :style="controlStyle.item ? controlStyle.item : {}">
-            <el-switch
+            <ZXISwitch
               v-if="item.type === EBtncontrolType.switch"
               v-model="btnValues[item.paramName]"
               :style="item.activeColor ? `--el-switch-on-color: ${item.activeColor}` : ''"
@@ -126,11 +129,15 @@ defineExpose({
           </el-form-item>
           <el-tooltip :effect="Effect.DARK" :disabled="!btnValues.pubutu" content="瀑布图保存加倍" placement="top">
             <el-form-item prop="pubutusave" :style="controlStyle.item ? controlStyle.item : {}">
-              <el-input-number
+              <ZXISelect
                 v-show="btnValues.pubutu"
-                v-model="btnValues.pubutusave"
-                :min="1"
-                :max="5" />
+                v-model="btnValues.pubutusave">
+                <el-option
+                  v-for="(select, i) in fallSaveOptions"
+                  :key="i"
+                  :label="select.label"
+                  :value="select.value" />
+              </ZXISelect>
             </el-form-item>
           </el-tooltip>
         </el-form>
@@ -143,27 +150,29 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .container{
   cursor: pointer;
   position: relative;
   background-color: rgb(44, 44, 44);
   display: flex;
-  width: 50px;
-  padding: 3px 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0.3rem 0;
   .icon-shezhi-{
     margin: auto;
     color: @color;
-    font-size: 25px;
+    font-size: 3.4rem;
     font-weight: 600;
   }
   .form-wrapper{
     position: absolute;
-    top: 35px;
-    left: 50px;
+    top: 0;
+    left: calc(100% + 10px);
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 1rem;
     // background-color: v-bind('UseTheme.theme.var.tipBgColor');
     background-color: var(--el-bg-color);
     box-shadow: var(--el-box-shadow);
@@ -174,9 +183,9 @@ defineExpose({
       flex-wrap: wrap;
       box-sizing: border-box;
       >div{
-        margin: 0;
+        margin: 5px;
         >div{
-          line-height: 30px!important;
+          line-height: 3rem!important;
         }
       }
     }

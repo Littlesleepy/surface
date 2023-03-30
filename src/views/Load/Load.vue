@@ -102,6 +102,7 @@ setTimeout(() => {
     position: absolute;
     right: 20px;
     bottom:10px;
+    font-size: 1.8rem;
   }
 }
 </style>

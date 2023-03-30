@@ -9,11 +9,51 @@
 import { ElMessage } from 'element-plus'
 import SimpleKeyboard from 'simple-keyboard'
 import 'simple-keyboard/build/css/index.css'
-import { KeyboardButtonTheme } from 'simple-keyboard/build/interfaces'
 import { IClientPosition, Listen, PopupMenu } from '../core'
 import './index.css'
 
+enum ECaculate {
+  /**
+   * @description: 求和
+   */  
+  sum,
+  /**
+   * @description: 求积
+   */
+  quadrature
+}
+
+interface IUnitGroup {
+  type: ECaculate
+  items: Map<string, { order: number, ds: number }>
+}
+
 export class Keyboard {
+  static unit?: string
+
+  static selectUnit?: string
+
+  static unitGroup: Array<IUnitGroup> = [
+    {
+      type: ECaculate.quadrature,
+      items: new Map([
+        ['GHz', { order: 0, ds: 1000 }], ['MHz', { order: 1, ds: 1000 }], ['kHz', { order: 2, ds: 1000 }], ['Hz', { order: 3, ds: 1 }]
+      ])
+    },
+    {
+      type: ECaculate.quadrature,
+      items: new Map([
+        ['s', { order: 0, ds: 1000 }], ['ms', { order: 1, ds: 0 }]
+      ])
+    },
+    {
+      type: ECaculate.sum,
+      items: new Map([
+        ['dBuV', { order: 0, ds: -107 }], ['dBm', { order: 1, ds: 0 }]
+      ])
+    }
+  ]
+
   static confirm: (value: string) => void | undefined
 
   static validFn: ((v: string) => boolean) | undefined
@@ -22,16 +62,18 @@ export class Keyboard {
     borderRadius: '0px',
     closeButton: false,
     drag: true,
-    width: 270
+    width: 360
   })
 
   static elKeyBoard = document.createElement('div')
 
   static input = document.createElement('input')
 
-  static clear = document.createElement('i')
+  static clear = document.createElement('div')
 
   static container = document.createElement('div')
+
+  static unitDom = document.createElement('div')
 
   static setInput = function (value: string) {
     if (!Keyboard.instance) Keyboard.init()
@@ -43,30 +85,111 @@ export class Keyboard {
       Keyboard.instance!.setCaretPosition(0, 0)
     }
   }
+
+  static backValue() {
+    // 格式验证
+    const reg = /^(\-|\+)?\d+(\.\d+)?$/
+    if (!reg.test(Keyboard.input.value)) {
+      ElMessage.error('请输入数字')
+      return
+    }
+    // 单位换算
+    let result = parseFloat(Keyboard.input.value)
+    if (Keyboard.selectUnit && Keyboard.unit && Keyboard.selectUnit !== Keyboard.unit) {
+      // 找到使用的单位组
+      let group: IUnitGroup | undefined
+
+      Keyboard.unitGroup.forEach(g => {
+        if (g.items.has(Keyboard.selectUnit!)) group = g
+      })
+
+      if (group) {
+        // 找到使用的单位和要转的单位
+        const unitSource = group.items.get(Keyboard.selectUnit)!
+        const unitTarget = group.items.get(Keyboard.unit)!
+        
+        const minOrder = Math.min(unitSource.order, unitTarget.order)
+        const maxOrder = Math.max(unitSource.order, unitTarget.order)
+
+        const orderDs = (unitSource.order - unitTarget.order)
+        if (group.type === ECaculate.quadrature) { // 求积
+          let ds = 1
+          // 循环两者之间的项，计算差值
+          for (const [name, item] of group.items) {
+            if (item.order >= minOrder && item.order < maxOrder) {
+              if (orderDs < 0) {
+                ds *= item.ds
+              } else {
+                ds /= item.ds
+              }
+            }
+          }
+          result *= ds
+        } else { // 求和
+          let ds = 0
+          // 循环两者之间的项，计算差值
+          for (const [name, item] of group.items) {
+            if (item.order >= minOrder && item.order < maxOrder) {
+              if (orderDs < 0) {
+                ds += item.ds
+              } else {
+                ds -= item.ds
+              }
+            }
+          }
+          result += ds
+        }
+      }
+
+    }
+
+
+    // 运行自定义验证
+    if (Keyboard.validFn !== undefined) {
+      if (!Keyboard.validFn(result.toString())) return
+    }
+
+    Keyboard.confirm(result.toString())
+
+    Keyboard.popupMenu.close()
+  }
   /** 
    * @description: 初始化键盘实例
    * @return {*}
    */  
   static init = function () {
     if (Keyboard.instance === undefined) {
-      Keyboard.elKeyBoard.style.cssText = `
+      // 左边输入列，右边单位列
+      Keyboard.container.style.cssText = `
+        display: flex;
+        background-color: #ececec;;
+      `
+      const firstColumn = document.createElement('div')
+      firstColumn.style.cssText = `
         display: flex;
         flex-direction: column;
+        background-color: inherit;
       `
+      Keyboard.container.appendChild(firstColumn)
+
+      Keyboard.unitDom.classList.add(...['keyBoardUnit'])
+
       // 输入行
       const firstRow = document.createElement('div')
       firstRow.style.cssText = `
         display: flex;
-        padding: 5px 0;
-        height: 40px;
+        margin: 5px 5px 0 5px;
+        height: 5rem;
+        background-color: inherit;
       `
       firstRow.appendChild(Keyboard.input)
       Keyboard.input.setAttribute('type', 'text')
       Keyboard.input.setAttribute('id', 'simpleKeyBoardInput')
       
       Keyboard.input.style.cssText = `
-        max-width: 200px;
-        font-size: 20px;
+        flex: auto;
+        max-width: 20rem;
+        font-size: 2.2rem;
         border: none;
         box-sizing: border-box;
         background-color: rgb(255, 255, 255);
@@ -75,13 +198,18 @@ export class Keyboard {
 
       firstRow.appendChild(Keyboard.clear)
       Keyboard.clear.style.cssText = `
-        flex: auto;
-        padding: 0 20px;
-        margin: auto;
-        font-size: 20px;
+        width: 6rem;
         cursor: pointer;
+        display: flex;
       `
-      Keyboard.clear.classList.add(...['iconfont', 'icon-delete'])
+      // 清除按钮图标
+      const clearIcon = document.createElement('i')
+      clearIcon.style.cssText = `
+        font-size: 2rem;
+        margin: auto;
+      `
+      clearIcon.classList.add(...['iconfont', 'icon-delete'])
+      Keyboard.clear.appendChild(clearIcon)
 
       Keyboard.clear.addEventListener(Listen.CLICK, (e) => {
         Keyboard.instance!.clearInput()
@@ -93,10 +221,10 @@ export class Keyboard {
         Keyboard.input.value = Keyboard.instance!.getInput()
       })
       
-      Keyboard.elKeyBoard.appendChild(firstRow)
+      firstColumn.appendChild(firstRow)
 
       // 第二行
-      Keyboard.container.appendChild(Keyboard.elKeyBoard)
+      firstColumn.appendChild(Keyboard.elKeyBoard)
       Keyboard.elKeyBoard.classList.add(...['simple-keyboard'])
       Keyboard.popupMenu.setContent(Keyboard.container)
       
@@ -107,20 +235,7 @@ export class Keyboard {
         onKeyPress: (btn) => {
           // 按下enter再把值给出去
           if(btn === '{ent}') {
-            // 格式验证
-            const reg = /^(\-|\+)?\d+(\.\d+)?$/
-            if (!reg.test(Keyboard.input.value)) {
-              ElMessage.error('请输入数字')
-              return
-            }
-            // 先验证
-            if (Keyboard.validFn !== undefined) {
-              if (!Keyboard.validFn(Keyboard.input.value)) return
-            }
-
-            Keyboard.confirm(parseFloat(Keyboard.input.value).toString())
-
-            Keyboard.popupMenu.close()
+            Keyboard.backValue()
           }
         },
         layout: {
@@ -153,14 +268,104 @@ export class Keyboard {
    * @description: 打开键盘
    * @param {IClientPosition} position 键盘打开位置
    * @param {string} mouseOrTouch 出模还是鼠标激发
+   * @param {string} unit 单位
    * @return {*}
    */  
-  static open = function (position: IClientPosition, mouseOrTouch: string, value = '') {
+  static open = function (
+    position: IClientPosition,
+    mouseOrTouch: string,
+    value = '',
+    unit?: string
+  ) {
     Keyboard.init()
+
+    Keyboard.renderUnit(unit)
 
     Keyboard.popupMenu.trigger(position, mouseOrTouch)
 
     Keyboard.setInput(value)
+  }
+
+  static confirmUnit = function (unit: string) {
+    Keyboard.selectUnit = unit
+
+    Keyboard.backValue()
+  }
+
+  /**
+   * @description: 渲染单位
+   * @param {string} unit 输入项的单位
+   * @return {*}
+   */  
+  static renderUnit = function (unit?: string) {
+    Keyboard.selectUnit = unit
+    Keyboard.unit = unit
+
+    if (unit) {
+      Keyboard.popupMenu.infoTag.instance.style.width = '360px'
+      Keyboard.popupMenu.options.width = 360
+      // 渲染单位按钮，先找到对应的单位组
+      let group: IUnitGroup | undefined
+
+      Keyboard.unitGroup.forEach(g => {
+        if (g.items.has(unit)) group = g
+      })
+
+      if (group) {
+        Keyboard.unitDom.innerHTML = ''
+        // 循环渲染按钮
+        for (const [name] of group.items) {
+          const div = document.createElement('div')
+          div.classList.add(...['unit-button'])
+
+          div.addEventListener(Listen.MOUSEDOWN, function () {
+            this.classList.add(...['unit-hg-activeButton'])
+          })
+          div.addEventListener(Listen.TOUCHSTART, function () {
+            this.classList.add(...['unit-hg-activeButton'])
+          })
+
+          div.addEventListener(Listen.MOUSEUP, function () {
+            this.classList.remove(...['unit-hg-activeButton'])
+
+            Keyboard.confirmUnit(name)
+          })
+          div.addEventListener(Listen.TOUCHEND, function () {
+            this.classList.remove(...['unit-hg-activeButton'])
+            Keyboard.confirmUnit(name)
+          })
+
+          if (name === Keyboard.unit) {
+            div.classList.add(...['current-unit'])
+          }
+
+          const span = document.createElement('span')
+          span.textContent = name
+
+          div.appendChild(span)
+
+          Keyboard.unitDom.appendChild(div)
+        }
+
+        if (!Keyboard.container.contains(Keyboard.unitDom)) {
+          Keyboard.container.appendChild(Keyboard.unitDom)
+        }
+      } else {
+        console.warn(`未检测到可供${unit}转换单位组`)
+        if (Keyboard.container.contains(Keyboard.unitDom)) {
+          Keyboard.container.removeChild(Keyboard.unitDom)
+        }
+      }
+     
+    } else {
+      // 移除单位
+      if (Keyboard.container.contains(Keyboard.unitDom)) {
+        Keyboard.container.removeChild(Keyboard.unitDom)
+      }
+
+      Keyboard.popupMenu.infoTag.instance.style.width = '270px'
+      Keyboard.popupMenu.options.width = 270
+    }
   }
   /** 
    * @description: 关闭键盘

@@ -18,6 +18,7 @@ import 'element-plus/theme-chalk/dark/css-vars.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 
 import UI from './packages'
+import './assets/styles/customElement.less'
 
 window.electronAPI.readConfig().then(configStr => {
   window.Config = JSON.parse(configStr)
@@ -27,6 +28,13 @@ window.electronAPI.readConfig().then(configStr => {
     .use(router)
     .use(UI)
     .use(components)
-    .use(ElementPlus, { locale: zhCn })
+    .use(ElementPlus, { locale: zhCn, size: 'large' })
     .mount("#app")
+})
+
+// 监听F12切换调试工具
+window.addEventListener('keyup', (e) => {
+  if (e.key === 'F12' || e.key === 'PageDown') {
+    window.electronAPI.toggleDevTools()
+  }
 })

@@ -67,7 +67,7 @@ export class FluidFence {
       lastDataIndex: -1,
 
       options: {
-        eachPieceMaxWidth: 30,
+        eachPieceMaxWidth: 50,
         defaultZoom: 4,
         coordinateTrans: undefined
       }

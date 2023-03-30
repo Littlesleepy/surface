@@ -36,7 +36,7 @@ export class Overlay {
       show: true,
       color: UseTheme.theme.var.color,
       className: 'icon-guanbi',
-      fontSize: '25px',
+      fontSize: '40px',
       top: '10px',
       right: '10px',
       zIndex: '100'

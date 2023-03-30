@@ -33,8 +33,13 @@ export class Device extends ZHelper.Device {
       const result = x.paramNameOfSimplifiedChinese.match(reg)
       const unit = result ? result[0] : undefined
 
+      // 名称
+      const regName = /.+(?=\()/
+      const nameR = x.paramNameOfSimplifiedChinese.match(regName)
+      const title = nameR ? nameR[0] : x.paramNameOfSimplifiedChinese
+
       const obj: IParamElement = {
-        title: x.paramNameOfSimplifiedChinese,
+        title,
         tooltip: x.paramNameOfSimplifiedChinese,
         paramName: x.paramName,
         disabled: false,

@@ -19,6 +19,7 @@ declare namespace Config {
 interface IElectronAPI {
   readConfig: () => Promise<string>
   controlApp: (status: 'min' | 'max' | 'close') => void
+  toggleDevTools: () => void
 }
 
 declare interface Window {

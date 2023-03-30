@@ -109,7 +109,7 @@ export class Tag {
     selectColor: UseTheme.theme.var.tagSelectColor,
     ddPoint: {
       show: false,
-      fontSize: 20,
+      fontSize: 30,
       color: UseTheme.theme.var.tagBgColor,
       zIndex: '100'
     },
@@ -403,14 +403,14 @@ export class Tag {
   /**
    * @description: 添加到目标容器
    */  
-  append () {
-    this.container.appendChild(this.el)
+  append() {
+    if (!this.container.contains(this.el)) this.container.appendChild(this.el)
   }
   /**
    * @description: 从目标容器移除
    */
   remove () {
-    this.container.removeChild(this.el)
+    if (this.container.contains(this.el))  this.container.removeChild(this.el)
   }
 
   dispose () {
@@ -500,8 +500,6 @@ export class Tag {
       for (const [, fun] of this.beforeStart) {
         fun(this.positionResult)
       }
-    } else {
-      this.end()
     }
   }
 
@@ -516,8 +514,6 @@ export class Tag {
 
         this.setPosition(position, this.fence)
       }
-    } else {
-      this.end()
     }
   }
 

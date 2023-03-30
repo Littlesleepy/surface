@@ -12,6 +12,7 @@ export default {
 }
 </script>
 <script setup lang="ts">import { ElMessage, ElMessageBox } from 'element-plus';
+import func from 'vue-editor-bridge';
 
 function setMinMaxClose (status: 'min' | 'max' | 'close') {
   if (status === 'close') {
@@ -30,12 +31,16 @@ function setMinMaxClose (status: 'min' | 'max' | 'close') {
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: '取消退出',
+        message: '取消退出'
       })
     })
   } else {
     window.electronAPI.controlApp(status)
   }
+}
+
+function reload () {
+  window.location.reload()
 }
 </script>
 
@@ -48,9 +53,18 @@ function setMinMaxClose (status: 'min' | 'max' | 'close') {
         </div>
         <div class="right">
           <div class="control">
-            <i class="iconfont icon-zuixiaohua" @click="setMinMaxClose('min')" />
-            <i class="iconfont icon-zuidahua" @click="setMinMaxClose('max')" />
-            <i class="iconfont icon-guanbi1" @click="setMinMaxClose('close')" />
+            <BaseButton @click="reload">
+              <i class="iconfont icon-shuaxin" />
+            </BaseButton>
+            <BaseButton @click="setMinMaxClose('min')">
+              <i class="iconfont icon-zuixiaohua" />
+            </BaseButton>
+            <BaseButton @click="setMinMaxClose('max')">
+             <i class="iconfont icon-zuidahua" />
+            </BaseButton>
+            <BaseButton @click="setMinMaxClose('close')">
+              <i class="iconfont icon-guanbi1" />
+            </BaseButton>
           </div>
           <div class="slot">
             <slot name="right" />
@@ -83,14 +97,13 @@ function setMinMaxClose (status: 'min' | 'max' | 'close') {
       display: flex;
       flex-direction: column;
       .control{
-        padding: 5px;
+        padding: 0.5rem 0 0.5rem 0;
         display: flex;
         justify-content: right;
         .iconfont{
-          font-size: 40px;
-          .btnStyle();
+          font-size: 2.4rem;
         }
-        .icon-zuidahua{
+        :nth-child(2n){
           margin: 0 @btnSpace;
         }
       }

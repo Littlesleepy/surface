@@ -89,7 +89,7 @@ export class LayersFence {
       direction: Fence.TRANSVERSE,
       
       options: {
-        eachPieceMaxWidth: 30,
+        eachPieceMaxWidth: 50,
         coordinateTrans: undefined
       }
     }

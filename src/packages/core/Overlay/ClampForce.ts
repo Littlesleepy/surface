@@ -227,7 +227,7 @@ export class ClampForce {
       },
       infoTag: {
         show: true,
-        width: 200,
+        width: 300,
         height: 36,
         backgroundColor: UseTheme.theme.var.tipBgColor,
         color: UseTheme.theme.var.tipColor,
@@ -265,7 +265,7 @@ export class ClampForce {
       show: true,
       color: 'rgb(120, 120, 120)',
       className: 'icon-guanbi',
-      fontSize: '25px',
+      fontSize: '40px',
       top: '10px',
       right: '10px',
       zIndex: '100'

@@ -35,7 +35,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/PScan',
     name: 'PScan',
-    meta: { title:'手持式天线测量' },
+    meta: { title:'全景扫描' },
     component: () => import('views/PScan/PScan.vue')
   }
 ]

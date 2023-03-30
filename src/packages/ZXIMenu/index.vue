@@ -29,7 +29,7 @@ const emit = defineEmits<{
 
 const mount = ref<HTMLDivElement>()
 
-const popupMenu = new PopupMenu({ width: 250, height: 78 })
+const popupMenu = new PopupMenu({ width: 250, height: 78, drag: true })
 
 emit('popupMenu', popupMenu)
 

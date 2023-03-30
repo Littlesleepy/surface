@@ -39,7 +39,7 @@ export function createMarker (
         return marker.value.clear()
       } else {
         const markers = new Map<number, { el: HTMLElement, properties: { frequency: number } }>()
-        const width = 140
+        const width = 210
         frequencys.forEach(frequency => {
           // 检查frequency超出范围没有
           if (frequency <= params.value.end && frequency >= params.value.begin) {
@@ -47,7 +47,7 @@ export function createMarker (
             const container = document.createElement('div')
             container.style.cssText = `
               width: ${width}px;
-              height: 23px;
+              height: 26px;
               left: ${-width / 2}px;
               position: absolute;
               display: flex;
@@ -60,7 +60,7 @@ export function createMarker (
               display: flex;
               justify-content: center;
               color: ${UseTheme.theme.var.color};
-              font-size: 14px;
+              font-size: 20px;
             `
 
             const p = document.createElement('p')
@@ -70,7 +70,7 @@ export function createMarker (
               background-color: ${UseTheme.theme.var.backgroundColor};
               padding: 3px 5px;
               border-radius: 9px;
-              font-size: 12px;
+              font-size: 20px;
             `
 
             p.textContent = `${frequency} ${scaleX.value.unit}`
@@ -82,6 +82,7 @@ export function createMarker (
               color: ${UseTheme.theme.var.tagBgColor};
               padding-left: 3px;
               margin: auto 0px;
+              font-size: 25px;
             `
             span0.appendChild(i)
             container.appendChild(span0)

@@ -101,7 +101,7 @@ const props = withDefaults(defineProps<IZXISpectrumAndFallProps>(), {
   },
   xScaleType: EAxisXType.range,
   defaultValueY: () => { return { max: 90, min: -20 } },
-  controlStyle: () => { return { wrapper: { width: '360px', height: '140px' }, item: { width: '33.33%' } } },
+  controlStyle: () => { return { wrapper: { width: '650px' }, item: { width: 'calc(33.33% - 10px)' } } },
   setTool: () => [],
   deleteTool: () => [],
   addTool: () => [],
@@ -131,7 +131,8 @@ const props = withDefaults(defineProps<IZXISpectrumAndFallProps>(), {
   },
   infiniteFall: false,
   singleMode: false,
-  markers: () => []
+  markers: () => [],
+  name: '频谱'
 })
 
 const emit = defineEmits<{
@@ -261,10 +262,9 @@ defineExpose({
           :btnValues="btnValues"
           :controlStyle="controlStyle" />
         <div class="single-header-info">
-          <span v-if="name !== undefined">{{name}}</span>
-          <HeaderInfo class="left" :params="params" :step="step" :xScaleType="xScaleType" />
-          <div>
-            <slot></slot>
+          <span class="name" v-if="name !== undefined">{{name}}</span>
+          <div class="slot-content">
+            <slot name="header"></slot>
           </div>
         </div>
       </div>
@@ -333,6 +333,10 @@ defineExpose({
             @change="axisYChange" />
         </div>
       </div>
+      <!-- 中部插槽 -->
+      <div>
+        <slot name="middle"></slot>
+      </div>
       <!-- 瀑布图 -->
       <div class="fall" v-show="btnValues.pubutu">
         <ZXIAxisTimeY
@@ -351,7 +355,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .container{
   width: 100%;
   height: 100%;
@@ -359,42 +363,39 @@ defineExpose({
   flex-direction: column;
   background: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
-    height: @headerHeight;
-    position: relative;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
     .single-control{
-      width: @headerHeight;
+      z-index:99999;
+      width: 60px;
       height: 100%;
-      position: absolute;
-      left: 10px;
-      top: 1px;
-      z-index: 2;
     }
     .single-header-info{
-      width: 100%;
-      padding-left: 35px;
-      height: 100%;
+      align-items: center;
+      flex: auto;
       box-sizing: border-box;
       display: flex;
-      span{
+      .name{
         line-height: @headerHeight;
-        font-size: 12px;
+        font-size: @font20;
         color: v-bind('UseTheme.theme.var.color');
-        padding-right: 10px;
+        padding-left: 10px;
       }
-      .left{
+      .slot-content{
         flex: auto;
       }
     }
   }
   .spectrum{
-    flex: auto;
+    flex: 1;
     display: flex;
     padding-bottom: 5px;
     box-sizing: border-box;
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 28px;
+      padding-bottom: 30px;
     }
     .second-column{
       flex: auto;
@@ -428,10 +429,9 @@ defineExpose({
     }
   }
   .fall{
-    height: 50%;
+    flex: 1;
     display: flex;
     .axis-y{
-      width: 90px;
       box-sizing: border-box;
       padding-top: 1px;
       padding-bottom: 1px;

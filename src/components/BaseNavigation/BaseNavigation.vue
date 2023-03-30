@@ -6,6 +6,11 @@
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseNavigation\BaseNavigation.vue
  * @Description: 
  -->
+<script lang="ts">
+export default {
+  name: 'BaseNavigation'
+}
+</script>
 
 <script setup lang="ts">
 import { ref } from 'vue'
@@ -218,19 +223,18 @@ dataInit()
   flex-direction: column;
   .group{
     width: 100%;
-    margin: 20px 0;
-    padding: 0 0 10px 0;
+    margin: 2rem 0;
+    padding: 0 0 1rem 0;
     border: 1px solid #202020;
-    // box-shadow: 0 2px 4px 0 rgba(255, 255, 255, 0.12), 0 0 6px 0 rgba(255, 255, 255, 0.04);
     background-color: @mainColor;
     box-sizing: border-box;
     .title{
-      padding: 10px 0 10px 10px;
-      font-size: 15px;
+      padding: 1rem 0 1rem 1rem;
+      font-size: 2rem;
       color: rgb(31, 128, 255);
       font-weight: 700;
       background-color: rgba(0, 0, 0, .08);
-      margin-bottom: 5px;
+      margin-bottom: 0.5rem;
     }
     ul{
       width: 100%;
@@ -252,27 +256,15 @@ dataInit()
             }
           }
           p{
-            padding-top: 5px;
-            font-size: 14px;
+            padding-top: 0.5rem;
+            font-size: 1.8rem;
           }
         }
       }
     }
     ul:first-child{
-      margin-top: 10px;
+      margin-top: 1rem;
     }
   }
 }
-/* 移动端横屏一行6个 */
-// @media screen and (max-height: 813px) and (max-width: 1200px) {
-//   .base-scroll{
-//     ul{
-//       >li{
-//         width: 16.66%!important;
-//         height: 0;
-//         padding-bottom: 13%!important;
-//       }
-//     }
-//   }
-// }
 </style>

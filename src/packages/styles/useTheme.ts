@@ -360,11 +360,11 @@ export class UseTheme {
       lineColor: 'rgb(0, 255, 0)'
     } as Required<IStatisticalY>,
     Tabs: {
-      selectBgColor: 'var(--zxi--Tabs--selectBgColor, rgb(255, 255, 255))',
-      selectColor: 'var(--zxi--Tabs--selectColor, #409eff)',
-      notSelectBgColor: 'var(--zxi--Tabs--notSelectBgColor, #e4e7ed)',
-      notSelectColor: 'var(--zxi--Tabs--notSelectColor, #909399)',
-      borderColor: 'var(--zxi--Tabs--borderColor, rgb(211, 211, 211))'
+      selectBgColor: 'var(--zxi--Tabs--selectBgColor, rgb(18, 18, 18))',
+      selectColor: 'var(--zxi--Tabs--selectColor, rgb(220, 220, 220))',
+      notSelectBgColor: 'var(--zxi--Tabs--notSelectBgColor, rgb(44, 44, 44))',
+      notSelectColor: 'var(--zxi--Tabs--notSelectColor, rgb(220, 220, 220))',
+      borderColor: 'var(--zxi--Tabs--borderColor, rgb(96, 96, 96))'
     } as Required<ITabs>,
     Tv: {
       borderColor: 'var(--zxi--Tv--borderColor, rgb(150, 150, 150))'
@@ -484,11 +484,11 @@ export class UseTheme {
       lineColor: 'rgb(0, 255, 0)'
     } as Required<IStatisticalY>,
     Tabs: {
-      selectBgColor: 'var(--zxi--Tabs--selectBgColor, rgb(255, 255, 255))',
-      selectColor: 'var(--zxi--Tabs--selectColor, #409eff)',
-      notSelectBgColor: 'var(--zxi--Tabs--notSelectBgColor, #e4e7ed)',
-      notSelectColor: 'var(--zxi--Tabs--notSelectColor, #909399)',
-      borderColor: 'var(--zxi--Tabs--borderColor, rgba(211, 211, 211))'
+      selectBgColor: 'var(--zxi--Tabs--selectBgColor, rgb(18, 18, 18))',
+      selectColor: 'var(--zxi--Tabs--selectColor, rgb(220, 220, 220))',
+      notSelectBgColor: 'var(--zxi--Tabs--notSelectBgColor, rgb(44, 44, 44))',
+      notSelectColor: 'var(--zxi--Tabs--notSelectColor, rgb(220, 220, 220))',
+      borderColor: 'var(--zxi--Tabs--borderColor, rgb(96, 96, 96))'
     } as Required<ITabs>,
     Tv: {
       borderColor: 'var(--zxi--Tv--borderColor, rgb(150, 150, 150))'

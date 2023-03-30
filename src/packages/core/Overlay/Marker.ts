@@ -71,7 +71,7 @@ export class Marker {
       /** 
        * @description: 单位px
        */    
-      fontSize: 21,
+      fontSize: 30,
       color: UseTheme.theme.var.tagBgColor
     },
     chain: {
@@ -99,7 +99,7 @@ export class Marker {
       position: absolute;
       display: block;
       cursor: pointer;
-      font-size: 25px;
+      font-size: 40px;
       top: 10px;
       right: 10px;
       zIndex: 100;
@@ -329,8 +329,9 @@ export class Marker {
         color: ${linkOp.color};
         font-size: ${linkOp.fontSize}px;
         position: absolute;
+        padding: 10px 10px 0 10px;
         ${bottom}: 0;
-        ${left}: -${Math.floor(linkOp.fontSize / 2)}px;
+        ${left}: -${Math.floor(linkOp.fontSize / 2) + 10}px;
       `
       if (this.options.type === Fence.TRANSVERSE) {
         // 旋转锁icon

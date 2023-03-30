@@ -9,12 +9,13 @@
 
 <script setup lang="ts">
 import ShowInfo from './components/ShowInfo.vue'
-// import BaseLink from '@/components/BaseLink/BaseLink.vue'
+import BaseLink from '@/components/BaseLink/BaseLink.vue'
+import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import { useSingleMeasure } from '.'
 import { isRef, onMounted, ref } from 'vue';
 import BaseParams from 'cp/BaseParams/BaseParams.vue';
-import { EParamsType, IParamElement } from '@/types';
-// import { UseTheme } from 'zcharts'
+import { BaseParamsType, EParamsType, IParamElement } from '@/types';
+import { UseTheme } from 'mcharts/index'
 
 
 const {
@@ -22,69 +23,119 @@ const {
   store,
   params,
   hightlightItems,
+  clear,
   route,
   spectrum,
   changeFrequency,
-  // selectFrequency,
-  // trigger,
-  markers
+  selectFrequency,
+  trigger,
+  markers,
+  subaudioDecoding,
+  ITU,
+  modulate,
+  decodingState
 } = useSingleMeasure()
 
-const master = ref<InstanceType<typeof BaseParams>>()
+const master = ref<BaseParamsType>()
+
+const tabId = ref(0)
 
 </script>
 
 <template>
   <BaseFrame>
+     <BaseLink :trigger="trigger">
+      <div class="base-link">
+        <el-button type="primary" round @click="changeFrequency">切换频率</el-button>
+        <el-button type="primary" round @click="() => { markers = [trigger.value as number] }">标注</el-button>
+      </div>
+      <hr>
+    </BaseLink>
     <template #set>
       <BaseParams ref="master" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
-    <div class="single-measure">
-      <BaseParamsBranch
-        class="params-branch"
-        :params="[
-          [
-            { name: 'cf', paramName: 'frequency', ratio: 4 },
-            { name: 'bd1', paramName: 'bandwidth', ratio: 6 },
-            { name: 'debw', paramName: 'debw', ratio: 6 },
-            { name: 'audio', paramName: 'tcpaudio', ratio: 2.5 }
-          ]
-        ]"
-        :master="master" />
+    <!-- 头部切换视图 -->
+    <template #header-center>
+      <BaseTabHeader
+        class="header-tab"
+        :headers="['频谱', 'ITU测量', '调制识别', '数字语音解调/解码状态', '亚音解码']"
+        v-model="tabId" />
+    </template>
+    <ZXITabs
+      class="single-tabs"
+      :wrapperStyle="{ border: 'none' }"
+      :hidHeader="true"
+      v-model="tabId">
       <ZXISpectrumAndFall
         ref="spectrumInstance0"
         class="spectrum-and-fall"
-        tabName="信道频谱"
         :inputData="spectrum"
         :params="params"
         :switchLever="store.s_playButton"
         :hightlightItems="hightlightItems"
-        :markers="markers">
-        <!-- <template #header>
-          <BaseParamsBranch :master="master" />
-        </template> -->
-        <!-- <template #middle>
-          <BaseParamsBranch :master="master" />
-        </template> -->
+        :markers="markers"
+        @selectFrequency="selectFrequency">
+        <template #header>
+          <BaseParamsBranch
+            class="params-branch"
+            :params="[
+              [
+                { name: '解调模式', paramName: 'demodulation', ratio: 10 },
+                { name: '衰减', paramName: 'attenuation', ratio: 10 },
+                { name: '禁噪门限', paramName: 'squelch', ratio: 10 },
+                { name: 'Itu', paramName: 'itumeasure', ratio: 4 },
+                { name: '音频', paramName: 'tcpaudio', ratio: 4 }
+              ]
+            ]"
+            :master="master" />
+        </template>
+        <template #middle>
+            <BaseParamsBranch
+              class="params-branch"
+              :params="[
+                [
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 10 },
+                  { name: '中心频率', paramName: 'frequency', ratio: 10 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 10 }
+                ]
+              ]"
+              :master="master" />
+          </template>
       </ZXISpectrumAndFall>
-    </div>
+      <ZXIItu :inputData="ITU" />
+      <ZXIModulate :inputData="modulate" />
+      <ZXIScrollInfo :clear="clear" :inputData="decodingState" :wrapperStyle="{ padding: '0' }" />
+      <ZXISubaudioDecoding :inputData="subaudioDecoding" />
+    </ZXITabs>
   </BaseFrame>
 </template>
 
 <style scoped lang="less">
-.single-measure{
+@import url('theme');
+.base-link{
+  display: flex;
+  justify-content:space-around;
+}
+.header-tab{
+  width: 100%;
+  height: 100%;
+}
+
+.params-branch{
+  padding: 0 0 @btnSpace @btnSpace;
+}
+.single-tabs{
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  .params-branch{
-    margin: 5px;
-  }
   .spectrum-and-fall{
     width: 100%;
     flex: auto;
-    padding-top: 5px;
+    padding: @btnSpace @btnSpace 0 @btnSpace;
     box-sizing: border-box;
+    background: v-bind('UseTheme.theme.var.backgroundColor');
   }
 }
+
 </style>

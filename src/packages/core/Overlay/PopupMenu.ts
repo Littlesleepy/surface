@@ -60,7 +60,7 @@ export class PopupMenu {
     backgroundColor: UseTheme.theme.var.tipBgColor,
     borderRadius: '10px',
     closeButton: true,
-    zIndex: 9999,
+    zIndex: 99999,
     drag: false
   }
 
@@ -97,10 +97,10 @@ export class PopupMenu {
       this.closeButton.classList.add(...['iconfont', 'icon-guanbi'])
 
       this.closeButton.style.cssText = `
-        font-size: 20px;
+        font-size: 30px;
         position: absolute;
-        top: -15px;
-        right: -15px;
+        top: -25px;
+        right: -25px;
         cursor: pointer;
         z-index: 100;
         color: ${UseTheme.theme.var.tipBgColor};
@@ -218,7 +218,7 @@ export class PopupMenu {
   private setPosition (position: IClientPosition, type: string) {
     const infoTagOptions = this.options
     const style = this.infoTag.instance.style
-    const off = 15
+    const off = 20
     const clientX = position.clientX
     const clientY = position.clientY
 
@@ -250,9 +250,7 @@ export class PopupMenu {
       resultY = clientY - infoTagOptions.height - off
       if (resultY < 0 && resultY + containerPosition.top < 0) {
         resultY = clientY + off
-        if (resultY + containerPosition.top > window.innerHeight) {
-          resultY = undefined
-        }
+        if (resultY + infoTagOptions.height > window.innerHeight) resultY = undefined
       }
     }
 

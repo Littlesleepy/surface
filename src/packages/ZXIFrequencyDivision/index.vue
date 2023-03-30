@@ -102,7 +102,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .frequency-division-coantainer{
   width: 100%;
   pointer-events: none;
@@ -110,20 +110,21 @@ defineExpose({
   ul{
     width: 100%;
     position: relative;
-    height: 16px;
+    height: 20px;
     opacity: 1;
     li{
       position: absolute;
       display: block;
       top: 0;
-      height: 16px;
+      height: 20px;
       overflow: hidden;
       box-sizing: border-box;
       color: v-bind('UseTheme.theme.var.color');
       text-align: center;
       padding: 0 3px;
-      line-height: 16px;
+      line-height: 20px;
       text-overflow: clip;
+      font-size: 18px;
     }
   }
 }

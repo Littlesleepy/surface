@@ -1,3 +1,7 @@
+.simple-keyboard{
+  border-radius: 0!important;
+}
+
 .numeric-theme {
   width: 270px;
 }
@@ -7,6 +11,49 @@
 }
 
 .numeric-theme .my-button {
-  height: 45px!important;
-  font-size: 16px;
+  height: 5rem!important;
+  font-size: 2rem;
+}
+
+.keyBoardUnit{
+  display: flex;
+  flex-direction: column;
+  background-color: #ececec;
+  border-radius: 0 5px 5px 0;
+  box-sizing: border-box;
+  font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+  padding: 5px;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.unit-button{
+  width: 8rem;
+  height: 5rem;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid #b5b5b5;
+  border-radius: 5px;
+  box-shadow: 0 0 3px -1px rgba(0, 0, 0, .3);
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  font-size: 2rem;
+}
+
+.current-unit {
+  background-color: rgb(64, 158, 255);
+}
+
+.unit-button:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.unit-hg-activeButton{
+  background: #efefef
 }

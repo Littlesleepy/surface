@@ -75,7 +75,7 @@ const props = defineProps({
   name: { type: String, default: '' },
   capacity: { default: 0.1 },
   scaleNumWidthY: {
-    default: 30
+    default: 40
   },
   toolTip: {
     default: () => {

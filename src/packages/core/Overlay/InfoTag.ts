@@ -50,8 +50,8 @@ export class InfoTag {
       left?: number
     }
   } = {
-    width: 300,
-    height: 76,
+    width: 330,
+    height: 94,
     backgroundColor: UseTheme.theme.var.tipBgColor,
     borderRadius: '10px',
     color: UseTheme.theme.var.tipColor,
@@ -247,14 +247,14 @@ export class InfoTag {
   /**
    * @description: 添加到目标容器
    */  
-  append () {
-    this.container.appendChild(this.el)
+  append() {
+    if (!this.container.contains(this.el)) this.container.appendChild(this.el)
   }
   /**
    * @description: 从目标容器移除
    */
-  remove () {
-    this.container.removeChild(this.el)
+  remove() {
+    if (this.container.contains(this.el)) this.container.removeChild(this.el)
   }
   /**
    * @description: 设置默认文字内容，如果InfoTag.el内默认挂载点被外部替换，则该方法失效
@@ -263,7 +263,7 @@ export class InfoTag {
   setContent (content: Map<string, { color?: string, info: string }>) {
     if (this.el.children.length === 1 && this.defaultContent === this.el.children[0]) {
       // 自动调整高度
-      const height = content.size * 20 + 16
+      const height = content.size * 26 + 16
       this.el.style.height = `${height}px`
       this.options.height = height
 
@@ -272,8 +272,8 @@ export class InfoTag {
           const li = document.createElement('li')
           li.style.cssText = `
             padding: 3px 0;
-            font-size: 12px;
-            height: 20px;
+            font-size: 20px;
+            height: 26px;
             box-sizing: border-box;
             display: flex;
           `

@@ -6,6 +6,11 @@
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseParams\BaseParams.vue
  * @Description: 
  -->
+<script lang="ts">
+export default {
+  name: 'BaseParams'
+}
+</script>
 <script setup lang="ts">
 import { onBeforeUnmount, PropType, ref, toRaw, watch, WatchStopHandle } from 'vue'
 import * as Helper from 'helper/index'
@@ -20,7 +25,6 @@ import { IMockPanleState, EParamsType, IWorkMode, IParamElement } from '..'
 import { Device, Sundry, UI } from 'helper/index'
 import localForage from 'localforage'
 import router from '@/router'
-import { Keyboard } from 'mcharts/ZXIkeyboard'
 
 const props = defineProps({
   inited: {
@@ -155,7 +159,7 @@ const viceRules = ref(props.vice.rules ?? {})
 
 const viceElements = ref(props.vice.elements)
 
-const globalStore = useFrameStore()
+const frameStore = useFrameStore()
 
 const serverStore = useServerStore()
 
@@ -199,7 +203,7 @@ function allListInit () {
 }
 
 function watchRuleForm () {
-  globalStore.m_form(form.value)
+  frameStore.m_form(form.value)
   Helper.Device.functionParamsLocaCache((route.name!).toString(), form.value)
   // 自动参数
   if ('bandwidth' in form.value && (form.value.bandwidth === '25' || form.value.bandwidth === '12.5')) {
@@ -214,7 +218,7 @@ function watchRuleForm () {
 }
 
 function watchPlayAnimation () {
-  if (globalStore.s_playButton === ESwitchState.open) { // 临时任务开启后禁用部分按钮和输入框
+  if (frameStore.s_playButton === ESwitchState.open) { // 临时任务开启后禁用部分按钮和输入框
     if (props.disableBtnAfterTaskStart.all) {
       elements.value.forEach((d: any) => { d.disabled = true })
       // 禁用附加参数
@@ -253,14 +257,14 @@ function requestData () { // 临时任务获取数据控制
     ElMessage.error('任务ID还未分配，请等待或刷新页面')
     return
   }
-  if (globalStore.s_playButton === ESwitchState.open) { // 开启数据获取
+  if (frameStore.s_playButton === ESwitchState.open) { // 开启数据获取
     let str = (route.name!).toString() + '|' + Helper.Device.formDataString(form.value)
 
     const paramString = { value: str }
     // 发送前数据定制，如果返回false则不会启动任务
     const result = props.beforeTaskStart(paramString, createMockStatus())
     if (!result) {
-      globalStore.m_playButton(ESwitchState.off)
+      frameStore.m_playButton(ESwitchState.off)
     } else {
       connection.invoke('onMeasureStart', taskId.value, paramString.value, connection.connectionId)
     }
@@ -286,7 +290,7 @@ async function createConnection () { // 建立临时连接
     taskId.value = await connection.invoke('onMakeRealTimeCallerID', connection.connectionId)
     console.log('临时任务连接' + connection.connectionId + '成功')
     // 监听开关
-    unwatchRequestData = watch(() => globalStore.s_playButton, requestData)
+    unwatchRequestData = watch(() => frameStore.s_playButton, requestData)
     // 重连中提示
     let reconnecting: any
     connection.onreconnecting(() => {
@@ -340,7 +344,7 @@ function getParams (value: any, key: string) {
 }
 
 function sendParams (value: any, key: string) { // 发送
-  if (globalStore.s_playButton === ESwitchState.off || !connection) return
+  if (frameStore.s_playButton === ESwitchState.off || !connection) return
   changeParam(key, value)
 }
 /**
@@ -355,11 +359,11 @@ function changeParam (key: string, value: any) {
         message: '任务已停止，请检查您输入的参数值并重启任务',
         type: 'error'
       })
-      globalStore.m_playButton(ESwitchState.off)
+      frameStore.m_playButton(ESwitchState.off)
     }
-    globalStore.m_formOneResult({ result, key, value })
+    frameStore.m_formOneResult({ result, key, value })
   }).catch(() => {
-    globalStore.m_formOneResult({ result: false, key, value })
+    frameStore.m_formOneResult({ result: false, key, value })
   })
 }
 
@@ -378,7 +382,7 @@ function befoeSendParams (value: any, key: string) {
         ElMessage.success('已关闭随路音频')
       }
 
-      if (globalStore.s_playButton === ESwitchState.open) changeParam('tcpaudio', false)
+      if (frameStore.s_playButton === ESwitchState.open) changeParam('tcpaudio', false)
     }
   }
   if (key === 'demodulation' && value !== '不解调') {
@@ -388,7 +392,7 @@ function befoeSendParams (value: any, key: string) {
         ElMessage.success('已打开随路音频')
       }
 
-      if (globalStore.s_playButton === ESwitchState.open) changeParam('tcpaudio', true)
+      if (frameStore.s_playButton === ESwitchState.open) changeParam('tcpaudio', true)
     }
   }
   // 解调模式TETRA仅支持解调带宽25kHz
@@ -396,7 +400,7 @@ function befoeSendParams (value: any, key: string) {
     // 如果选为'TETRA'或'自动数字语音'，必须先发送this.form.debw = '25'再发送'TETRA'或'自动数字语音'
     if ('debw' in form.value && form.value.debw !== '25') {
       form.value.debw = '25'
-      if (globalStore.s_playButton === ESwitchState.open) changeParam('debw', 25)
+      if (frameStore.s_playButton === ESwitchState.open) changeParam('debw', 25)
       ElMessage.error(`解调模式${value}仅支持解调带宽25kHz`)
     }
   }
@@ -410,7 +414,7 @@ function befoeSendParams (value: any, key: string) {
     // 如果选为'DMR'，必须先发送this.form.debw = '25'再发送'DMR'
     if ('debw' in form.value && form.value.debw !== '25' && form.value.debw !== '12.5') {
       form.value.debw = '25'
-      if (globalStore.s_playButton === ESwitchState.open) changeParam('debw', 25)
+      if (frameStore.s_playButton === ESwitchState.open) changeParam('debw', 25)
       ElMessage.error('解调模式DMR仅支持解调带宽12.5/25kHz')
     }
   }
@@ -424,7 +428,7 @@ function befoeSendParams (value: any, key: string) {
     // 如果选为'dPMR'，必须先发送this.form.debw = '25'再发送'dPMR'
     if ('debw' in form.value && form.value.debw !== '25' && form.value.debw !== '12.5' && form.value.debw !== '6') {
       form.value.debw = '25'
-      if (globalStore.s_playButton === ESwitchState.open) changeParam('debw', 25)
+      if (frameStore.s_playButton === ESwitchState.open) changeParam('debw', 25)
       ElMessage.error('解调模式dPMR仅支持解调带宽6/12.5/25kHz')
     }
   }
@@ -437,7 +441,7 @@ function befoeSendParams (value: any, key: string) {
   if (key === 'decode' && value !== '无') {
     if ('bandwidth' in form.value && form.value.bandwidth !== '12.5' && form.value.bandwidth !== '25') {
       form.value.bandwidth = '25'
-      if (globalStore.s_playButton === ESwitchState.open) changeParam('bandwidth', 25)
+      if (frameStore.s_playButton === ESwitchState.open) changeParam('bandwidth', 25)
       ElMessage.error('亚音频解码仅支持频谱带宽12.5/25kHz')
     }
   }
@@ -460,7 +464,7 @@ function watchViceForm () {
   var rulforms = JSON.parse(localStorage.getItem(localStorageKey.KEY_VICEFORMS)!)
   rulforms[route.name!] = viceForm.value
   localStorage.setItem(localStorageKey.KEY_VICEFORMS, JSON.stringify(rulforms))
-  globalStore.m_viceForm(viceForm.value)
+  frameStore.m_viceForm(viceForm.value)
 }
 
 function createMockStatus (): IMockPanleState {
@@ -628,25 +632,25 @@ function deleteTemplate (t: IParamsTemplate) {
 
 watch(form, watchRuleForm, { deep: true })
 
-watch(() => globalStore.s_playButton, watchPlayAnimation)
+watch(() => frameStore.s_playButton, watchPlayAnimation)
 
 watch(viceForm, watchViceForm, { deep: true })
 
-watch(() => globalStore.s_formOne, (formOne) => {
+watch(() => frameStore.s_formOne, (formOne) => {
   if (formOne === undefined) return
   form.value[formOne.key] = formOne.value
   // 如果任务进行中，向后台发送参数变更
-  if (globalStore.s_playButton === ESwitchState.open && connection) {
+  if (frameStore.s_playButton === ESwitchState.open && connection) {
     changeParam(formOne.key, formOne.value)
   }
 })
 
 watch(taskId, (value) => {
-  globalStore.m_taskId(value)
+  frameStore.m_taskId(value)
 })
 
 watch(workMode, (newV, oldV) => {
-  if (globalStore.s_playButton === ESwitchState.off && newV) {
+  if (frameStore.s_playButton === ESwitchState.off && newV) {
     if (oldV) {
       // 放出上一次隐藏的元素
       oldV.hidenParams.forEach(param => {
@@ -678,20 +682,18 @@ onBeforeUnmount(() => {
   hasReconnected = false
   if (unwatchRequestData) unwatchRequestData()
   if (connection) connection.stop() // 关闭连接
-
-  // mainStore.rootDispose()
 })
 
 defineExpose({
   getParams,
   form,
   rules,
-  elements
+  elements,
+  viceForm,
+  viceRules,
+  viceElements,
+  taskId
 })
-
-function input () {
-  console.log('input')
-}
 
 
 </script>
@@ -699,6 +701,41 @@ function input () {
 <template>
   <ZXIScroll :preventDefault="true" class="base-scroll" :wrapperStyle="{ backgroundColor: 'var(--el-bg-color)' }">
     <div class="content">
+      <!-- 参数模板 -->
+      <div class="params-template">
+        <!-- 保存模板 -->
+        <el-popover placement="bottom" :width="350" trigger="click" :hide-after="0" v-model:visible="saveTemplateVisible">
+          <template #reference>
+            <el-button plain>保存为模板</el-button>
+          </template>
+          <div style="display: flex;flex-direction: column;height: 100px;justify-content: space-between;">
+            <el-input v-model="templateName" placeholder="输入模板名称" />
+            <el-button type="primary" @click="saveTemplate">保存</el-button>
+          </div>
+        </el-popover>
+        <!-- 打开模板 -->
+        <el-popover placement="bottom" :width="500" trigger="click" :hide-after="0" v-model:visible="useTemplateVisible" @before-enter="openTemplate">
+          <template #reference>
+            <el-button plain :disabled="frameStore.s_playButton === ESwitchState.open">参数模板</el-button>
+          </template>
+          <el-table :data="templateTable" style="width: 100%" max-height="250">
+            <el-table-column prop="name" label="名称" min-width="150" :show-overflow-tooltip="true" />
+            <el-table-column label="操作" min-width="100">
+              <template #default="scope">
+                <div style="display: flex;">
+                  <el-button @click="useTemplate(scope.row)">使用</el-button>
+                  <el-button
+                    type="danger"
+                    @click="deleteTemplate(scope.row)">
+                    删除
+                  </el-button>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-popover>
+      </div>
+      <!-- 设备参数 -->
       <div class="item device" v-if="elements.length">
         <span class="title">设备参数</span>
         <ElForm
@@ -715,6 +752,7 @@ function input () {
               :max="item.maxValue"
               :min="item.minValue"
               :name="item.title"
+              :unit="item.unit"
               :placeholder="item.placeholder"
               :disabled="item.disabled"
               :readonly="true" />
@@ -723,6 +761,7 @@ function input () {
               @change="getParams(form[item.paramName], item.paramName)"
               v-model="form[item.paramName]"
               :name="item.title"
+              :unit="item.unit"
               :disabled="item.disabled">
                 <el-option
                   v-for="select in item.valueList"
@@ -753,6 +792,7 @@ function input () {
               :name="item.title"
               :max="item.maxValue"
               :min="item.minValue"
+              :unit="item.unit"
               :placeholder="item.placeholder"
               :disabled="item.disabled"
               :readonly="true" />
@@ -760,6 +800,7 @@ function input () {
               v-if="item.type === EParamsType.enum"
               v-model="viceForm[item.paramName]"
               :name="item.title"
+              :unit="item.unit"
               :disabled="item.disabled">
                 <el-option
                   v-for="select in item.valueList"
@@ -783,27 +824,32 @@ function input () {
 @import url('theme');
 .base-scroll{
   width: 100%;
-  height: 400px;
+  height: 65vh;
 }
 .content{
   width: 100%;
   display: flex;
   flex-direction: column;
   color: @color;
+  .params-template{
+    display: flex;
+    justify-content: center;
+  }
   .item{
-    padding: 10px;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     .title {
-      padding-bottom: 10px;
+      padding-bottom: 1.5rem;
+      font-size: 1.8rem;
     }
     .title::before{
       display: inline-block;
-      margin-right: 10px;
+      margin-right: 1rem;
       content: '';
-      width: 10px;
-      height: 10px;
-      border-radius: 10px;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 1rem;
       border: 1px solid @color;
     }
   }

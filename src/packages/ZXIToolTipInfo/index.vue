@@ -63,7 +63,7 @@ const useInfo = computed(() => {
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 ul{
   padding: 8px;
   width: 100%;

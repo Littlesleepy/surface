@@ -117,7 +117,7 @@ watch(() => props.scene, (scene) => {
     const options: IAxisOptions = {
       direction: Fence.VERTICAL,
       scaleNum: {
-        width: 70
+        width: 100
       }
     }
 

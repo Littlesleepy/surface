@@ -15,8 +15,9 @@ export default {
 
 <script setup lang="ts">
 import { ElMessage } from 'element-plus';
-import { computed } from 'vue';
-import { Keyboard } from '../ZXIkeyboard'
+import { computed, CSSProperties, useAttrs } from 'vue';
+import { Keyboard } from '../ZXIKeyBoard'
+import { Listen } from '../core';
 
 const props = defineProps({
   modelValue: {
@@ -44,6 +45,7 @@ const emit = defineEmits<{
   (e: 'change', result: string): void
 }>()
 
+const attrs = useAttrs()
 
 const currentValue = computed({
   set: (v) => {
@@ -55,7 +57,9 @@ const currentValue = computed({
 Keyboard.init()
 
 
-function inputClick (e: MouseEvent) {
+function inputClick(e: PointerEvent | MouseEvent) {
+  if (attrs.disabled) return
+  
   if (Keyboard.instance) {
 
     Keyboard.confirm = function (v) {
@@ -65,11 +69,11 @@ function inputClick (e: MouseEvent) {
 
     Keyboard.validFn = function (v: string) {
       if (props.max !== undefined && Number(v) > props.max) {
-        ElMessage.error(`输入值不可大于${props.max}`)
+        ElMessage.error(`输入值不可大于${props.max}${props.unit ?? ''}`)
         return false
       }
       if (props.min !== undefined && Number(v) < props.min) {
-        ElMessage.error(`输入值不可小于于${props.min}`)
+        ElMessage.error(`输入值不可小于于${props.min}${props.unit ?? ''}`)
         return false
       }
 
@@ -77,8 +81,10 @@ function inputClick (e: MouseEvent) {
     }
 
     const inputValue = props.setInput ? currentValue.value.toString() : ''
-    
-    Keyboard.open(e, 'mouse', inputValue)
+    const type = 'pointerType' in e ?
+      (e.pointerType === 'mouse' ? Listen.MOUSE : Listen.TOUCH)
+      : ('touches' in e ? Listen.TOUCH : Listen.MOUSE)
+    Keyboard.open(e, type, inputValue, props.unit)
   }
 }
 
@@ -87,6 +93,8 @@ function inputClick (e: MouseEvent) {
 
 <template>
   <div class="container" @click="inputClick">
+    <!-- 禁用遮罩 -->
+    <span class="marker" :style="$attrs.disabled ? { opacity: 1 } : { opacity: 0 }" />
     <!-- 名称 -->
     <div class="name" v-if="name">{{ name }}</div>
     <el-input class="zxi-input" v-model="currentValue" v-bind="$attrs">
@@ -103,13 +111,18 @@ function inputClick (e: MouseEvent) {
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them.less');
+@import url('../assets/styles/theme.less');
 .container{
   width: 100%;
   display: flex;
-  padding: 0 10px;
+  padding: 0 1rem;
   background-color: @btnBgColor;
   box-sizing: border-box;
+  align-items: center;
+  position: relative;
+  .marker{
+    .marker-disabled();
+  }
   :deep(.zxi-input){
     width: 0px;
     flex: auto;
@@ -129,6 +142,7 @@ function inputClick (e: MouseEvent) {
   }
   .name{
     color: @color;
+    font-size: calc(@fontSize * 0.7);
   }
 }
 </style>

@@ -12,22 +12,22 @@ import BaseTopFrame from './BaseTopFrame/BaseTopFrame.vue'
 import BaseParams from './BaseParams/BaseParams.vue'
 import BaseDialog from './BaseDialog/BaseDialog.vue'
 import BaseParamsBranch from './BaseParamsBranch/BaseParamsBranch.vue'
-
-BaseParams.name = 'BaseParams'
-BaseDialog.name = 'BaseDialog'
-BaseParamsBranch.name = 'BaseParamsBranch'
+import BaseButton from './BaseButton/BaseButton.vue'
 
 const components = [
   BaseFrame,
   BaseTopFrame,
   BaseParams,
   BaseDialog,
-  BaseParamsBranch
+  BaseParamsBranch,
+  BaseButton
 ]
 
 export * from './BaseParams/type'
 export * from './BaseServerData'
 export * from './BaseParamsBranch/type'
+export * from './BaseFrame/type'
+export * from './BaseLink/type'
 
 export default {
   install: (app: App) => {

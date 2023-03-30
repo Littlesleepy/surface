@@ -18,7 +18,7 @@
 import { computed, effectScope, onBeforeUnmount, onMounted, reactive, ref, Ref, watch, watchEffect } from 'vue'
 import { Controls, IAdditionalCurve, ISpectrumInputData, ISpectrumStatisticalBuffer } from './type'
 import { Engine, IMeshInputOptions, isLayersFenceType, LayersFence, LayersFenceType,
-  Mesh, Program, Scene, Shader, ToolTip, ZoomTrans, IPositionResult, Measure, Threshold, IOffsetPosition, Listen, Region, Marker, WebGl, Caliper } from '../core'
+  Mesh, Program, Scene, Shader, ToolTip, ZoomTrans, IPositionResult, Measure, Threshold, IOffsetPosition, Listen, Region, Marker, WebGl, Caliper, Tag, Fence } from '../core'
 import { EBtncontrolType, IBtncontrols, ESwitchState, IAxisXValue, IAxisYValue, ITargetIcon, ISpectrumAndFallSpectrumPool } from '../types'
 import peakIcon from '../assets/imgs/peakIcon.png'
 import { createMarker } from '../ZXISpectrumScanAndFall/marker'
@@ -490,15 +490,14 @@ export function spectrum (
 
       const range = usingData.value.data[dataIndex]
       
-      const message = `${props.scaleX.parse(frequency)}
-      ${props.scaleY.parse(range)}`
+      const message = `${props.scaleX.parse(frequency)}\n${props.scaleY.parse(range)}`
 
       peakIcons.value = [{
         dataIndex,
         message,
         imgUrl: peakIcon,
         style: {
-          width: 200
+          width: 410
         }
       }]
     }
@@ -1130,11 +1129,24 @@ export function spectrum (
       zoomTrans = new ZoomTrans(spectrumScene.value)
 
       // 双击反出选中频率
+      const dblclickTag = new Tag(spectrumScene.value.container, {
+        direction: Fence.VERTICAL
+      })
+
+      spectrumScene.value.event.mousedown.add(() => {
+        dblclickTag.remove()
+      })
+
+      spectrumScene.value.event.touchstart.add(() => {
+        dblclickTag.remove()
+      })
+
       spectrumScene.value.event.dblclick.add((e, type) => {
         if (spectrumScene.value && usingData.value.time > 0) {
           const fence = spectrumScene.value.fence as LayersFenceType
           const event = spectrumScene.value.event
           const offsetX = type === Listen.MOUSE ? event.mousePosition!.offsetX : event.touchPosition.get(0)!.offsetX
+
           const fenceIndex = fence.baseFence.getFenceIndexByDistance(offsetX / spectrumScene.value.canvas.clientWidth)
           const dataIndex = fence.getDataIndexByFenceIndex(fenceIndex)
 
@@ -1145,7 +1157,13 @@ export function spectrum (
             dataIndex,
             value: props.scaleX.transform(frequency),
             baseEvent: e,
-            sceneEvent: event, mouseOrTouch: type })
+            sceneEvent: event,
+            mouseOrTouch: type
+          })
+
+          // 双击位置显示
+          dblclickTag.append()
+          dblclickTag.setPosition({ offsetX, offsetY: 0 }, fence)
         }
       })
 
@@ -1175,7 +1193,7 @@ export function spectrum (
       dbThreshold = new Threshold(spectrumScene.value.container, {
         centerTag: { type: Threshold.TOP_AND_BOTTOM, drag: true },
         infoTag: {
-          width: 200
+          width: 270
         },
         showTags: new Map([[
           Threshold.TOP,
@@ -1230,7 +1248,7 @@ export function spectrum (
       singleThreshold = new Threshold(spectrumScene.value.container, {
         centerTag: { type: Threshold.BOTTOM_TO_TOP },
         infoTag: {
-          width: 130
+          width: 200
         },
         showTags: new Map([[
           Threshold.BOTTOM,
@@ -1329,7 +1347,7 @@ export function spectrum (
 
       // marker标注
       marker.value = new Marker(spectrumScene.value)
-      marker.value.closeButton.style.top = '45px'
+      marker.value.closeButton.style.top = '60px'
 
       marker.value.afterAdd.set('0', (markers) => {
         markerManagers.value = new Set()
@@ -1424,7 +1442,35 @@ export function spectrum (
       })
       
       // 游离显示信息
-      toolTip = new ToolTip(spectrumScene.value, { type: ToolTip.VERTICAL })
+      toolTip = new ToolTip(spectrumScene.value, {
+        type: ToolTip.VERTICAL,
+        verticalTag: {
+          lock: { show: true }
+        }
+      })
+      // 点击锁定按钮，返出选择的值
+      toolTip.verticalTag!.lock!.addEventListener(Listen.TOUCHSTART, (e) => {
+        if (spectrumScene.value && usingData.value.time > 0 && toolTipPosition.value) {
+          const tag = toolTip.verticalTag!.instance
+          const fence = spectrumScene.value.fence as LayersFenceType
+          const event = spectrumScene.value.event
+          const offsetX = tag.positionResult.offsetMiddlePCTX
+
+          const fenceIndex = fence.baseFence.getFenceIndexByDistance(offsetX)
+          const dataIndex = fence.getDataIndexByFenceIndex(fenceIndex)
+
+          const frequency = defaultValueX.value.min + dataIndex * step.value
+
+          emit('selectFrequency', {
+            fenceIndex,
+            dataIndex,
+            value: props.scaleX.transform(frequency),
+            baseEvent: e,
+            sceneEvent: event,
+            mouseOrTouch: Listen.TOUCH
+          })
+        }
+      })
 
       toolTip.afterTrigger.set('spectrum', (p) => {
         toolTipPosition.value = p.offsetMiddlePCTX

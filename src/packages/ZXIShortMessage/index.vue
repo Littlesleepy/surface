@@ -44,7 +44,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .short-message{
   width: 100%;
   height: 100%;

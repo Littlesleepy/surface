@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ElTable } from 'element-plus'
-import { PropType, ref, watch } from 'vue'
+import { PropType, ref, watch, nextTick } from 'vue'
 import { Marker, PopupMenu, Shader } from '../../core'
 import { ISpectrumInputData, IUnit, IZXIMenu } from '../../types'
 import { UseTheme } from '../../styles'
@@ -109,7 +109,7 @@ watch(props.statisticalBuffer, (v) => {
   }
 })
 
-function setInputData () {
+function setInputData() {
   if (props.marker) {
     props.markerManagers.forEach((item) => {
       if (item.add) {
@@ -131,14 +131,21 @@ function setInputData () {
         }
       }
     })
+
+    nextTick(() => {
+      if (_popupMenu && props.trigger && open.value) _popupMenu.trigger(props.trigger.position, props.trigger.mouseOrTouch)
+    })
   }
 }
 
 watch(() => props.markerManagers, setInputData)
 
-function getPopupMenu (popupMenu: PopupMenu) {
-  popupMenu.options.width = 350
-  popupMenu.infoTag.instance.style.width = '350px'
+let _popupMenu: PopupMenu | undefined
+
+function getPopupMenu(popupMenu: PopupMenu) {
+  _popupMenu = popupMenu
+  popupMenu.options.width = 550
+  popupMenu.infoTag.instance.style.width = '550px'
 
   popupMenu.afterClose.set('0', () => {
     open.value = false
@@ -207,7 +214,6 @@ function caculateDsy () {
     <div class="container">
       <el-table
         class="table"
-        size="small"
         ref="table"
         :data="inputData"
         style="width: 100%"
@@ -216,11 +222,11 @@ function caculateDsy () {
         row-key="frequency"
         header-cell-class-name="header-cell-class"
         cell-class-name="cell-class">
-        <el-table-column prop="frequency" :show-overflow-tooltip="true" label="频率(MHz)" min-width="80" />
-        <el-table-column prop="curValue" :show-overflow-tooltip="true" label="瞬时值" min-width="60" />
-        <el-table-column prop="maxValue" :show-overflow-tooltip="true" label="最大值" min-width="60" />
-        <el-table-column prop="minValue" :show-overflow-tooltip="true" label="最小值" min-width="60" />
-        <el-table-column prop="aveValue" :show-overflow-tooltip="true" label="平均值" min-width="60" />
+        <el-table-column prop="frequency" :show-overflow-tooltip="true" label="频率(MHz)" min-width="100" />
+        <el-table-column prop="curValue" :show-overflow-tooltip="true" label="瞬时值" min-width="80" />
+        <el-table-column prop="maxValue" :show-overflow-tooltip="true" label="最大值" min-width="80" />
+        <el-table-column prop="minValue" :show-overflow-tooltip="true" label="最小值" min-width="80" />
+        <el-table-column prop="aveValue" :show-overflow-tooltip="true" label="平均值" min-width="80" />
       </el-table>
     </div>
   </ZXIMenu>
@@ -248,17 +254,18 @@ function caculateDsy () {
   }
 }
 .measure{
-  min-width: 200px;
+  min-width: 350px;
   margin: auto;
   color: v-bind('UseTheme.theme.var.color');
-  font-size: 14px;
+  font-size: 20px;
   display: flex;
-  height: 24px;
+  height: 30px;
   padding: 5px;
   box-sizing: border-box;
   position: relative;
-  top: -24px;
+  top: -30px;
   .iconfont{
+    font-size: 25px;
     display: block;
     transform-origin: center;
     transform: rotate(180deg);

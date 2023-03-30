@@ -12,6 +12,8 @@ export function useIpcMain () {
   ipcMain.handle(PreloadName.readConfig, useConfig)
   // 监听render设置app的状态命令
   ipcMain.on(PreloadName.controlApp, controlApp)
+  // 监听浏览器打开调试窗口命令
+  ipcMain.on(PreloadName.toggleDevTools, toggleDevTools)
 
   return {
     getWin (win: BrowserWindow) {
@@ -36,6 +38,12 @@ async function useConfig (){
   return fs.readFileSync(filePath, 'utf-8')
 }
 
+/**
+ * @description: 控制APP最小化、最大化、关闭
+ * @param {IpcMainEvent} e
+ * @param {*} status 想要设置的状态
+ * @return {*}
+ */
 function controlApp (e:  IpcMainEvent, status: 'min' | 'max' | 'close') {
   switch (status) {
     case 'min': if (ipcMainWin) ipcMainWin.minimize()
@@ -50,5 +58,15 @@ function controlApp (e:  IpcMainEvent, status: 'min' | 'max' | 'close') {
     break
     case 'close': app.exit()
     break
+  }
+}
+
+function toggleDevTools () {
+  if (ipcMainWin) {
+    if (ipcMainWin.webContents.isDevToolsOpened()) {
+      ipcMainWin.webContents.closeDevTools()
+    } else {
+      ipcMainWin.webContents.openDevTools()
+    }
   }
 }

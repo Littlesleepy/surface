@@ -590,7 +590,7 @@ defineExpose({
 
 
 <style scoped lang="less">
-@import url('../assets/styles/them');
+@import url('../assets/styles/theme');
 .spectrum-lines-container{
   width: 100%;
   height: 100%;

@@ -8,12 +8,12 @@
  */
 import { ReceiveData, ReceiveDataOptions, makeSpectrumData } from '@/server'
 import { useFrameStore, useServerStore } from '@/store'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { ISpectrumInputData, IHighlightItem, ZXISpectrumAndFall, EAxisXType } from 'mcharts/index'
+import { ISpectrumInputData, IHighlightItem, ZXISpectrumAndFall, EAxisXType, IITUData, IModulateData, ISubaudioDecodingData, ESwitchState } from 'mcharts/index'
 import { ElMessage } from 'element-plus'
 
-// import { setLinkTrigger } from '@/types'
+import { setLinkTrigger } from '@/types'
 import { ToExport } from '@/helper/dataExport'
 import { Sundry } from '@/helper'
 
@@ -44,9 +44,11 @@ export function useSingleMeasure () {
     return []
   })
 
+  const clear = computed(() => store.s_playButton === ESwitchState.open)
+
   const params = computed(() => {
     const form = store.s_form
-    console.log(form)
+    
     return {
       begin: Number(form.frequency) - form.bandwidth / 2000,
       end: Number(form.frequency) + form.bandwidth / 2000,
@@ -71,12 +73,12 @@ export function useSingleMeasure () {
   // let canReceiveAudio = false
 
   function changeFrequency () {
-    // store.m_formOne({ key: 'frequency', value: trigger.value.value })
+    store.m_formOne({ key: 'frequency', value: trigger.value.value })
   }
 
   const markers = ref<Array<number>>([])
 
-  // const { trigger, selectFrequency } = setLinkTrigger()
+  const { trigger, selectFrequency } = setLinkTrigger()
 
   // function backItem (item: number) {
   //   canReceiveAudio = item !== 0
@@ -125,6 +127,49 @@ export function useSingleMeasure () {
   //     time: new Date(data.time).getTime()
   //   }]
   // }
+  
+  const subaudioDecoding = ref<Array<ISubaudioDecodingData>>([])
+
+  const ITU = ref<Array<IITUData>>([])
+  const modulate = ref<Array<IModulateData>>([])
+  const decodingState = ref<Array<string>>([])
+  
+  // ITU
+  optionsChild.set('ITU', {
+    control: (data) => {
+      ITU.value = data.data
+    }
+  })
+  // 模式识别
+  optionsChild.set('MODE', {
+    control: (data) => {
+      modulate.value = data.data
+    }
+  })
+  // 数字语音解调/解码状态
+  optionsChild.set('LOGTEXTSTATE', {
+    control: (data) => {
+      decodingState.value = data.data
+    }
+  })
+  // 亚音频解码
+  optionsChild.set('SUBAUDIODATA', {
+    control: (data) => {
+      const arr: Array<ISubaudioDecodingData> = []
+      if (data) {
+        data.cdcss_n.forEach(element => {
+          arr.push(element)
+        })
+        data.cdcss_p.forEach(element => {
+          arr.push(element)
+        })
+        data.ctcss.forEach(element => {
+          arr.push(element)
+        })
+      }
+      subaudioDecoding.value = arr
+    }
+  })
 
   options.set('DATA', { children: optionsChild })
   ReceiveData.add(options)
@@ -134,6 +179,15 @@ export function useSingleMeasure () {
   //     cacheAudioData = undefined
   //   }
   // })
+
+  watch(() => store.s_playButton, (btn) => {
+    if (btn === ESwitchState.open) {
+      subaudioDecoding.value = []
+      ITU.value = []
+      modulate.value = []
+      decodingState.value = []
+    }
+  })
 
   ToExport.beforExport.set('params', () => {
     ToExport.DATA.clear()
@@ -161,13 +215,18 @@ export function useSingleMeasure () {
     store,
     params,
     hightlightItems,
+    clear,
     route,
     spectrum,
     changeFrequency,
-    // selectFrequency,
-    // trigger,
+    selectFrequency,
+    trigger,
     markers,
     audioSpectrum,
-    audioParams
+    audioParams,
+    subaudioDecoding,
+    ITU,
+    modulate,
+    decodingState
   }
 }

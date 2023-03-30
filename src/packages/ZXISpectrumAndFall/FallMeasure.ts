@@ -111,8 +111,8 @@ export class FallMeasure {
   } = {
     lock: true,
     infoTag: {
-      width: 250,
-      height: 96,
+      width: 410,
+      height: 60,
       backgroundColor: UseTheme.theme.var.tipBgColor,
       borderRadius: '10px'
     },
@@ -120,7 +120,7 @@ export class FallMeasure {
       show: true,
       color: UseTheme.theme.var.color,
       className: 'icon-guanbi',
-      fontSize: '25px',
+      fontSize: '40px',
       top: '10px',
       right: '10px',
       zIndex: '100'
@@ -235,8 +235,8 @@ export class FallMeasure {
       position: absolute;
       display: block;
       cursor: pointer;
-      font-size: 25px;
-      top: 45px;
+      font-size: 40px;
+      top: 60px;
       right: 10px;
       zIndex: 100;
       color: ${UseTheme.theme.var.color};

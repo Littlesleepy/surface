@@ -157,7 +157,7 @@ export class Threshold {
     },
     infoTag: {
       show: true,
-      width: 250,
+      width: 300,
       height: 36,
       backgroundColor: UseTheme.theme.var.tipBgColor,
       color: UseTheme.theme.var.tipColor,
@@ -177,7 +177,7 @@ export class Threshold {
       show: true,
       color: UseTheme.theme.var.color,
       className: 'icon-guanbi',
-      fontSize: '25px',
+      fontSize: '40px',
       top: '10px',
       right: '10px',
       zIndex: '100'
