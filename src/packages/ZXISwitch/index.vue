@@ -13,14 +13,18 @@ export default {
 }
 </script>
 
-<script setup lang="ts">import { computed } from 'vue';
+<script setup lang="ts">
+import { PropType, StyleValue, computed } from 'vue';
+import { UseTheme } from '../styles'
 
 const props = defineProps({
   name: { type: String },
   modelValue: {
     type: Boolean,
     default: false
-  }
+  },
+  class: { type: String },
+  style: { type: [Object, String, Array] as PropType<StyleValue | undefined> }
 })
 
 const emit = defineEmits<{
@@ -43,12 +47,14 @@ function handleClick () {
 </script>
 
 <template>
-  <div class="container" @click="handleClick">
-    <!-- 禁用遮罩 -->
-    <span class="marker" :style="$attrs.disabled ? { opacity: 1 } : { opacity: 0 }" />
-    <!-- 名称 -->
-    <div class="name" v-if="name">{{ name }}</div>
-    <el-switch class="zxi-switch" v-model="currentValue" v-bind="$attrs" />
+  <div :class="class" :style="style">
+    <div class="container" @click="() => { if (!$attrs.disabled) handleClick() }">
+      <!-- 禁用遮罩 -->
+      <span class="marker" :style="$attrs.disabled ? { opacity: 1 } : { opacity: 0 }" />
+      <!-- 名称 -->
+      <div class="name" v-if="name">{{ name }}</div>
+      <el-switch class="zxi-switch" v-model="currentValue" v-bind="$attrs" />
+    </div>
   </div>
 </template>
 
@@ -58,8 +64,8 @@ function handleClick () {
   width: 100%;
   height: 100%;
   display: flex;
-  padding: 0 1rem;
-  background-color: @btnBgColor;
+  padding: 0 1.5rem;
+  background-color: v-bind('UseTheme.theme.var.btnBgColor');
   align-items: center;
   box-sizing: border-box;
   position: relative;
@@ -74,13 +80,16 @@ function handleClick () {
         border-radius: 0;
       }
     }
+    .el-switch__label{
+      color: v-bind('UseTheme.theme.var.color');
+    }
   }
   :deep(.el-switch--large .el-switch__label *){
     font-size: 20px!important;
   }
   .name{
     padding-right: 11px;
-    color: @color;
+    color: v-bind('UseTheme.theme.var.color');
     font-size: calc(@fontSize * 0.7);
   }
 }

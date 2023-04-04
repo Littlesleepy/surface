@@ -15,6 +15,7 @@ import { localStorageKey, localCache } from '@/storage'
 import { ElNotification } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { UseTheme } from 'mcharts/index'
 
 const router = useRouter()
 
@@ -78,8 +79,8 @@ setTimeout(() => {
 .container{
   width: 100%;
   height: 100%;
-  background-color: @mainColor;
-  color: @color;
+  background-color: v-bind('UseTheme.theme.var.backgroundColor');
+  color: v-bind('UseTheme.theme.var.color');
   display: flex;
   position: relative;
   -webkit-app-region: drag;

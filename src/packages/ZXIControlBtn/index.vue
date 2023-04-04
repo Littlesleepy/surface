@@ -115,6 +115,7 @@ defineExpose({
             :prop="item.paramName"
             :style="controlStyle.item ? controlStyle.item : {}">
             <ZXISwitch
+              class="form-item"
               v-if="item.type === EBtncontrolType.switch"
               v-model="btnValues[item.paramName]"
               :style="item.activeColor ? `--el-switch-on-color: ${item.activeColor}` : ''"
@@ -127,19 +128,18 @@ defineExpose({
                 {{ item.title }}
               </el-radio>
           </el-form-item>
-          <el-tooltip :effect="Effect.DARK" :disabled="!btnValues.pubutu" content="瀑布图保存加倍" placement="top">
-            <el-form-item prop="pubutusave" :style="controlStyle.item ? controlStyle.item : {}">
-              <ZXISelect
-                v-show="btnValues.pubutu"
-                v-model="btnValues.pubutusave">
-                <el-option
-                  v-for="(select, i) in fallSaveOptions"
-                  :key="i"
-                  :label="select.label"
-                  :value="select.value" />
-              </ZXISelect>
-            </el-form-item>
-          </el-tooltip>
+          <el-form-item prop="pubutusave" :style="controlStyle.item ? controlStyle.item : {}">
+            <ZXISelect
+              class="form-item"
+              v-show="btnValues.pubutu"
+              v-model="btnValues.pubutusave">
+              <el-option
+                v-for="(select, i) in fallSaveOptions"
+                :key="i"
+                :label="select.label"
+                :value="select.value" />
+            </ZXISelect>
+          </el-form-item>
         </el-form>
         <div>
           <slot />
@@ -151,10 +151,13 @@ defineExpose({
 
 <style scoped lang="less">
 @import url('../assets/styles/theme');
+.form-item{
+  width: 100%;
+}
 .container{
   cursor: pointer;
   position: relative;
-  background-color: rgb(44, 44, 44);
+  background-color: v-bind('UseTheme.theme.ControlBtn.backgroundColor');
   display: flex;
   width: 100%;
   height: 100%;
@@ -162,7 +165,7 @@ defineExpose({
   padding: 0.3rem 0;
   .icon-shezhi-{
     margin: auto;
-    color: @color;
+    color: v-bind('UseTheme.theme.var.color');
     font-size: 3.4rem;
     font-weight: 600;
   }
@@ -173,10 +176,7 @@ defineExpose({
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    // background-color: v-bind('UseTheme.theme.var.tipBgColor');
-    background-color: var(--el-bg-color);
-    box-shadow: var(--el-box-shadow);
-    border-radius: var(--el-border-radius-small);
+    background-color: v-bind('UseTheme.theme.ControlBtn.backgroundColor');
     :deep(.el-form){
       flex: auto;
       display: flex;

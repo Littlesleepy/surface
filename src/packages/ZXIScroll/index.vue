@@ -7,7 +7,7 @@
 -->
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, PropType, ref, CSSProperties } from 'vue'
+import { onBeforeUnmount, onMounted, PropType, ref, StyleValue } from 'vue'
 import BScroll, { Options } from '@better-scroll/core'
 import MouseWheel, { MouseWheelOptions } from '@better-scroll/mouse-wheel'
 import ScrollBar, { ScrollbarOptions } from '@better-scroll/scroll-bar'
@@ -37,7 +37,7 @@ const props = defineProps({
   },
   // 内部滚动部分样式
   scrollStyle: {
-    type: Object as PropType<CSSProperties>
+    type: [Object, String, Array] as PropType<StyleValue | undefined>,
   },
   mouseWheel: {
     type: Boolean as PropType<MouseWheelOptions>,
@@ -45,7 +45,7 @@ const props = defineProps({
   },
   // 最外层大小固定的容器样式
   wrapperStyle: {
-    type: Object as PropType<CSSProperties>,
+    type: [Object, String, Array] as PropType<StyleValue | undefined>,
     default: () => {
       return {
         backgroundColor: 'rgb(255, 255, 255)'

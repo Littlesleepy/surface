@@ -242,7 +242,23 @@ function getLocalRuleForms () {
         // 是否自带默认值
         if (P1.defaultValue !== null) {
           value[parameter] = P1.defaultValue
-          continue
+
+          // 检查默认值是否规范
+          // 1、range类型数据
+          if (P1.paramType === EParamsType.range) {
+            const defaultValue = Number(P1.defaultValue)
+            if (defaultValue <= P1.maxValue && defaultValue >= P1.minValue) continue
+          }
+
+          // 2、enum类型数据
+          if (P1.paramType === EParamsType.enum) {
+            let has = false
+            P1.valueList!.forEach(item => {
+              if (item === P1.defaultValue) has = true
+            })
+
+            if (has) continue
+          }
         }
 
         // 1、range类型数据

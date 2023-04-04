@@ -79,11 +79,15 @@ export class Device extends ZHelper.Device {
         // 生成valueList
         // const isFFT: boolean = x.paramName.indexOf('fftpoints') > -1 && !forbidFFt
         const arr: Array<any> = []
-        x.valueList!.forEach((m: any)=> {
+        x.valueList!.forEach((m: any) => {
+          let label = m
+          const number = Number(m)
+          if (!isNaN(number)) label = label + `  ${unit}` ?? ''
+
           const aObj: any = {}
           aObj.id = id
           aObj.value = m
-          aObj.label = m
+          aObj.label = label
           aObj.tooltip = ''
           arr.push(aObj)
           id++

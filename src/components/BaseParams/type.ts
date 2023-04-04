@@ -95,3 +95,11 @@ export enum EParamsType {
  * @description: 主机工况模式
  */
 export interface IWorkMode { name: string, hidenParams: Array<IParam> }
+/**
+ * @description: 附加参数
+ */
+export interface IParamsVice {
+  rules?: Record<string, any>,
+  elements: Array<Omit<IParamElement, 'show'>>,
+  form: Record<string, any>
+}

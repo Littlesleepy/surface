@@ -20,8 +20,8 @@ import * as Server from '@/server'
 import { ElNotification, ElForm, ElMessage } from 'element-plus'
 import { localStorageKey } from 'storage/index'
 import { IDeviceFunc, IParam, IParamsTemplate } from '@/types'
-import { ESwitchState } from 'mcharts/index';
-import { IMockPanleState, EParamsType, IWorkMode, IParamElement } from '..'
+import { ESwitchState, UseTheme } from 'mcharts/index';
+import { IMockPanleState, EParamsType, IWorkMode, IParamElement, IParamsVice } from '..'
 import { Device, Sundry, UI } from 'helper/index'
 import localForage from 'localforage'
 import router from '@/router'
@@ -67,11 +67,7 @@ const props = defineProps({
     default: ''
   },
   vice: {
-    type: Object as PropType<{
-      rules?: Record<string, any>,
-      elements: Array<Omit<IParamElement, 'show'>>,
-      form: Record<string, any>
-    }>,
+    type: Object as PropType<IParamsVice>,
     default: () => {
       return {
         rules: {},
@@ -81,10 +77,6 @@ const props = defineProps({
     }
   }
 })
-
-const emit = defineEmits<{
-  (e: 'result', result: any)
-}>()
 
 // 注册enter失去焦点
 function keyDown (e: KeyboardEvent) {
@@ -269,7 +261,9 @@ function requestData () { // 临时任务获取数据控制
       connection.invoke('onMeasureStart', taskId.value, paramString.value, connection.connectionId)
     }
   } else { // 关闭数据获取，创建遮罩，防止连续点击开始
-    const marker = Helper.Sundry.createMarker('关闭中')
+    const marker = Helper.Sundry.createMarker({
+      text: '关闭中'
+    })
 
     connection.invoke('onMeasureStop', taskId.value, connection.connectionId, 'false').finally(() => {
       marker.close()
@@ -295,7 +289,7 @@ async function createConnection () { // 建立临时连接
     let reconnecting: any
     connection.onreconnecting(() => {
       hasReconnected = true
-      reconnecting = Helper.Sundry.createMarker('网络波动，自动重连')
+      reconnecting = Helper.Sundry.createMarker({ text: '网络波动，自动重连' })
     })
 
     // 若断开自动重连成功，简单提示断开
@@ -699,7 +693,7 @@ defineExpose({
 </script>
 
 <template>
-  <ZXIScroll :preventDefault="true" class="base-scroll" :wrapperStyle="{ backgroundColor: 'var(--el-bg-color)' }">
+  <ZXIScroll :preventDefault="true" class="base-scroll" :wrapperStyle="{ backgroundColor: 'transparent' }">
     <div class="content">
       <!-- 参数模板 -->
       <div class="params-template">
@@ -746,6 +740,7 @@ defineExpose({
         :hide-required-asterisk="true">
           <el-form-item v-for="item in elements" :key="item.id" :prop="item.paramName" v-show="item.show">
             <ZXIInput
+              class="form-item"
               v-if="item.type === EParamsType.range"
               @change="getParams(form[item.paramName], item.paramName)"
               v-model="form[item.paramName]"
@@ -757,6 +752,7 @@ defineExpose({
               :disabled="item.disabled"
               :readonly="true" />
             <ZXISelect
+              class="form-item"
               v-if="item.type === EParamsType.enum"
               @change="getParams(form[item.paramName], item.paramName)"
               v-model="form[item.paramName]"
@@ -770,6 +766,7 @@ defineExpose({
                   :value="select.value" />
             </ZXISelect>
             <ZXISwitch
+              class="form-item"
               v-if="item.type === EParamsType.boolean"
               @change="getParams(form[item.paramName], item.paramName)"
               v-model="form[item.paramName]"
@@ -787,6 +784,7 @@ defineExpose({
         :hide-required-asterisk="true">
           <el-form-item v-for="item in viceElements" :key="item.id"  :prop="item.paramName">
             <ZXIInput
+              class="form-item"
               v-if="item.type === EParamsType.range"
               v-model="viceForm[item.paramName]"
               :name="item.title"
@@ -797,10 +795,10 @@ defineExpose({
               :disabled="item.disabled"
               :readonly="true" />
             <ZXISelect
+              class="form-item"
               v-if="item.type === EParamsType.enum"
               v-model="viceForm[item.paramName]"
               :name="item.title"
-              :unit="item.unit"
               :disabled="item.disabled">
                 <el-option
                   v-for="select in item.valueList"
@@ -809,6 +807,7 @@ defineExpose({
                   :value="select.value" />
             </ZXISelect>
             <ZXISwitch
+              class="form-item"
               v-if="item.type === EParamsType.boolean"
               v-model="viceForm[item.paramName]"
               :name="item.title"
@@ -830,7 +829,7 @@ defineExpose({
   width: 100%;
   display: flex;
   flex-direction: column;
-  color: @color;
+  color: v-bind('UseTheme.theme.var.color');
   .params-template{
     display: flex;
     justify-content: center;
@@ -841,7 +840,8 @@ defineExpose({
     flex-direction: column;
     .title {
       padding-bottom: 1.5rem;
-      font-size: 1.8rem;
+      font-size: @font20;
+      color: v-bind('UseTheme.theme.var.color');
     }
     .title::before{
       display: inline-block;
@@ -850,7 +850,7 @@ defineExpose({
       width: 1rem;
       height: 1rem;
       border-radius: 1rem;
-      border: 1px solid @color;
+      border: 1px solid v-bind('UseTheme.theme.var.color');
     }
   }
   :deep(.demo-ruleForm) {
@@ -861,5 +861,8 @@ defineExpose({
       width: 48%;
     }
   }
+}
+.form-item{
+  width: 100%;
 }
 </style>

@@ -25,6 +25,7 @@ interface ITag  {
 export type IThresholdOptions = {
   traceByFence?: boolean
   lock?: boolean
+  openInit?: boolean
   centerTag?: {
     show?: boolean
     type?: string
@@ -112,6 +113,7 @@ export class Threshold {
   options: {
     traceByFence: boolean
     lock: boolean
+    openInit: boolean
     centerTag: {
       show: boolean
       type: string
@@ -148,6 +150,7 @@ export class Threshold {
   } = {
     traceByFence: false,
     lock: false,
+    openInit: false,
     centerTag: {
       show: true,
       type: Threshold.BOTTOM_TO_TOP,
@@ -509,8 +512,13 @@ export class Threshold {
 
     this.setRectangleStyle()
   }
-
-  private init = () => {
+  /**
+   * @description: 初始化
+   * @param {Boolean} useAfterMove  是否触发每一个tag的aftermove回调，默认为false
+   */  
+  init = (useAfterMove = false) => {
+    if (this.options.openInit) this.hasInit = false
+    
     if (!this.hasInit) {
       for (const [name] of this.options.showTags) {
         const options = this.options.showTags.get(name)!
@@ -524,7 +532,7 @@ export class Threshold {
           position.offsetY = this.container.clientHeight / 2
         }
         
-        this.tagManager.get(name)!.instance.setPosition(position, this.scene?.fence, false, false)
+        this.tagManager.get(name)!.instance.setPosition(position, this.scene?.fence, false, useAfterMove)
       }
       this.hasInit = true
     }
@@ -742,8 +750,6 @@ export class Threshold {
 
       this.active(position)
 
-    } else {
-      this.end()
     }
   }
 
@@ -758,8 +764,6 @@ export class Threshold {
 
         this.move(position)
       }
-    } else {
-      this.end()
     }
   }
 

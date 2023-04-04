@@ -98,3 +98,5 @@ export interface ISpectrumScanAndFallSpectrumPool {
    */
   measurePosition: Array<IFallMeasurePoint> | undefined
 }
+
+export * from './marker'

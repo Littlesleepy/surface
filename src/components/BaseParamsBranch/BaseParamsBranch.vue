@@ -13,9 +13,9 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { h, onMounted, PropType, VNode, watch, render, ref, computed, isRef, toRef } from 'vue'
+import { PropType, watch, ref, watchEffect } from 'vue'
 import { BaseParamsType, IParamElement } from '../BaseParams/type'
-import { IMockPanleState, EParamsType, IWorkMode } from '..'
+import { EParamsType } from '..'
 import { IParamBranch } from './type'
 
 const props = defineProps({
@@ -25,22 +25,34 @@ const props = defineProps({
   params: {
     type: Array as PropType<Array<Array<IParamBranch>>>,
     default: () => []
-  }
+  },
+  reset: { default: false }
 })
 
-function backResult (data: Array<Array<IParamBranch>>) {
+const paramsTrance = ref<Array<IParamElement & { name: string, style: string }>>([])
+
+function backResult () {
   const result: Array<IParamElement & { name: string, style: string }> = []
   if (props.master) {
+    const data = props.params
     // @ts-ignore
     const elements = props.master.elements.concat(props.master.viceElements)
     // 总行数
     const rowLen = data.length
     data.forEach((row, indexRow) => {
       let totalRatio = 0
-      row.forEach(item => {
-        totalRatio += item.ratio
-        totalRatio += item.mL ?? 0
-        totalRatio += item.mR ?? 0
+      row.forEach(item0 => {
+        // 找到对应的元素判断是否加ratio
+        let currentEl: IParamElement | undefined
+        elements.forEach(el => {
+          if (el.paramName === item0.paramName) currentEl = el
+        })
+
+        if (currentEl && !(currentEl.show !== undefined && !currentEl.show)) {
+          totalRatio += item0.ratio
+          totalRatio += item0.mL ?? 0
+          totalRatio += item0.mR ?? 0
+        }
       })
       // 不是最后一行，加margin-bottom: 5px;
       const marginBottom = indexRow < rowLen - 1 ? 'margin-bottom: 5px;' : ''
@@ -57,18 +69,24 @@ function backResult (data: Array<Array<IParamBranch>>) {
         // 计算宽度
         const width = item.ratio / totalRatio * 100
         let widthStyle = '', marginRight = ''
-        if (item.mL !== undefined || item.mR !== undefined) {// 自定义间隔
-          widthStyle = `width: ${width}%;`
-          if (item.mL !== undefined) {
-            widthStyle += `margin-left: ${item.mL / totalRatio * 100}%;`
+
+        // 判断元素是否隐藏
+        if (currentEl.show !== undefined && !currentEl.show) {
+          widthStyle = 'width:0%';
+        } else {
+          if (item.mL !== undefined || item.mR !== undefined) {// 自定义间隔
+            widthStyle = `width: ${width}%;`
+            if (item.mL !== undefined) {
+              widthStyle += `margin-left: ${item.mL / totalRatio * 100}%;`
+            }
+            if (item.mR !== undefined) {
+              widthStyle += `margin-right: ${item.mR / totalRatio * 100}%;`
+            }
+          } else { // 默认样式
+            widthStyle = indexColumn < columnLen - 1 ? `width: calc(${width}% - 5px);` : `width: ${width}%;`
+            // 不是最后一列，加margin-right: 5px;
+            marginRight = indexColumn < columnLen - 1 ? 'margin-right: 5px;' : ''
           }
-          if (item.mR !== undefined) {
-            widthStyle += `margin-right: ${item.mR / totalRatio * 100}%;`
-          }
-        } else { // 默认样式
-          widthStyle = indexColumn < columnLen - 1 ? `width: calc(${width}% - 5px);` : `width: ${width}%;`
-          // 不是最后一列，加margin-right: 5px;
-          marginRight = indexColumn < columnLen - 1 ? 'margin-right: 5px;' : ''
         }
 
         const obj = {
@@ -82,10 +100,14 @@ function backResult (data: Array<Array<IParamBranch>>) {
     })
   }
 
-  return result
+  paramsTrance.value = result
 }
 
-const paramsTrance = computed(() => backResult(props.params))
+watchEffect(() => {
+  backResult()
+})
+
+watch(() => props.reset, backResult)
 
 </script>
 
@@ -95,7 +117,7 @@ const paramsTrance = computed(() => backResult(props.params))
     <div
       v-if="master && paramsTrance.length"
       class="demo-ruleForm">
-        <div v-for="item in paramsTrance" :style="item.style" :key="item.id">
+        <div v-for="item in paramsTrance" :style="item.style" :key="item.id" v-show="item.show === undefined ? true : item.show">
           <!-- 设备参数 -->
           <ZXIInput
             v-if="item.show !== undefined && item.type === EParamsType.range"
@@ -113,7 +135,6 @@ const paramsTrance = computed(() => backResult(props.params))
             @change="master!.getParams(master!.form[item.paramName], item.paramName)"
             v-model="master.form[item.paramName]"
             :name="item.name"
-            :unit="item.unit"
             :disabled="item.disabled">
             <el-option
               v-for="select in item.valueList"
@@ -130,7 +151,6 @@ const paramsTrance = computed(() => backResult(props.params))
           <!-- 附加参数 -->
           <ZXIInput
             v-if="item.show === undefined && item.type === EParamsType.range"
-            @change="master!.getParams(master!.form[item.paramName], item.paramName)"
             v-model="master.viceForm[item.paramName]"
             :max="item.maxValue"
             :min="item.minValue"
@@ -141,7 +161,6 @@ const paramsTrance = computed(() => backResult(props.params))
             :readonly="true" />
           <ZXISelect
             v-if="item.show === undefined && item.type === EParamsType.enum"
-            @change="master!.getParams(master!.form[item.paramName], item.paramName)"
             v-model="master.viceForm[item.paramName]"
             :name="item.name"
             :unit="item.unit"
@@ -154,7 +173,6 @@ const paramsTrance = computed(() => backResult(props.params))
           </ZXISelect>
           <ZXISwitch
             v-if="item.show === undefined && item.type === EParamsType.boolean"
-            @change="master!.getParams(master!.form[item.paramName], item.paramName)"
             v-model="master.viceForm[item.paramName]"
             :name="item.name"
             :disabled="item.disabled" />

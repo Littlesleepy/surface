@@ -120,7 +120,6 @@ const headerTrance = computed(() => backResult(props.headers))
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  padding: @btnSpace;
   box-sizing: border-box;
 }
 .autoStyle{

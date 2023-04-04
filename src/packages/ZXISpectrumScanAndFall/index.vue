@@ -366,6 +366,8 @@ defineExpose({
     min-height: 40px;
     display: flex;
     align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
     .single-control{
       z-index:99999;
       width: 60px;
@@ -395,7 +397,7 @@ defineExpose({
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 30px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;

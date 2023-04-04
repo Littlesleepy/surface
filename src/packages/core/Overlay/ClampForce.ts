@@ -46,6 +46,10 @@ export type IClampForceOptions = {
   sectionThreshold?: {
     traceByFence?: boolean
     show?: boolean
+    /**
+     * @description: 是否每次打开都恢复到初始位置
+     */
+    openInit?: boolean
     /** 
      * @description: Threshold.TOP或者Threshold.LEFT
      */    
@@ -84,6 +88,10 @@ export type IClampForceOptions = {
    * @description: 相对全局截取配置
    */  
   allThreshold?: {
+    /**
+     * @description: 是否每次打开都恢复到初始位置
+     */
+    openInit?: boolean
     show?: boolean
     /**
      * @description: 厚度
@@ -211,6 +219,7 @@ export class ClampForce {
     sectionThreshold: {
       traceByFence: false,
       show: true,
+      openInit: false,
       tag0: {
         offset: 0.2,
         backgroundColor: UseTheme.theme.var.tipBgColor,
@@ -237,6 +246,7 @@ export class ClampForce {
     allThreshold: {
       show: true,
       thickness: 30,
+      openInit: false,
       border: '1px solid white',
       tag0: {
         offset: 0.1,
@@ -263,7 +273,7 @@ export class ClampForce {
     },
     closeButton: {
       show: true,
-      color: 'rgb(120, 120, 120)',
+      color: UseTheme.theme.var.color,
       className: 'icon-guanbi',
       fontSize: '40px',
       top: '10px',
@@ -346,6 +356,7 @@ export class ClampForce {
       const tag1 = sectionThresholdOp.tag1
 
       const sectionThresholdOptions = {
+        openInit: sectionThresholdOp.openInit,
         traceByFence: sectionThresholdOp.traceByFence,
         centerTag: {
           type: Threshold.TOP_AND_BOTTOM,
@@ -399,6 +410,7 @@ export class ClampForce {
       const tag1 = allThresholdOp.tag1
 
       const allThresholdOptions = {
+        openInit: allThresholdOp.openInit,
         centerTag: {
           type: Threshold.TOP_AND_BOTTOM,
           drag: true,

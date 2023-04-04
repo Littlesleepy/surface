@@ -30,7 +30,15 @@ const props = defineProps({
     required: true
   },
   name: { type: String, default: '' },
-  pointRadius: { default: 4 }
+  pointRadius: { default: 4 },
+  toolTip: {
+    default: () => {
+      return {
+        width: 150,
+        height: 56
+      }
+    }
+  }
 })
 
 const emit = defineEmits<{
@@ -208,10 +216,7 @@ onMounted(() => {
 
     toolTip = new ToolTip(scene.value, {
       type: ToolTip.CROSS,
-      infoTag: {
-        width: 110,
-        height: 56
-      }
+      infoTag: props.toolTip
     })
 
     toolTip.afterTrigger.set('spectrum', (p) => {
@@ -245,6 +250,8 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (scene.value) scene.value.dispose()
+
+  UseTheme.off(themKey)
 })
 
 defineExpose({
@@ -258,11 +265,12 @@ defineExpose({
     <div class="iq-vector-image-container">
       <div class="header">
         <span>{{name}}</span>
-        <el-tooltip content="绘制点数" :effect="Effect.LIGHT" placement="bottom">
-          <el-select size="small" style="width:80px;" v-model="dataPoint">
-            <el-option v-for="item in dataPointSelect" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-tooltip>
+        <ZXISelect style="width: 200px;" name="绘制点数" v-model="dataPoint">
+          <el-option v-for="item in dataPointSelect" :key="item.value" :label="item.label" :value="item.value" />
+        </ZXISelect>
+        <div class="slot">
+          <slot />
+        </div>
       </div>
       <div class="second-row">
         <ZXIAxisY
@@ -290,23 +298,28 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
+@import url('../assets/styles/theme.less');
 .iq-vector-image-container{
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  padding: 5px;
   box-sizing: border-box;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
-    height: 35px;
     display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
     color: v-bind('UseTheme.theme.var.color');
-    line-height: 35px;
     span{
       padding: 0 10px;
-      font-size: 12px;
+      font-size: @font20;
+    }
+    .slot{
+      height: 100%;
+      flex: auto;
     }
   }
   .second-row{
@@ -315,7 +328,7 @@ defineExpose({
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 28px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;

@@ -13,39 +13,16 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { ESwitchState } from '@/packages';
-import { useFrameStore, useMainStore } from '@/store';
-import { computed, onBeforeUnmount, ref, toRaw, watch } from 'vue';
 import BaseTopFrame from '../BaseTopFrame/BaseTopFrame.vue'
 import BaseNavigation from '../BaseNavigation/BaseNavigation.vue'
-import { useRoute, useRouter } from 'vue-router';
-import { ReceiveData, ReceiveDataOptions } from '@/server';
-import { ZAudio } from 'mcharts/index'
-import { IServerAudioData } from '@/types';
-import * as Helper from '@/helper'
-import { ElMessageBox, ElNotification } from 'element-plus';
+import { useRoute } from 'vue-router';
+import { UseTheme } from 'mcharts/index'
+import { ref } from 'vue';
 
 const route = useRoute()
 
 const title = route.meta.title
 
-const frameStore = useFrameStore()
-
-const startBtnClass = computed(() => {
-  const classes = frameStore.s_playButton === ESwitchState.off ? 'icon-qidong' : 'icon-zanting'
-
-  return ['iconfont', classes]
-})
-
-function handleStart () {
-  frameStore.m_playButton()
-}
-/**.............................表单参数............................. */
-const formShow = ref(false)
-
-function handleForm () {
-  formShow.value = !formShow.value
-}
 /**.............................导航............................. */
 const navigationShow = ref(false)
 
@@ -53,81 +30,10 @@ function handleNavigation () {
   navigationShow.value = !navigationShow.value
 }
 
-/**......................................数据接收...................................... */
-// 音频播放部分
-let audio = new ZAudio()
-/**
- * @description: 音频数据播放
- * @param {IServerAudioData} data
- * @return {*}
- */
-function audioControl(data: IServerAudioData) {
-  if (audio && frameStore.s_playButton === ESwitchState.open) {
-    audio.play(toRaw(data.audioData), data.sampleRate, data.channel, data.bits)
-  }
-}
-// 添加公共数据监听
-const options: ReceiveDataOptions = new Map([
-  [ReceiveData.key.AUDIO, {
-    canDelete: false,
-    control: audioControl
-  }],
-  [ReceiveData.key.ERROR, {
-    canDelete: false,
-    control: (data: any) => {
-      ElNotification({ type: 'error', title: '错误', message: data }) // 出错
-      frameStore.m_playButton(ESwitchState.off)
-    }
-  }],
-  [ReceiveData.key.WARNING, {
-    canDelete: false,
-    control: (data: any) => {
-      ElNotification({ type: 'warning', title: '警告', message: data })
-    }
-  }]
-])
-
-const optionsChild: ReceiveDataOptions = new Map()
-// 音频数据二层接收
-optionsChild.set(ReceiveData.key.AUDIO, {
-  canDelete: false,
-  control: audioControl
-})
-
-options.set('DATA', { children: optionsChild })
-
-ReceiveData.add(options)
-
-watch(() => frameStore.s_playButton, (btn) => {
-  if (audio) {
-    if (btn === ESwitchState.off) {
-      audio.dispose()
-    } else {
-      audio.activate()
-    }
-  }
-})
-// 监测功能开启数据监听，子组件不再需要run
-ReceiveData.run()
-
-const mainStore = useMainStore()
-
-onBeforeUnmount(() => {
-  mainStore.rootDispose()
-})
-
 </script>
 
 <template>
   <div class="container">
-    <!-- 参数弹出框 -->
-    <BaseDialog v-model="formShow" title="参数设置" width="80%" key="form">
-      <div class="set-form">
-        <slot name="set">
-          <BaseParams />
-        </slot>
-      </div>
-    </BaseDialog>
     <!-- 导航弹出框 -->
     <BaseDialog v-model="navigationShow" title="功能选取" width="80%" key="navigation" delay>
       <BaseNavigation class="navigation" />
@@ -143,14 +49,6 @@ onBeforeUnmount(() => {
             <BaseButton @click="handleNavigation">
               <i class="iconfont icon-gongneng"></i>
               <span>{{ title }}</span>
-            </BaseButton>
-            <!-- 启动 -->
-            <BaseButton @click="handleStart">
-              <i :class="startBtnClass" />
-            </BaseButton>
-            <!-- 参数表单 -->
-            <BaseButton @click="handleForm">
-              <i class="iconfont icon-zhongduancanshuguanli" />
             </BaseButton>
           </div>
           <!-- 插槽 -->
@@ -192,7 +90,7 @@ onBeforeUnmount(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: @mainColor;
+  background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
     border-bottom: 2px solid rgb(96, 96, 96);
   }

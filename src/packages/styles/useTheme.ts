@@ -57,6 +57,10 @@ export interface IGlobalTheme {
    * @description: 遮罩被选中颜色
    */
   markerSelectColor?: Array<number>
+  /** 
+   * @description: 按钮背景颜色
+   */
+  btnBgColor?: Array<number>
 }
 
 interface IDpx {
@@ -228,6 +232,13 @@ interface ISwitchButton {
   selectColor?: string
 }
 
+interface IControlBtn {
+  /**
+   * @description: 背景颜色var(--zxi--ControlBtn--backgroundColor, 颜色名、十六进制、RGB、RGBA)'
+   */
+  backgroundColor?: string
+}
+
 export interface IZXITheme {
   /** 
    * @description: 全局样式，必须为[0-255, 0-255, 0-255, 0-1?]
@@ -293,6 +304,10 @@ export interface IZXITheme {
    * @description: 开关按钮组件 
    */
   SwitchButton?: ISwitchButton
+  /** 
+   * @description: 组件工具区
+   */
+  ControlBtn?: IControlBtn
 }
 
 export class UseTheme {
@@ -313,7 +328,8 @@ export class UseTheme {
       textInfoBgColor: [255, 255, 255],
       textInfoColor: [96, 98, 102],
       markerColor: [120, 120, 120, 0.2],
-      markerSelectColor: [120, 120, 120, 0.5]
+      markerSelectColor: [120, 120, 120, 0.5],
+      btnBgColor: [44, 44, 44]
     } as Required<IGlobalTheme>,
     Dpx: {
       lineColor: [1, 1, 0]
@@ -375,7 +391,10 @@ export class UseTheme {
     SwitchButton: {
       backgroundColor: 'var(--zxi--SwitchButton--backgroundColor, rgb(60, 60, 60))',
       selectColor: 'var(--zxi--SwitchButton--backgroundColor, rgb(30, 30, 30))'
-    } as Required<ISwitchButton>
+    } as Required<ISwitchButton>,
+    ControlBtn: {
+      backgroundColor: 'var(--zxi--ControlBtn--backgroundColor, rgb(29, 29, 29))'
+    } as Required<IControlBtn>
   }
   static theme = {
     /** 
@@ -392,8 +411,9 @@ export class UseTheme {
       tagSelectColor: 'rgb(255, 0, 0)',
       textInfoBgColor: 'rgb(255, 255, 255)',
       textInfoColor: 'rgb(96, 98, 102)',
-      markerColor: 'rgb(120, 120, 120, 0.2)',
-      markerSelectColor: 'rgb(120, 120, 120, 0.5)'
+      markerColor: 'rgba(120, 120, 120, 0.2)',
+      markerSelectColor: 'rgb(120, 120, 120, 0.5)',
+      btnBgColor: 'rgb(44, 44, 44)'
     } as {
       [P in keyof IGlobalTheme]-?: string
     },
@@ -412,7 +432,8 @@ export class UseTheme {
       textInfoBgColor: [1, 1, 1],
       textInfoColor: [0.384, 0.384, 0.4],
       markerColor: [0.471, 0.471, 0.471, 0.2],
-      markerSelectColor: [0.471, 0.471, 0.471, 0.5]
+      markerSelectColor: [0.471, 0.471, 0.471, 0.5],
+      btnBgColor: [0.173, 0.173, 0.173]
     } as Required<IGlobalTheme>,
     /** 
      * @description: 自定义属性var(--zxi--name, rgb(0-255, 0-255, 0-255) | rgba(0-255, 0-255, 0-255, 0-1))
@@ -429,7 +450,8 @@ export class UseTheme {
       textInfoBgColor: 'var(--zxi--textInfoBgColor, rgb(255, 255, 255))',
       textInfoColor: 'var(--zxi--textInfoColor, rgb(96, 98, 102))',
       markerColor: 'var(--zxi--markerColor, rgba(120, 120, 120, 0.2))',
-      markerSelectColor: 'var(--zxi--markerSelectColor, rgba(120, 120, 120, 0.5))'
+      markerSelectColor: 'var(--zxi--markerSelectColor, rgba(120, 120, 120, 0.5))',
+      btnBgColor: 'var(--zxi--btnBgColor, rgb(44, 44, 44))'
     } as {
       [P in keyof IGlobalTheme]-?: string
     },
@@ -499,7 +521,10 @@ export class UseTheme {
     SwitchButton: {
       backgroundColor: 'var(--zxi--SwitchButton--backgroundColor, rgb(60, 60, 60))',
       selectColor: 'var(--zxi--SwitchButton--backgroundColor, rgb(30, 30, 30))'
-    } as Required<ISwitchButton>
+    } as Required<ISwitchButton>,
+    ControlBtn: {
+      backgroundColor: 'var(--zxi--ControlBtn--backgroundColor, rgb(29, 29, 29))'
+    } as Required<IControlBtn>
   }
   /** 
    * @description: 颜色格式转换rgba(0-255, 0-255, 0-255, 0-1?)

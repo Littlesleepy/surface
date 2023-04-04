@@ -9,10 +9,12 @@
 
 <script setup lang="ts">
 import { ElTable } from 'element-plus'
-import { PropType, ref, watch, nextTick } from 'vue'
+import { PropType, ref, watch, nextTick, computed } from 'vue'
 import { Marker, PopupMenu, Shader } from '../../core'
 import { ISpectrumInputData, IUnit, IZXIMenu } from '../../types'
 import { UseTheme } from '../../styles'
+import MarkerChain from './MarkerChain.vue'
+
 interface IData {
   dataIndex: number
   frequency: number
@@ -92,6 +94,12 @@ const open = ref(false)
 
 const inputData = ref<Array<IData>>([])
 
+const chainData = computed(() => {
+  if (props.usingData.data.length) return props.usingData.data
+
+  return new Float32Array()
+})
+
 const table = ref<InstanceType<typeof ElTable>>()
 
 const measure = ref<HTMLDivElement>()
@@ -161,55 +169,21 @@ watch(() => props.usingData, (v) => {
     const value = v.data[item.dataIndex]
     if (value !== undefined) item.curValue = parseFloat(value.toFixed(1))
   })
-
-  caculateDsy()
 })
 
 watch(() => props.trigger, () => {
   if (table.value) table.value.sort('frequency', 'ascending')
 })
 
-const dsX = ref('')
-const dsY = ref('')
-watch(() => props.marker, (marker) => {
-  if (marker) {
-    marker.chain.el.appendChild(measure.value!)
-    marker.afterLink.set('0', (start, end) => {
-      const ds = props.scaleX.transform((end.index - start.index) * props.step)
-      dsX.value = `${ds} ${props.scaleX.unit}`
-
-      caculateDsy()
-    })
-  }
-})
-
-function caculateDsy () {
-  if (props.marker) {
-    if (props.marker.chain.start && props.marker.chain.end) {
-      const startIndex = props.marker.chain.start.index
-      const endIndex = props.marker.chain.end.index
-
-      const start = props.usingData.data[startIndex]
-      const end = props.usingData.data[endIndex]
-
-      if (start !== undefined && end !== undefined) {
-        if (start === Shader.BACKGROUND_COLOR || end === Shader.BACKGROUND_COLOR) {
-          dsY.value = ''
-        } else {
-          dsY.value = `${props.scaleY.transform(end - start)} ${props.scaleY.unit}`
-        }
-      }
-    } 
-  }
-}
 </script>
 
 <template>
-  <div ref="measure" class="measure">
-    <i class="iconfont icon-sanjiaoxing" />
-    <span class="content">{{dsX}}</span>
-    <span class="content">{{dsY}}</span>
-  </div>
+  <MarkerChain
+    :usingData="chainData"
+    :marker="marker"
+    :scaleX="scaleX"
+    :scaleY="scaleY"
+    :step="step" />
   <ZXIMenu @popupMenu="getPopupMenu" :trigger="trigger">
     <div class="container">
       <el-table
@@ -251,27 +225,6 @@ function caculateDsy () {
     .el-table__empty-text{
       color: v-bind('UseTheme.theme.var.tipColor')!important;
     }
-  }
-}
-.measure{
-  min-width: 350px;
-  margin: auto;
-  color: v-bind('UseTheme.theme.var.color');
-  font-size: 20px;
-  display: flex;
-  height: 30px;
-  padding: 5px;
-  box-sizing: border-box;
-  position: relative;
-  top: -30px;
-  .iconfont{
-    font-size: 25px;
-    display: block;
-    transform-origin: center;
-    transform: rotate(180deg);
-  }
-  .content{
-    padding: 0 5px;
   }
 }
 </style>

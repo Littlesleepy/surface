@@ -7,6 +7,7 @@
  * @Description: 
  */
 import { App } from 'vue'
+import BaseMonitorFrame from './BaseMonitorFrame/BaseMonitorFrame.vue'
 import BaseFrame from './BaseFrame/BaseFrame.vue'
 import BaseTopFrame from './BaseTopFrame/BaseTopFrame.vue'
 import BaseParams from './BaseParams/BaseParams.vue'
@@ -15,6 +16,7 @@ import BaseParamsBranch from './BaseParamsBranch/BaseParamsBranch.vue'
 import BaseButton from './BaseButton/BaseButton.vue'
 
 const components = [
+  BaseMonitorFrame,
   BaseFrame,
   BaseTopFrame,
   BaseParams,
@@ -26,7 +28,7 @@ const components = [
 export * from './BaseParams/type'
 export * from './BaseServerData'
 export * from './BaseParamsBranch/type'
-export * from './BaseFrame/type'
+export * from './BaseMonitorFrame/type'
 export * from './BaseLink/type'
 
 export default {

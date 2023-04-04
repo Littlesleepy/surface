@@ -1,21 +1,22 @@
 <!--
  * @Author: shiershao
  * @Date: 2022-04-26 16:02:21
- * @LastEditTime: 2023-02-24 15:00:44
+ * @LastEditTime: 2023-03-10 16:42:45
  * @Description: 绘制非抽取类型多条线
  * 
 -->
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, PropType, reactive, ref, watch } from 'vue'
-import { EAxisXType, IAxisXValue, ESwitchState, IAxisYValue, ILineData, IUnitAxis } from '../types'
+import { computed, onBeforeUnmount, onMounted, PropType, reactive, ref, watch, watchEffect } from 'vue'
+import { EAxisXType, IAxisXValue, ESwitchState, IAxisYValue, ILineData, IUnitAxis, createMarker, IBtncontrols, EBtncontrolType, Controls } from '../types'
 import ZXIAxisY from '../ZXIAxisY'
 import ZXIAxisX from '../ZXIAxisX'
 import ZXIControlBtn from '../ZXIControlBtn'
-import { Scene, ToolTip } from '../core'
+import { Caliper, IPositionResult, LayerFenceType, Marker, Scene, ToolTip } from '../core'
 import { NoSampleLines, INoSampleLinesPool } from './type'
 import { Sundry } from '..'
 import { UseTheme } from '../styles'
+import MarkerChain from '../ZXISpectrumScanAndFall/components/MarkerChain.vue'
 
 const props = defineProps({
   inputData: {
@@ -69,12 +70,12 @@ const props = defineProps({
   name: { type: String, default: '' },
   capacity: { default: 0.1 },
   scaleNumWidthY: {
-    default: 30
+    default: 50
   },
   toolTip: {
     default: () => {
       return {
-        width: 150,
+        width: 300,
         height: 56
       }
     }
@@ -84,6 +85,16 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: 'scene', result: Scene<any>): void
 }>()
+
+const controls = ref<Array<IBtncontrols>>([{
+  type: EBtncontrolType.switch,
+  title: '标注',
+  paramName: Controls.biaozhu
+}])
+
+const btnValues = reactive({
+  biaozhu: false
+})
 
 const root = ref<HTMLDivElement>()
 
@@ -125,17 +136,6 @@ const legends = computed(() => {
   return arr
 })
 
-// 是否启用控制器
-const enableControl = computed(() => {
-  if (legends.value.length <= 1) return false
-  return true
-})
-
-const headerStyle = computed(() => {
-  if (legends.value.length > 1) return {}
-  if (props.name !== '') return { height: '25px' }
-  return { height: '5px' }
-})
 
 function axisYChange (obj: IAxisYValue) {
   spectrumYvalue.value = obj
@@ -185,6 +185,51 @@ watch(() => props.switchLever, (btn) => {
   }
 })
 
+/**....................................卡尺工具................................ */
+let caliper: Caliper
+
+const caliperPosition = ref<IPositionResult>()
+
+watch(() => btnValues.biaozhu, (v) => {
+  if (caliper) {
+    if (v) {
+      caliper.open()
+    } else {
+      caliper.close()
+    }
+  }
+})
+
+watchEffect(() => {
+  if (caliperPosition.value && sceneL.value) {
+    const fence = sceneL.value.fence as LayerFenceType
+    if (inputData.value.size > 0) {
+      const result: Map<string, { info: string, color?: string }> = new Map()
+      const dataIndex = fence.getDataIndexByDistance(caliperPosition.value.offsetMiddlePCTX)
+      // X
+      const dataX = props.defaultValueX.min + dataIndex * step.value
+
+      result.set('0', {
+        info: `${props.scaleX.transform(dataX)} ${props.scaleX.unit}`
+      })
+
+      caliper.setContent(result)
+    }
+  }
+})
+
+/** .............................................marker............................................. */
+const params = computed(() => {
+  return { begin: props.defaultValueX.min, end: props.defaultValueX.max }
+})
+const {
+  marker,
+  addMarker,
+  setMarkerPoints
+} = createMarker(computed(() => props.scaleX), params, step)
+
+watch([spectrumYvalue, () => props.inputData], () => setMarkerPoints(spectrumYvalue.value, inputData.value))
+
 onMounted(() => {
   if (sceneDom.value) {
     const {
@@ -199,6 +244,50 @@ onMounted(() => {
     toolTipL = toolTip
 
     toolTipL.setOptions({ infoTag: props.toolTip })
+
+    // 卡尺
+    caliper = new Caliper(sceneL.value!.container, {
+      scene: scene.value
+    })
+
+    caliper.infoTag!.remove()
+
+    caliper.afterClose.set('caliper', () => {
+      btnValues.biaozhu = false
+      caliperPosition.value = undefined
+
+      if (marker.value) {
+        marker.value.clear()
+      }
+    })
+
+    caliper.afterTrigger.set('caliper', (p) => {
+      caliperPosition.value = { ...p }
+
+      caliper.infoTag!.append()
+    })
+
+    caliper.afterEnd.set('caliper', (p) => {
+      caliperPosition.value = { ...p }
+      
+      caliper.infoTag!.remove()
+
+      if (inputData.value.size > 0) {
+        const fence = scene.value!.fence as LayerFenceType
+        const dataIndex = fence.getDataIndexByDistance(p.offsetMiddlePCTX)
+        // 频率
+        const dataX =  props.defaultValueX.min + dataIndex * step.value
+
+        addMarker([props.scaleX.transform(dataX)])
+        setMarkerPoints(spectrumYvalue.value, props.inputData)
+      }
+    })
+
+    if (btnValues.biaozhu) caliper.open()
+
+    // marker标注
+    marker.value = new Marker(sceneL.value!)
+    marker.value.closeButton.style.top = '60px'
 
     // @ts-ignore
     scene.value.pool = reactive({
@@ -227,27 +316,30 @@ defineExpose({
 
 <template>
   <div ref="root">
+    <MarkerChain
+      :usingData="inputData"
+      :marker="marker"
+      :scaleX="scaleX"
+      :scaleY="scaleY"
+      :step="step" />
     <div class="container">
-      <div class="header" :style="headerStyle">
+      <div class="header">
         <!-- 工具部分 -->
-        <div class="wrapper">
-          <ZXIControlBtn
-            class="control"
-            v-if="enableControl"
-            :controlStyle="{ wrapper: { width: '240px' } }">
-            <el-tooltip v-for="(legend, index) in legends" :key="index" effect="dark" :content="legend.name" placement="right" >
-              <div class="legend">
-                <span :style="{ backgroundColor: legend.backgroundColor }" />
-                <p>{{ legend.name }}</p>
-              </div>
-            </el-tooltip>
-          </ZXIControlBtn>
-          <div class="header-info" v-if="name !== ''">
-            <span>{{name}}</span>
-          </div>
-          <div calss="header-slot">
-            <slot></slot>
-          </div>
+        <ZXIControlBtn
+          class="control"
+          :controls="controls"
+          :btnValues="btnValues"
+          :controlStyle="{ wrapper: { width: legends.length ? '240px' : '150px' } }">
+          <el-tooltip v-for="(legend, index) in legends" :key="index" effect="dark" :content="legend.name" placement="right" >
+            <div class="legend">
+              <span :style="{ backgroundColor: legend.backgroundColor }" />
+              <p>{{ legend.name }}</p>
+            </div>
+          </el-tooltip>
+        </ZXIControlBtn>
+        <span v-if="name" class="name">{{ name }}</span>
+        <div class="header-slot">
+          <slot></slot>
         </div>
       </div>
       <!-- 第二行 -->
@@ -288,57 +380,47 @@ defineExpose({
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-right: 5px;
   box-sizing: border-box;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   /* 头部信息面板 */
   .header{
     width: 100%;
-    height: @headerHeight;
-    position: relative;
     color: v-bind('UseTheme.theme.var.color');
-    .wrapper{
-      position: absolute;
-      left: 10px;
-      top: 2px;
-      display: flex;
-      .control{
-        height: 100%;
-        width: 25px;
-        z-index: 2;
-        .legend{
-          width: 100%;
-          padding-top: 5px;
-          display: flex;
-          line-height: 14px;
-          color: v-bind('UseTheme.theme.var.tipColor');
-          span{
-            width: 60px;
-            height: 5px;
-            margin: auto 0;
-          }
-          p{
-            flex: 1;
-            padding-left: 5px;
-            width: 0;
-            .textOverflow();
-            font-size: 12px;
-          }
-        }
-      }
-      .header-info{
-        height: 100%;
-        box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
+    .control{
+      height: 100%;
+      z-index: 99999;
+      width: 60px;
+      .legend{
+        width: 100%;
+        padding-top: 5px;
         display: flex;
+        line-height: @font20;
+        color: v-bind('UseTheme.theme.var.tipColor');
         span{
-          font-size: 12px;
-          line-height: 20px;
+          width: 60px;
+          height: 5px;
           margin: auto 0;
         }
+        p{
+          flex: 1;
+          padding-left: 5px;
+          width: 0;
+          .textOverflow();
+          font-size: @font20;
+        }
       }
-      .header-slot{
-        height: 100%;
-      }
+    }
+
+    .name{
+      font-size: @font20;
+      padding-left: 10px;
+    }
+    .header-slot{
+      flex: auto;
     }
   }
   .second-row{
@@ -347,7 +429,7 @@ defineExpose({
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 28px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;

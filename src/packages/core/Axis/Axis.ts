@@ -326,11 +326,11 @@ export class Axis {
           }
         } else {
           const height = _container.clientHeight
-          if (height <= 100) {
+          if (height <= 200) {
             state.scaleNum = 3
-          } else if (height > 100 && height <= 200) {
-            state.scaleNum = 4
           } else if (height > 200 && height <= 300) {
+            state.scaleNum = 4
+          } else if (height > 300 && height <= 500) {
             state.scaleNum = 5
           } else {
             state.scaleNum = 6

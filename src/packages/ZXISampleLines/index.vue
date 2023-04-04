@@ -1,21 +1,22 @@
 <!--
  * @Author: shiershao
  * @Date: 2022-04-26 16:02:21
- * @LastEditTime: 2023-02-24 14:55:03
+ * @LastEditTime: 2023-03-10 16:29:10
  * @Description: 绘制多条抽取类型线
  * 
 -->
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, PropType, reactive, ref, watch } from 'vue'
-import { EAxisXType, IAxisXValue, ESwitchState, IAxisYValue, IUnitAxis, ITargetIcon } from '../types'
+import { computed, onBeforeUnmount, onMounted, PropType, reactive, ref, watch, watchEffect } from 'vue'
+import { EAxisXType, IAxisXValue, ESwitchState, IAxisYValue, IUnitAxis, ITargetIcon, EBtncontrolType, IBtncontrols, Controls, createMarker } from '../types'
 import ZXIAxisY from '../ZXIAxisY'
 import ZXIAxisX from '../ZXIAxisX'
 import ZXIControlBtn from '../ZXIControlBtn'
-import { isLayersFenceType, Scene, ToolTip } from '../core'
+import { Caliper, IPositionResult, isLayersFenceType, LayersFenceType, Marker, Scene, ToolTip } from '../core'
 import { SampleLines, ILineData, ISampleLinesPool } from './type'
 import { Sundry } from '..'
 import { UseTheme } from '../styles'
+import MarkerChain from '../ZXISpectrumScanAndFall/components/MarkerChain.vue'
 
 const props = defineProps({
   inputData: {
@@ -69,7 +70,7 @@ const props = defineProps({
   name: { type: String, default: '' },
   capacity: { default: 0.1 },
   scaleNumWidthY: {
-    default: 40
+    default: 50
   },
   toolTip: {
     default: () => {
@@ -86,12 +87,35 @@ const props = defineProps({
   /** 
    * @description: 刷新
    */    
-  refresh: { default: false }
+  refresh: { default: false },
+  biaozhu: { default: false }
 })
 
 const emit = defineEmits<{
   (e: 'scene', result: Scene<ISampleLinesPool>): void
+  (e: 'update:biaozhu', result: boolean): void
 }>()
+
+const biaozhuModle = computed({
+  get: () => props.biaozhu,
+  set: (v) => {
+    emit('update:biaozhu', v)
+  }
+})
+
+watch(biaozhuModle, (v) => {
+  btnValues.biaozhu = v
+})
+
+const controls = ref<Array<IBtncontrols>>([{
+  type: EBtncontrolType.switch,
+  title: '标注',
+  paramName: Controls.biaozhu
+}])
+
+const btnValues = reactive({
+  biaozhu: false
+})
 
 const root = ref<HTMLDivElement>()
 
@@ -159,6 +183,12 @@ const enableControl = computed(() => {
   return true
 })
 
+const headerStyle = computed(() => {
+  if (legends.value.length > 1) return {}
+  if (props.name !== '') return { height: '25px' }
+  return { height: '5px' }
+})
+
 function axisYChange (obj: IAxisYValue) {
   spectrumYvalue.value = obj
 }
@@ -187,6 +217,52 @@ function watchInputData () {
 
 watch(() => props.inputData, watchInputData)
 
+/**....................................卡尺工具................................ */
+let caliper: Caliper
+
+const caliperPosition = ref<IPositionResult>()
+
+watch(() => btnValues.biaozhu, (v) => {
+  biaozhuModle.value = v
+  if (caliper) {
+    if (v) {
+      caliper.open()
+    } else {
+      caliper.close()
+    }
+  }
+})
+
+watchEffect(() => {
+  if (caliperPosition.value && sceneL.value) {
+    const fence = sceneL.value.fence as LayersFenceType
+    if (inputData.value.size > 0) {
+      const result: Map<string, { info: string, color?: string }> = new Map()
+      const dataIndex = fence.getDataIndexByDistance(caliperPosition.value.offsetMiddlePCTX)
+      // X
+      const dataX = props.defaultValueX.min + dataIndex * step.value
+
+      result.set('0', {
+        info: `${props.scaleX.transform(dataX)} ${props.scaleX.unit}`
+      })
+
+      caliper.setContent(result)
+    }
+  }
+})
+
+/** .............................................marker............................................. */
+const params = computed(() => {
+  return { begin: props.defaultValueX.min, end: props.defaultValueX.max }
+})
+const {
+  marker,
+  addMarker,
+  setMarkerPoints
+} = createMarker(computed(() => props.scaleX), params, step)
+
+watch([spectrumYvalue, () => props.inputData], () => setMarkerPoints(spectrumYvalue.value, inputData.value))
+
 onMounted(() => {
   if (sceneDom.value) {
     const {
@@ -202,6 +278,49 @@ onMounted(() => {
     toolTipL = toolTip
 
     toolTipL.setOptions({ infoTag: props.toolTip })
+    // 卡尺
+    caliper = new Caliper(sceneL.value!.container, {
+      scene: scene.value
+    })
+
+    caliper.infoTag!.remove()
+
+    caliper.afterClose.set('caliper', () => {
+      btnValues.biaozhu = false
+      caliperPosition.value = undefined
+
+      if (marker.value) {
+        marker.value.clear()
+      }
+    })
+
+    caliper.afterTrigger.set('caliper', (p) => {
+      caliperPosition.value = { ...p }
+
+      caliper.infoTag!.append()
+    })
+
+    caliper.afterEnd.set('caliper', (p) => {
+      caliperPosition.value = { ...p }
+      
+      caliper.infoTag!.remove()
+
+      if (inputData.value.size > 0) {
+        const fence = scene.value!.fence as LayersFenceType
+        const dataIndex = fence.getDataIndexByDistance(p.offsetMiddlePCTX)
+        // 频率
+        const dataX =  props.defaultValueX.min + dataIndex * step.value
+
+        addMarker([props.scaleX.transform(dataX)])
+        setMarkerPoints(spectrumYvalue.value, props.inputData)
+      }
+    })
+
+    if (btnValues.biaozhu) caliper.open()
+
+    // marker标注
+    marker.value = new Marker(sceneL.value!)
+    marker.value.closeButton.style.top = '60px'
 
     // @ts-ignore
     scene.value.pool = reactive({
@@ -231,13 +350,20 @@ defineExpose({
 
 <template>
   <div ref="root">
+    <MarkerChain
+      :usingData="inputData"
+      :marker="marker"
+      :scaleX="scaleX"
+      :scaleY="scaleY"
+      :step="step" />
     <div class="container">
       <div class="header">
         <!-- 工具部分 -->
         <ZXIControlBtn
           class="control"
-          v-if="enableControl"
-          :controlStyle="{ wrapper: { width: '240px' } }">
+          :controls="controls"
+          :btnValues="btnValues"
+          :controlStyle="{ wrapper: { width: legends.length ? '240px' : '150px' } }">
           <el-tooltip v-for="(legend, index) in legends" :key="index" effect="dark" :content="legend.name" placement="right" >
             <div class="legend">
               <span :style="{ backgroundColor: legend.backgroundColor }" />
@@ -279,7 +405,6 @@ defineExpose({
             </div>
           </div>
           <ZXIAxisX
-            class="axis-x"
             :xScaleType="xScaleType"
             :scene="sceneL"
             :defaultValue="defaultValueX"
@@ -299,7 +424,6 @@ defineExpose({
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding-right: 5px;
   box-sizing: border-box;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   /* 头部信息面板 */
@@ -308,6 +432,8 @@ defineExpose({
     color: v-bind('UseTheme.theme.var.color');
     display: flex;
     align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
     .control{
       height: 100%;
       z-index: 99999;
@@ -347,7 +473,7 @@ defineExpose({
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 30px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;
@@ -367,9 +493,6 @@ defineExpose({
             height: 100%;
           }
         }
-      }
-      .axis-x{
-        box-sizing: border-box;
       }
     }
   }

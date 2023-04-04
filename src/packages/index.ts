@@ -50,6 +50,7 @@ import ZXIMenu from './ZXIMenu'
 import ZXIInput from './ZXIInput'
 import ZXISelect from './ZXISelect'
 import ZXISwitch from './ZXISwitch'
+import ZXISampleTimeLines from './ZXISampleTimeLines'
 
 export type ZXIScrollType = InstanceType<typeof ZXIScroll>
 export type ZXIAxisXType = InstanceType<typeof ZXIAxisX>
@@ -92,6 +93,7 @@ export type ZXIMenuType = InstanceType<typeof ZXIMenu>
 export type ZXIInputType = InstanceType<typeof ZXIInput>
 export type ZXISelectType = InstanceType<typeof ZXISelect>
 export type ZXISwitchType = InstanceType<typeof ZXISwitch>
+export type ZXISampleTimeLinesType = InstanceType<typeof ZXISampleTimeLines>
 
 export * from './styles'
 export * from './types'
@@ -140,7 +142,8 @@ export {
   ZXIMenu,
   ZXIInput,
   ZXISelect,
-  ZXISwitch
+  ZXISwitch,
+  ZXISampleTimeLines
 }
 
 const components = [
@@ -184,7 +187,8 @@ const components = [
   ZXIMenu,
   ZXIInput,
   ZXISelect,
-  ZXISwitch
+  ZXISwitch,
+  ZXISampleTimeLines
 ]
 
 const zcharts: Plugin = {

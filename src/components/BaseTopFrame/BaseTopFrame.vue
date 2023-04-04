@@ -12,7 +12,6 @@ export default {
 }
 </script>
 <script setup lang="ts">import { ElMessage, ElMessageBox } from 'element-plus';
-import func from 'vue-editor-bridge';
 
 function setMinMaxClose (status: 'min' | 'max' | 'close') {
   if (status === 'close') {
@@ -101,7 +100,7 @@ function reload () {
         display: flex;
         justify-content: right;
         .iconfont{
-          font-size: 2.4rem;
+          font-size: 2rem;
         }
         :nth-child(2n){
           margin: 0 @btnSpace;

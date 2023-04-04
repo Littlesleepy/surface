@@ -7,7 +7,7 @@
 -->
 
 <script setup lang="ts">
-import { watch, ref, PropType, CSSProperties } from 'vue'
+import { watch, ref, PropType, CSSProperties, StyleValue } from 'vue'
 import { UseTheme } from '../styles'
 
 const props = defineProps({
@@ -21,7 +21,7 @@ const props = defineProps({
     default: () => { return { fade: true, interactive: true } }
   },
   preventDefault: { type: Boolean, default: false },
-  scrollWrapperStyle: { type: Object },
+  scrollWrapperStyle: { type: [Object, String, Array] as PropType<StyleValue | undefined>, },
   wrapperStyle: { type: Object },
   mouseWheel: { type: Boolean, default: true },
   name: { type: String }
@@ -61,7 +61,12 @@ defineExpose({
 <template>
   <div ref="root">
     <div class="wrapper">
-      <p v-if="name">{{name}}</p>
+      <div class="header">
+        <p v-if="name">{{ name }}</p>
+        <div class="slot">
+          <slot />
+        </div>
+      </div>
       <div class="scroll-content" :style="wrapperStyle">
         <ZXIScroll
           class="base-scroll"
@@ -87,13 +92,20 @@ defineExpose({
   height: 100%;
   display: flex;
   flex-direction: column;
-  >p{
-    height: @headerHeight;
-    line-height: @headerHeight;
-    color: v-bind('UseTheme.theme.var.color');
-    font-size: @font20;
-    background-color: v-bind('UseTheme.theme.var.backgroundColor');
-    padding: 0 10px;
+  .header{
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    >p{
+      color: v-bind('UseTheme.theme.var.color');
+      font-size: @font20;
+      background-color: v-bind('UseTheme.theme.var.backgroundColor');
+      padding: 0 10px;
+    }
+    .slot{
+      height: 100%;
+      flex: auto;
+    }
   }
   .scroll-content{
     flex: auto;
@@ -107,7 +119,6 @@ defineExpose({
         width: 100%;
         color: v-bind(color);
         pre{
-          line-height: 17px;
           padding: 5px 10px;
           letter-spacing: 2px;
           font-size: @font20;;

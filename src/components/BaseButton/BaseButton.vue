@@ -5,7 +5,8 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onBeforeUnmount, ref } from 'vue';
+import { UseTheme } from 'mcharts/index'
 
 const props = defineProps({
   selected: { default: false },
@@ -17,10 +18,20 @@ const props = defineProps({
 const selectStyle = computed(() => {
   return props.selected ? { backgroundColor: props.selectColor } : {}
 })
+
+const buttonColor = ref(UseTheme.theme.var.btnBgColor)
+
+const themeKey = UseTheme.on(() => {
+  buttonColor.value = UseTheme.theme.var.btnBgColor
+})
+
+onBeforeUnmount(() => {
+  UseTheme.off(themeKey)
+})
 </script>
 
 <template>
-  <el-button class="zxi-button" color="rgb(44, 44, 44)" :style="selectStyle">
+  <el-button class="zxi-button" :color="buttonColor" :style="selectStyle">
     <template #default>
       <slot />
     </template>

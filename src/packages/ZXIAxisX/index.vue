@@ -144,8 +144,16 @@ watch(() => props.scene, (scene) => {
             lists = getScaleplate(axis.value.scaleNum, left.value, right.value)
           }
 
+          // 根具当前放大状态，确定保留小数点位数
+          let needTransForm = true
+          if (fence) {
+            // if (fence.)
+            // needTransForm
+          }
+
           lists.forEach((item, i) => {
-            lists[i] = props.scale.transform(item)
+            // 更具当前放大状态，确定保留小数点位数
+            lists[i] = needTransForm ? props.scale.transform(item) : Number(item.toFixed(0))
           })
 
           emit('change', { min: lists[0], max: lists[axis.value.scaleNum - 1] }) // 抛出起始点
@@ -214,7 +222,7 @@ defineExpose({
 @import url('../assets/styles/theme');
 .container{
   width: 100%;
-  height: 30px;
+  height: 32px;
   cursor: pointer;
   display: flex;
   flex-direction: column;

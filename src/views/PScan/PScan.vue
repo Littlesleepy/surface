@@ -15,6 +15,7 @@ import { BaseParamsType } from '@/types';
 import { ref } from 'vue';
 import Sample from './components/Sample.vue'
 import { usePScan } from '.'
+import { UseTheme } from 'mcharts/index'
 
 const {
   store,
@@ -47,7 +48,7 @@ const master = ref<BaseParamsType>()
 </script>
 
 <template>
-  <BaseFrame>
+  <BaseMonitorFrame>
     <BaseLink :trigger="trigger">
       <el-button style="width: 100%;" type="primary" round @click="() => { markers = [trigger.value as number] }">标注</el-button>
       <hr style="margin-top: .5rem"/>
@@ -58,7 +59,7 @@ const master = ref<BaseParamsType>()
     <!-- 头部切换视图 -->
     <template #header-center>
       <BaseTabHeader
-        class="header-tab"
+        style="width: 100%;height: 100%; padding: .5rem; box-sizing: border-box;"
         :headers="['全景频谱', '信号识别', '样本操作']"
         v-model="currentTabId" />
     </template>
@@ -83,12 +84,12 @@ const master = ref<BaseParamsType>()
             class="params-branch"
             :params="[
               [
-                { name: '数据帧率', paramName: 'framerate', ratio: 10 },
+                { name: '数据帧率', paramName: 'framerate', ratio: 11 },
                 { name: '衰减', paramName: 'attenuation', ratio: 20 },
                 { name: '信噪比', paramName: 'AutoSignalDetectedSNR', ratio: 10 }
               ],
               [
-                { name: '信号识别', paramName: 'AutoSignalRecognition', ratio: 10 },
+                { name: '信号识别', paramName: 'AutoSignalRecognition', ratio: 11 },
                 { name: '信号门限', paramName: 'threshold', ratio: 10 },
                 { name: '门限容差', paramName: 'occupytolerance', ratio: 10 },
                 { name: '信号识别方式', paramName: 'signaldiscriminatemode', ratio: 10 }
@@ -101,9 +102,9 @@ const master = ref<BaseParamsType>()
             class="params-branch"
             :params="[
               [
-                { name: '开始频率', paramName: 'begin', ratio: 10 },
-                { name: '分辨率', paramName: 'step', ratio: 10 },
-                { name: '结束频率', paramName: 'end', ratio: 10 }
+                { name: '开始频率', paramName: 'begin', ratio: 14 },
+                { name: '分辨率', paramName: 'step', ratio: 18.6 },
+                { name: '结束频率', paramName: 'end', ratio: 9.4 }
               ]
             ]"
             :master="master" />
@@ -122,15 +123,11 @@ const master = ref<BaseParamsType>()
         :params="params"
         @result="getSample" />
     </ZXITabs>
-  </BaseFrame>
+  </BaseMonitorFrame>
 </template>
 
 <style scoped lang="less">
 @import url('theme');
-.header-tab{
-  width: 100%;
-  height: 100%;
-}
 .params-branch{
   padding: 0 0 @btnSpace @btnSpace;
 }
@@ -140,6 +137,9 @@ const master = ref<BaseParamsType>()
   .spectrum-scan-and-fall{
     width: 100%;
     height: 100%;
+    padding: @btnSpace @btnSpace 0 @btnSpace;
+    box-sizing: border-box;
+    background: v-bind('UseTheme.theme.var.backgroundColor');
   }
 }
 </style>

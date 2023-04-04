@@ -1,4 +1,9 @@
 @import url('./theme.less');
+:root {
+  --el-font-size-large: @font20 !important;
+  --el-font-size-base: @font20 !important;
+}
+// el-message
 .el-message {
   font-size: @font20;
 }
@@ -6,26 +11,24 @@
 .el-message__content {
   font-size: @font20!important;
 }
-
+// el-notification
 .el-notification__content {
   font-size: @font20!important;
-}
-
-:root {
-  --el-font-size-large: @font20!important;
-  --el-font-size-base: @font20!important;
 }
 
 .el-input--large {
   font-size: @font20!important;
 }
 
-// 表格
-.el-table__cell{
-  background-color: rgb(255, 255, 255)!important;
-  color: rgb(96,98,102);
-}
-
 .el-table__expand-icon>.el-icon {
   font-size: @font20;
+}
+
+// loading
+.el-loading-text {
+  font-size: @font20!important;
+}
+// 例如el-select
+.el-popper{
+  font-size: @font20 !important;
 }

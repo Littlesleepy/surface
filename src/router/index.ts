@@ -7,6 +7,7 @@
  * @Description: 
  */
 import { createRouter, RouterOptions, createWebHashHistory, RouteRecordRaw, Router } from 'vue-router'
+import globalManager from './modules/globalManager'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -16,6 +17,7 @@ declare module 'vue-router' {
 }
 
 const routes: Array<RouteRecordRaw> = [
+  globalManager,
   {
     path: '',
     redirect: '/Load'
@@ -37,6 +39,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'PScan',
     meta: { title:'全景扫描' },
     component: () => import('views/PScan/PScan.vue')
+  },
+  {
+    path: '/CIQStream',
+    name: 'CIQStream',
+    meta: { title: '信号多域分析' },
+    component: () => import('views/CIQStream/CIQStream.vue')
   }
 ]
 

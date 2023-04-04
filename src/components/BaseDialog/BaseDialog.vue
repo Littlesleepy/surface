@@ -13,6 +13,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue';
+import { UseTheme } from 'mcharts/index'
 
 const props = defineProps({
   modelValue: { default: false },
@@ -42,7 +43,7 @@ const pointerEevents = computed(() => {
   }
   return 'none'
 })
-const containerBgColor = computed(() => props.modal ? 'var(--el-overlay-color-lighter)' : 'rgba(0, 0, 0, 0)')
+const containerBgColor = computed(() => props.modal ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0)')
 
 const contentPointerEevents = computed(() => show.value ? 'auto' : 'none')
 
@@ -53,9 +54,8 @@ function close () {
 }
 
 const titleStyle = {
-  lineHeight: '24px',
-  fontSize: 'var(--el-font-size-large)',
-  color: 'var(--el-text-color-primary)',
+  fontSize: '2.5rem',
+  color: UseTheme.theme.var.color,
   margin: props.center ? 'auto' : 'auto 0'
 }
 
@@ -107,9 +107,7 @@ watch(show, () => {
     width: v-bind(width);
     display: flex;
     flex-direction: column;
-    background-color: var(--el-bg-color);
-    box-shadow: var(--el-box-shadow);
-    border-radius: var(--el-border-radius-small);
+    background-color: v-bind('UseTheme.theme.ControlBtn.backgroundColor');
     .header {
       padding: 2rem;
       padding-bottom: 1rem;
@@ -122,7 +120,7 @@ watch(show, () => {
     }
     .body {
       padding: 3rem 2rem;
-      color: @color;
+      color: v-bind('UseTheme.theme.var.color');
     }
   }
 }

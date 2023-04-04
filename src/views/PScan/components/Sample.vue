@@ -104,7 +104,9 @@ function saveSample () {
 }
 
 function openSample () {
-  const marker = Sundry.createMarker('请稍后。。。')
+  const marker = Sundry.createMarker({
+    text: '请稍后。。。'
+  })
   Axios({
     url: 'api/Monitor/scanSample/query'
   }).then((msg) => {

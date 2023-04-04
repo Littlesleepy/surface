@@ -9,20 +9,46 @@
 
 import { IParamsCache, localStorageKey } from '@/storage'
 // import { IServerSignal } from '@/types'
-import { ElLoading } from 'element-plus'
+import { ElLoading, LoadingOptions } from 'element-plus'
 import { Ref } from 'vue'
-import { Sundry as ZXISundry } from 'mcharts/index'
+import { Listen, Sundry as ZXISundry } from 'mcharts/index'
 import { IITUData, IModulateData, ISubaudioDecodingData, Public } from 'mcharts/index'
 
 /**
  * @description: 杂项类
  */
 export class Sundry extends ZXISundry {
-  static createMarker (text: string | Ref<string> | undefined) {
-    return ElLoading.service({
-      text,
-      background: 'rgba(0, 0, 0, 0.8)'
+  static createMarker(options: LoadingOptions) {
+    options.background = options.background ?? 'rgba(0, 0, 0, 0.6)'
+    const marker = ElLoading.service(options)
+    // 增加刷新按钮
+    const button = document.createElement('div')
+    button.style.cssText = `
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      font-size: 2rem;
+      padding: 1rem;
+      background-color: rgb(168, 168, 168);
+    `
+    button.classList.add(...['button-test'])
+
+    const i = document.createElement('i')
+    i.style.cssText = `
+      font-size: 3rem;
+    `
+    i.classList.add(...['iconfont', 'icon-shuaxin'])
+    button.appendChild(i)
+
+    button.addEventListener(Listen.CLICK, () => {
+      location.reload()
     })
+    button.addEventListener(Listen.TOUCHEND, () => {
+      location.reload()
+    })
+    
+    marker.$el.appendChild(button)
+    return marker
   }
   /** 
    * @description: 表格数据转换为可导出类型

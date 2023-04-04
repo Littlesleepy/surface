@@ -43,7 +43,7 @@ const tabId = ref(0)
 </script>
 
 <template>
-  <BaseFrame>
+  <BaseMonitorFrame>
      <BaseLink :trigger="trigger">
       <div class="base-link">
         <el-button type="primary" round @click="changeFrequency">切换频率</el-button>
@@ -57,7 +57,7 @@ const tabId = ref(0)
     <!-- 头部切换视图 -->
     <template #header-center>
       <BaseTabHeader
-        class="header-tab"
+        style="width: 100%;height: 100%; padding: .5rem; box-sizing: border-box;"
         :headers="['频谱', 'ITU测量', '调制识别', '数字语音解调/解码状态', '亚音解码']"
         v-model="tabId" />
     </template>
@@ -80,11 +80,11 @@ const tabId = ref(0)
             class="params-branch"
             :params="[
               [
-                { name: '解调模式', paramName: 'demodulation', ratio: 10 },
-                { name: '衰减', paramName: 'attenuation', ratio: 10 },
-                { name: '禁噪门限', paramName: 'squelch', ratio: 10 },
-                { name: 'Itu', paramName: 'itumeasure', ratio: 4 },
-                { name: '音频', paramName: 'tcpaudio', ratio: 4 }
+                { name: '解调模式', paramName: 'demodulation', ratio: 9.1 },
+                { name: '衰减', paramName: 'attenuation', ratio: 6.9 },
+                { name: '禁噪门限', paramName: 'squelch', ratio: 11.3 },
+                { name: 'Itu', paramName: 'itumeasure', ratio: 5.9 },
+                { name: '音频', paramName: 'tcpaudio', ratio: 5.9 }
               ]
             ]"
             :master="master" />
@@ -94,9 +94,9 @@ const tabId = ref(0)
               class="params-branch"
               :params="[
                 [
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 10 },
-                  { name: '中心频率', paramName: 'frequency', ratio: 10 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 10 }
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 8.6 },
+                  { name: '中心频率', paramName: 'frequency', ratio: 12 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 8 }
                 ]
               ]"
               :master="master" />
@@ -107,7 +107,7 @@ const tabId = ref(0)
       <ZXIScrollInfo :clear="clear" :inputData="decodingState" :wrapperStyle="{ padding: '0' }" />
       <ZXISubaudioDecoding :inputData="subaudioDecoding" />
     </ZXITabs>
-  </BaseFrame>
+  </BaseMonitorFrame>
 </template>
 
 <style scoped lang="less">

@@ -18,6 +18,7 @@ import { useRouter } from 'vue-router'
 import { localStorageKey } from 'storage/index'
 import { IDeviceFunc } from '@/types'
 import { ElMessage, ElNotification } from 'element-plus'
+import { UseTheme } from 'mcharts/index'
 interface IIconList {
   id: number
   imgUrl: string
@@ -141,7 +142,7 @@ dataInit()
 </script>
 
 <template>
-  <ZXIScroll :preventDefault="true" class="base-scroll" :wrapperStyle="{ backgroundColor: 'var(--el-bg-color)' }">
+  <ZXIScroll :preventDefault="true" class="base-scroll" :wrapperStyle="{ backgroundColor: 'transparent' }">
     <div class="group" v-if="baseLists.length">
       <p class="title">管理器</p>
       <ul>
@@ -226,7 +227,7 @@ dataInit()
     margin: 2rem 0;
     padding: 0 0 1rem 0;
     border: 1px solid #202020;
-    background-color: @mainColor;
+    background-color: v-bind('UseTheme.theme.var.backgroundColor');
     box-sizing: border-box;
     .title{
       padding: 1rem 0 1rem 1rem;
@@ -258,6 +259,7 @@ dataInit()
           p{
             padding-top: 0.5rem;
             font-size: 1.8rem;
+            color: v-bind('UseTheme.theme.var.color');
           }
         }
       }

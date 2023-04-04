@@ -58,7 +58,7 @@ const props = defineProps({
     }
   },
   scaleNumWidthY: {
-    default: 30
+    default: 50
   },
   name: { type: String, default: '' },
   capacity: { default: 0.1 },
@@ -96,7 +96,7 @@ const props = defineProps({
   toolTip: {
     default: () => {
       return {
-        width: 270,
+        width: 420,
         height: 56
       }
     }
@@ -204,12 +204,6 @@ const step = computed(() => {
     return (defaultValueX.value.max - defaultValueX.value.min) / (inputDataLength.value - 1)
   }
   return 0
-})
-
-const headerStyle = computed(() => {
-  if (controls.value.length > 0) return {}
-  if (props.name !== '') return { height: '25px' }
-  return { height: '5px' }
 })
 
 function axisYChange (obj: IAxisYValue) {
@@ -538,18 +532,17 @@ defineExpose({
 <template>
   <div ref="root">
     <div class="spectrum-lines-container">
-      <div class="header" :style="headerStyle">
+      <div class="header">
         <!-- 工具部分 -->
-        <div class="wrapper">
-          <ZXIControlBtn
-            class="control"
-            :controls="controls"
-            :btnValues="btnValues"
-            :controlStyle="{ wrapper: { width: '240px' }, item: { width: '50%' } }">
-          </ZXIControlBtn>
-          <div class="header-info" v-if="name !== ''">
-            <span>{{name}}</span>
-          </div>
+        <ZXIControlBtn
+          class="control"
+          :controls="controls"
+          :btnValues="btnValues"
+          :controlStyle="{ wrapper: { width: '400px' }, item: { width: 'calc(50% - 10px)' } }">
+        </ZXIControlBtn>
+        <span class="name" v-if="name">{{name}}</span>
+        <div class="slot">
+          <slot />
         </div>
       </div>
       <!-- 第二行 -->
@@ -602,47 +595,23 @@ defineExpose({
   /* 头部信息面板 */
   .header{
     width: 100%;
-    height: @headerHeight;
-    position: relative;
-    .wrapper{
-      position: absolute;
-      left: 10px;
-      top: 2px;
-      display: flex;
-      .control{
-        height: 100%;
-        width: 25px;
-        z-index: 2;
-        .legend{
-          width: 100%;
-          padding-top: 5px;
-          display: flex;
-          line-height: 14px;
-          span{
-            width: 60px;
-            height: 5px;
-            margin: auto 0;
-          }
-          p{
-            flex: 1;
-            padding-left: 5px;
-            width: 0;
-            .textOverflow();
-            font-size: 12px;
-          }
-        }
-      }
-      .header-info{
-        height: 100%;
-        box-sizing: border-box;
-        color: v-bind('UseTheme.theme.var.color');
-        display: flex;
-        span{
-          font-size: 12px;
-          line-height: 20px;
-          margin: auto 0;
-        }
-      }
+    color: v-bind('UseTheme.theme.var.color');
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
+    .control{
+      height: 100%;
+      z-index: 99999;
+      width: 60px;
+    }
+    .name{
+      padding-left: 10px;
+      font-size: @font20;
+    }
+    .slot{
+      flex: auto;
+      height: 100%;
     }
   }
   .second-row{

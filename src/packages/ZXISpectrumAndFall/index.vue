@@ -26,8 +26,6 @@ import { IAdditionalCurve, ISelectFrequency, ISpectrumAndFallFallPool, ISpectrum
 import { Scene } from '../core'
 import { UseTheme } from '../styles'
 
-import ZXISwitchButtons from '../ZXISwitchButtons'
-
 interface IZXISpectrumAndFallProps {
   name?: string
   switchLever?: ESwitchState
@@ -353,10 +351,11 @@ defineExpose({
   flex-direction: column;
   background: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
-    min-height: 40px;
     position: relative;
     display: flex;
     align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
     .single-control{
       z-index: 99999;
       width: 60px;
@@ -386,7 +385,7 @@ defineExpose({
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 30px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;

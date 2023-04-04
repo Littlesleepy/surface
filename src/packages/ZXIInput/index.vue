@@ -15,9 +15,10 @@ export default {
 
 <script setup lang="ts">
 import { ElMessage } from 'element-plus';
-import { computed, CSSProperties, useAttrs } from 'vue';
+import { computed, PropType, StyleValue, useAttrs } from 'vue';
 import { Keyboard } from '../ZXIKeyBoard'
 import { Listen } from '../core';
+import { UseTheme } from '../styles'
 
 const props = defineProps({
   modelValue: {
@@ -37,7 +38,9 @@ const props = defineProps({
    */  
   setInput: { default: false },
   name: { type: String },
-  unit: { type: String }
+  unit: { type: String },
+  class: { type: String },
+  style: { type: [Object, String, Array] as PropType<StyleValue | undefined> }
 })
 
 const emit = defineEmits<{
@@ -92,21 +95,23 @@ function inputClick(e: PointerEvent | MouseEvent) {
 </script>
 
 <template>
-  <div class="container" @click="inputClick">
-    <!-- 禁用遮罩 -->
-    <span class="marker" :style="$attrs.disabled ? { opacity: 1 } : { opacity: 0 }" />
-    <!-- 名称 -->
-    <div class="name" v-if="name">{{ name }}</div>
-    <el-input class="zxi-input" v-model="currentValue" v-bind="$attrs">
-      <template #suffix>
-        <slot name="suffix" />
-      </template>
-      <template #prefix>
-        <slot name="prefix" />
-      </template>
-    </el-input>
-    <!-- 单位 -->
-    <div class="unit" v-if="unit">{{ unit }}</div>
+  <div :class="class" :style="style">
+    <div class="container" @click="inputClick">
+      <!-- 禁用遮罩 -->
+      <span class="marker" :style="$attrs.disabled ? { opacity: 1 } : { opacity: 0 }" />
+      <!-- 名称 -->
+      <div class="name" v-if="name">{{ name }}</div>
+      <el-input class="zxi-input" v-model="currentValue" v-bind="$attrs">
+        <template #suffix>
+          <slot name="suffix" />
+        </template>
+        <template #prefix>
+          <slot name="prefix" />
+        </template>
+      </el-input>
+      <!-- 单位 -->
+      <div class="unit" v-if="unit">{{ unit }}</div>
+    </div>
   </div>
 </template>
 
@@ -114,9 +119,10 @@ function inputClick(e: PointerEvent | MouseEvent) {
 @import url('../assets/styles/theme.less');
 .container{
   width: 100%;
+  height: 100%;
   display: flex;
-  padding: 0 1rem;
-  background-color: @btnBgColor;
+  padding: 0 1.5rem;
+  background-color: v-bind('UseTheme.theme.var.btnBgColor');
   box-sizing: border-box;
   align-items: center;
   position: relative;
@@ -131,17 +137,20 @@ function inputClick(e: PointerEvent | MouseEvent) {
       border: none;
       box-shadow: none;
       font-size: @fontSize;
+      border-radius: 0;
+      background-color: v-bind('UseTheme.theme.var.btnBgColor');
       .el-input__inner{
         text-align: end;
+        color: v-bind('UseTheme.theme.var.color');
       }
     }
   }
   .unit {
-    color: @color;
+    color: v-bind('UseTheme.theme.var.color');
     font-size: @fontSize;
   }
   .name{
-    color: @color;
+    color: v-bind('UseTheme.theme.var.color');
     font-size: calc(@fontSize * 0.7);
   }
 }
