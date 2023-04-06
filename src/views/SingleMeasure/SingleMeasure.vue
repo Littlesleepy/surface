@@ -77,26 +77,26 @@ const tabId = ref(0)
         @selectFrequency="selectFrequency">
         <template #header>
           <BaseParamsBranch
-            class="params-branch"
+            class="params-branch0"
             :params="[
               [
-                { name: '解调模式', paramName: 'demodulation', ratio: 9.1 },
-                { name: '衰减', paramName: 'attenuation', ratio: 6.9 },
-                { name: '禁噪门限', paramName: 'squelch', ratio: 11.3 },
-                { name: 'Itu', paramName: 'itumeasure', ratio: 5.9 },
-                { name: '音频', paramName: 'tcpaudio', ratio: 5.9 }
+                { name: '解调模式', paramName: 'demodulation', ratio: 11 },
+                { name: '衰减', paramName: 'attenuation', ratio: 9 },
+                { name: '禁噪门限', paramName: 'squelch', ratio: 9 },
+                { name: 'Itu', paramName: 'itumeasure', ratio: 5.5 },
+                { name: '音频', paramName: 'tcpaudio', ratio: 5.5 }
               ]
             ]"
             :master="master" />
         </template>
         <template #middle>
             <BaseParamsBranch
-              class="params-branch"
+              class="params-branch1"
               :params="[
                 [
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 8.6 },
-                  { name: '中心频率', paramName: 'frequency', ratio: 12 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 8 }
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
+                  { name: '中心频率', paramName: 'frequency', ratio: 18 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 11 }
                 ]
               ]"
               :master="master" />
@@ -121,8 +121,11 @@ const tabId = ref(0)
   height: 100%;
 }
 
-.params-branch{
-  padding: 0 0 @btnSpace @btnSpace;
+.params-branch0{
+  padding: 0 0 0 @btnSpace;
+}
+.params-branch1{
+  padding: 0 0 @btnSpace 11.5rem;
 }
 .single-tabs{
   width: 100%;

@@ -23,7 +23,7 @@ function setTheme (name: string) {
     theme.value = true
     CustomTheme.set({
       lineColorOne: 'rgb(0, 200, 0)',
-      districtBorder: 'var(--device--districtBorder, 3px solid rgba(40, 40, 40, 0.4))',
+      districtBorder: 'var(--device--districtBorder, 2px solid rgba(40, 40, 40, 0.4))',
       logColor: 'rgb(40, 40, 40)',
       lineColorGreen: 'rgb(0, 0, 0)',
       thresholdColor: [0.157, 0.157, 0.157]

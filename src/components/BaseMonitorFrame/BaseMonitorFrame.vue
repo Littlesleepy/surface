@@ -21,7 +21,7 @@ import BaseNavigation from '../BaseNavigation/BaseNavigation.vue'
 import { useRoute, useRouter } from 'vue-router';
 import { ReceiveData, ReceiveDataOptions } from '@/server';
 import { ZAudio, UseTheme } from 'mcharts/index'
-import { IServerAudioData } from '@/types';
+import { IServerAudioData, CustomTheme } from '@/types';
 import * as Helper from '@/helper'
 import { ElMessageBox, ElNotification } from 'element-plus';
 
@@ -194,13 +194,13 @@ onBeforeUnmount(() => {
   flex-direction: column;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
-    border-bottom: 2px solid rgb(96, 96, 96);
+    border-bottom: v-bind('CustomTheme.theme.districtBorder');
   }
   .header-right{
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 0 5px 5px 5px;
+    padding: 0 @btnSpace @btnSpace @btnSpace;
     .slot{
       flex: auto;
     }
@@ -211,7 +211,7 @@ onBeforeUnmount(() => {
     -webkit-app-region: none;
     .button-area{
       display: flex;
-      padding: 0.5rem 0 0.5rem 0.5rem;
+      padding: @btnSpace 0 @btnSpace @btnSpace;
       :nth-child(2n){
         margin: 0 @btnSpace;
       }

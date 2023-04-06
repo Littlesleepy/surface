@@ -76,11 +76,14 @@ function backResult () {
         } else {
           if (item.mL !== undefined || item.mR !== undefined) {// 自定义间隔
             widthStyle = `width: ${width}%;`
-            if (item.mL !== undefined) {
-              widthStyle += `margin-left: ${item.mL / totalRatio * 100}%;`
-            }
             if (item.mR !== undefined) {
               widthStyle += `margin-right: ${item.mR / totalRatio * 100}%;`
+            } else {
+              widthStyle = indexColumn < columnLen - 1 ? `width: calc(${width}% - 5px);` : `width: ${width}%;`
+              widthStyle += indexColumn < columnLen - 1 ? 'margin-right: 5px;' : ''
+            }
+            if (item.mL !== undefined) {
+              widthStyle += `margin-left: ${item.mL / totalRatio * 100}%;`
             }
           } else { // 默认样式
             widthStyle = indexColumn < columnLen - 1 ? `width: calc(${width}% - 5px);` : `width: ${width}%;`

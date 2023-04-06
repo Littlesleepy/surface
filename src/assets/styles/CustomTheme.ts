@@ -33,7 +33,7 @@ export interface ICustomTheme {
 export class CustomTheme {
   static default = {
     lineColorOne: 'rgb(212, 103, 1)',
-    districtBorder: 'var(--device--districtBorder, 3px solid rgba(196, 196, 196, 0.4))',
+    districtBorder: 'var(--device--districtBorder, 2px solid rgba(196, 196, 196, 0.4))',
     logColor: 'rgb(0, 153, 0)',
     lineColorGreen: 'rgb(0, 255, 0)',
     thresholdColor: [1, 1, 1]
@@ -41,7 +41,7 @@ export class CustomTheme {
 
   static theme = {
     lineColorOne: 'rgb(212, 103, 1)',
-    districtBorder: 'var(--device--districtBorder, 3px solid rgba(196, 196, 196, 0.4))',
+    districtBorder: 'var(--device--districtBorder, 2px solid rgba(196, 196, 196, 0.4))',
     logColor: 'rgb(0, 153, 0)',
     lineColorGreen: 'rgb(0, 255, 0)',
     thresholdColor: [1, 1, 1]

@@ -145,15 +145,13 @@ watch(() => props.scene, (scene) => {
           }
 
           // 根具当前放大状态，确定保留小数点位数
-          let needTransForm = true
-          if (fence) {
-            // if (fence.)
-            // needTransForm
-          }
+          // let needTransForm = false
+          // if (fence) {
+          //   if (fence.baseFence.eachPieceWidth * fence.expectCount > 2) needTransForm = true
+          // }
 
           lists.forEach((item, i) => {
-            // 更具当前放大状态，确定保留小数点位数
-            lists[i] = needTransForm ? props.scale.transform(item) : Number(item.toFixed(0))
+            lists[i] = props.scale.transform(item)
           })
 
           emit('change', { min: lists[0], max: lists[axis.value.scaleNum - 1] }) // 抛出起始点
@@ -163,13 +161,15 @@ watch(() => props.scene, (scene) => {
             result[(axis.value.scaleNum - 1) / 2] = center + props.scale.unit
             for (let i = 0; i < axis.value.scaleNum; i++) {
               if (i !== (axis.value.scaleNum - 1) / 2) {
-                const num = lists[i] - center
-                result[i] = num > 0 ? '+' + props.scale.transform(num) + props.scale.unit : props.scale.transform(num) + props.scale.unit
+                let num = lists[i] - center
+                num = props.scale.transform(num)
+                result[i] = num > 0 ? '+' + num + props.scale.unit : num + props.scale.unit
               }
             }
           } else {
             for (let l = 0; l < lists.length; l++) {
-              result[l] = lists[l] + props.scale.unit
+              let num = lists[l]
+              result[l] = num + props.scale.unit
             }
           }
 

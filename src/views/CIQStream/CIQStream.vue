@@ -578,8 +578,10 @@ const master = ref<BaseParamsType>()
   }
   .second-row{
     flex: auto;
+    margin-top: @btnSpace;
     padding: @btnSpace;
     box-sizing: border-box;
+    border-top: v-bind('CustomTheme.theme.districtBorder');
   }
 }
 </style>

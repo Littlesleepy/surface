@@ -319,7 +319,7 @@ export class Axis {
           const width = _container.clientWidth
           if (width <= 800) {
             state.scaleNum = 3
-          } else if (width > 800 && width <= 1100) {
+          } else if (width > 800 && width <= 1400) {
             state.scaleNum = 5
           } else {
             state.scaleNum = 7

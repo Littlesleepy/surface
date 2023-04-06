@@ -81,30 +81,30 @@ const master = ref<BaseParamsType>()
         @selectFrequency="selectFrequency">
         <template #header>
           <BaseParamsBranch
-            class="params-branch"
+            class="params-branch0"
             :params="[
               [
                 { name: '数据帧率', paramName: 'framerate', ratio: 11 },
-                { name: '衰减', paramName: 'attenuation', ratio: 20 },
-                { name: '信噪比', paramName: 'AutoSignalDetectedSNR', ratio: 10 }
+                { name: '衰减', paramName: 'attenuation', ratio: 18 },
+                { name: '信噪比', paramName: 'AutoSignalDetectedSNR', ratio: 11 }
               ],
               [
                 { name: '信号识别', paramName: 'AutoSignalRecognition', ratio: 11 },
-                { name: '信号门限', paramName: 'threshold', ratio: 10 },
-                { name: '门限容差', paramName: 'occupytolerance', ratio: 10 },
-                { name: '信号识别方式', paramName: 'signaldiscriminatemode', ratio: 10 }
+                { name: '信号门限', paramName: 'threshold', ratio: 9 },
+                { name: '门限容差', paramName: 'occupytolerance', ratio: 9 },
+                { name: '信号识别方式', paramName: 'signaldiscriminatemode', ratio: 11 }
               ]
             ]"
             :master="master" />
         </template>
         <template #middle>
           <BaseParamsBranch
-            class="params-branch"
+            class="params-branch1"
             :params="[
               [
-                { name: '开始频率', paramName: 'begin', ratio: 14 },
-                { name: '分辨率', paramName: 'step', ratio: 18.6 },
-                { name: '结束频率', paramName: 'end', ratio: 9.4 }
+                { name: '开始频率', paramName: 'begin', ratio: 11 },
+                { name: '分辨率', paramName: 'step', ratio: 18 },
+                { name: '结束频率', paramName: 'end', ratio: 11 }
               ]
             ]"
             :master="master" />
@@ -128,8 +128,11 @@ const master = ref<BaseParamsType>()
 
 <style scoped lang="less">
 @import url('theme');
-.params-branch{
-  padding: 0 0 @btnSpace @btnSpace;
+.params-branch0{
+  padding: 0 0 0 @btnSpace;
+}
+.params-branch1{
+  padding: 0 0 @btnSpace 11.5rem;
 }
 .PScan{
   width: 100%;
