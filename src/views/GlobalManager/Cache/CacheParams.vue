@@ -13,7 +13,7 @@ import { ref, toRaw, watch } from 'vue'
 import { IParam, localStorageKey } from '@/storage'
 import localForage from 'localforage'
 import { ElMessage } from 'element-plus'
-import BaseDeviceParams from '@/components/BaseDeviceParams/BaseDeviceParams.vue'
+import BaseParamsTemp from 'cp/BaseParamsTemp/BaseParamsTemp.vue'
 import { Device } from '@/helper'
 
 /**...........................................模板列表........................................... */
@@ -236,7 +236,7 @@ function clear () {
           <!-- 设备参数 -->
           <div class="device">
             <p class="title">设备参数</p>
-            <BaseDeviceParams
+            <BaseParamsTemp
               class="params"
               :params="form"
               :elements="elements"
@@ -248,7 +248,7 @@ function clear () {
         </div>
         <div class="device-vice" v-if="viceElements.length > 0">
           <p class="title">附加参数</p>
-          <BaseDeviceParams
+          <BaseParamsTemp
             class="params"
             :params="viceForm"
             :elements="viceElements"
