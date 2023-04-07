@@ -1,0 +1,28 @@
+.el-input {
+  .el-textarea__inner {
+    background-color: var(--pm-el-background-color);
+    box-shadow: none;
+  }
+  &.text-right {
+    .el-input__wrapper .el-input__inner {
+      text-align: right;
+    }
+  }
+  .el-input__wrapper {
+    transition: background-color var(--pm-el-transition-duration);
+    background-color: var(--pm-el-background-color);
+    box-shadow: none !important;
+  }
+  .el-input-group__append {
+    // padding: 0 10px;
+    padding-left: 0;
+    color: var(--el-input-text-color, var(--el-text-color-regular));
+    transition: background-color var(--pm-el-transition-duration);
+    box-shadow: none;
+  }
+  .el-input-group__prepend {
+    // padding: 0 10px;
+    transition: background-color var(--pm-el-transition-duration);
+    box-shadow: none;
+  }
+}
