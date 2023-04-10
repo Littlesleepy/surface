@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-07 11:06:14
+ * @LastEditTime: 2023-04-10 11:43:30
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
@@ -113,10 +113,7 @@ const master = ref<BaseParamsType>()
 const tabId = ref(0)
 
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
-onMounted(() => {
-  console.log(JSON.parse(localStorage.getItem(localStorageKey.KEY_FUNCTIONPARAMLISTS)!)[route.name!]);
 
-})
 
 </script>
 

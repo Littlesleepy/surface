@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-07 17:30:05
+ * @LastEditTime: 2023-04-10 11:27:09
  * @FilePath: \zxi-surface\src\views\FFMX\components\Modulate.vue
  * @Description: 
  -->
@@ -10,7 +10,7 @@
 import { useFrameStore } from '@/store'
 import { computed, onBeforeUnmount, Ref, ref, watch } from 'vue'
 import * as Helper from 'helper/index'
-import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme } from 'mcharts/index'
+import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme, ILevelData, ZXILevel } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import { ReceiveData, ReceiveDataOptions } from '@/server'
 import { ToExport } from 'helper/index'
@@ -57,6 +57,12 @@ const inputData9 = ref(new Float32Array())
 
 const inputData10 = ref(new Float32Array())
 
+const levelInput = ref(new Map<string, ILevelData>())
+
+const startAndStop = computed(() => store.s_playButton)
+
+const levleInstance = ref<InstanceType<typeof ZXILevel>>()
+
 const params1 = computed(() => {
   return { bandwidth: Number(store.s_form.debw) / 1000 }
 })
@@ -88,6 +94,9 @@ const cacheData1 = new Map<string, Float32Array>()
 // 数据接收
 const options: ReceiveDataOptions = new Map()
 const optionsChild: ReceiveDataOptions = new Map()
+
+
+
 // 瞬时频率频谱数据
 function receiveSpectrum1(
   key: string,
@@ -107,6 +116,7 @@ function receiveSpectrum1(
       }
     }
   })
+
 }
 receiveSpectrum1('INSTANTFREQUENCYDATA', inputData1, statistical1)
 // 瞬时幅度频谱数据
@@ -141,7 +151,14 @@ receiveSpectrum2('SQUAREDATA', inputData8, false)
 receiveSpectrum2('QUADDATA', inputData9, false)
 // 八次方谱
 receiveSpectrum2('EIGHTDATA', inputData10, false)
-
+// 电平
+optionsChild.set('CHLEVEL', {
+  control: (data) => {
+    const map = new Map<string, ILevelData>()
+    map.set('1', { data: data.level, time: new Date() })
+    levelInput.value = map
+  }
+})
 options.set('DATA', { children: optionsChild })
 ReceiveData.add(options)
 
@@ -220,6 +237,8 @@ onBeforeUnmount(() => {
 })
 
 ToExport.beforExport.set('1', () => {
+
+  if (levelInput.value.size > 0) ToExport.addDom('电平图', levleInstance.value!.root!, 3)
   if (cacheData0.size > 0) {
     // 如果未观察信号分析页，则强制绘制一次
     if (!props.canDraw) drawForceAll()
@@ -228,26 +247,16 @@ ToExport.beforExport.set('1', () => {
       PDF: { contentSize: 24 },
       Excel: { options: { size: 24 } }
     })
-    // 瞬时频率
-    ToExport.addDom('瞬时频率', instance1.value!, 8)
-    // 瞬时幅度
-    ToExport.addDom('瞬时幅度', instance2.value!, 9)
-    // 瞬时相位
-    ToExport.addDom('瞬时相位', instance3.value!, 10)
-    // 瞬时频率包络
-    ToExport.addDom('瞬时频率包络', instance4.value!.root!, 11)
-    // 瞬时幅度包络
-    ToExport.addDom('瞬时幅度包络', instance5.value!.root!, 12)
-    // FM解调谱
-    ToExport.addDom('FM解调谱', instance6.value!.root!, 13)
-    // 功率谱
-    ToExport.addDom('功率谱', instance7.value!.root!, 14)
-    // 二次方谱
-    ToExport.addDom('二次方谱', instance8.value!.root!, 15)
-    // 四次方谱
-    ToExport.addDom('四次方谱', instance9.value!.root!, 16)
-    // 八次方谱
-    ToExport.addDom('八次方谱', instance10.value!.root!, 17)
+      .addDom('瞬时频率', instance1.value!, 8)
+      .addDom('瞬时幅度', instance2.value!, 9)
+      .addDom('瞬时相位', instance3.value!, 10)
+      .addDom('瞬时频率包络', instance4.value!.root!, 11)
+      .addDom('瞬时幅度包络', instance5.value!.root!, 12)
+      .addDom('FM解调谱', instance6.value!.root!, 13)
+      .addDom('功率谱', instance7.value!.root!, 14)
+      .addDom('二次方谱', instance8.value!.root!, 15)
+      .addDom('四次方谱', instance9.value!.root!, 16)
+      .addDom('八次方谱', instance10.value!.root!, 17)
   }
 })
 
@@ -256,9 +265,24 @@ const currentTabId = ref(0)
 
 <template>
   <div class="Modulate-container">
-    <BaseTabHeader :headers="['时域特征','频域特征']" v-model="currentTabId" />
-    <ZXITabs class="tabItem"  :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="currentTabId">
-      <div class="first-colum">
+    <div class="first-colum">
+      <ZXILevel class="level" name="电平图" ref="levleInstance" :deleteTool="['threshold']" :inputData="levelInput"
+        :switchLever="startAndStop" />
+    </div>
+    <div class="second-colum">
+      <BaseTabHeader class="tab-header" :headers="[
+        [{ name: '瞬时频率', ratio: 1 }],
+        [{ name: '瞬时幅度', ratio: 1 }],
+        [{ name: '瞬时相位', ratio: 1 }],
+        [{ name: '瞬时频率包络', ratio: 1 }],
+        [{ name: '瞬时幅度包络', ratio: 1 }],
+        [{ name: 'FM解调谱', ratio: 1 }],
+        [{ name: '功率谱', ratio: 1 }],
+        [{ name: '二次方谱', ratio: 1 }],
+        [{ name: '四次方谱', ratio: 1 }],
+        [{ name: '八次方谱', ratio: 1 }],
+      ]" v-model="currentTabId" />
+      <ZXITabs class="tabItem" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="currentTabId">
         <div ref="instance1" class="item">
           <ZXITimeDomainLines class="level" :name="'瞬时频率'" :inputData="inputData1" :switchLever="store.s_playButton"
             :params="params1" :capacity="0" :scaleY="{
@@ -298,8 +322,6 @@ const currentTabId = ref(0)
             }" />
           <ZXIStatisticalY class="statistical" :inputData="statistical3" :switchLever="store.s_playButton" />
         </div>
-      </div>
-      <div class="second-colum">
         <ZXISpectrumLine class="spectrum" ref="instance4" :name="'瞬时频率包络'" :inputData="inputData4" :params="param5"
           :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
           :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
@@ -309,8 +331,6 @@ const currentTabId = ref(0)
         <ZXISpectrumLine class="spectrum" :name="'FM解调谱'" ref="instance6" :inputData="inputData6" :params="param5"
           :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
           :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
-      </div>
-      <div class="three-colum">
         <ZXISpectrumLine class="spectrum" ref="instance7" :name="'功率谱'" :inputData="inputData7" :params="param4"
           :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
           :scaleY="scaleY" />
@@ -323,8 +343,9 @@ const currentTabId = ref(0)
         <ZXISpectrumLine class="spectrum" ref="instance10" :name="'八次方谱'" :inputData="inputData10" :params="param4"
           :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
           :scaleY="scaleY" />
-      </div>
-    </ZXITabs>
+      </ZXITabs>
+    </div>
+
   </div>
 </template>
 
@@ -336,89 +357,55 @@ const currentTabId = ref(0)
   width: 100%;
   height: 100%;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
-  .tabItem {
+  display: flex;
+  flex-direction: column;
+
+  .first-colum {
     width: 100%;
-    height: 100%;
+    height: 40%;
 
-    .first-colum {
+    .level {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .second-colum {
+    flex: auto;
+    display: flex;
+    border-top: v-bind('CustomTheme.theme.districtBorder');
+
+    .tab-header {
+      width: 150px;
+      margin: @btnSpace;
+    }
+  }
+
+  .tabItem {
+    flex: auto;
+    display: flex;
+
+    .item {
+      flex: auto;
       display: flex;
-      flex-direction: column;
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
-
-      >div {
+      .level {
         flex: auto;
-        display: flex;
+      }
 
-        .level {
-          flex: auto;
-        }
-
-        .statistical {
-          width: 20%;
-          min-width: 100px;
-          padding-top: 45px;
-          padding-left: 5px;
-        }
+      .statistical {
+        width: 20%;
+        min-width: 100px;
+        padding-top: 45px;
+        padding-left: 5px;
       }
     }
 
-    .second-colum {
-      visibility: hidden;
+    .spectrum {
+      flex: auto;
+      
     }
 
-    .three-colum {
-      visibility: hidden;
-    }
   }
 }
-
-// .Modulate-container {
-//   width: 100%;
-//   height: 100%;
-//   display: flex;
-
-//   >div {
-//     display: flex;
-//     flex-direction: column;
-//   }
-
-//   .first-colum {
-//     width: 40%;
-
-//     .item {
-//       background-color: v-bind('UseTheme.theme.var.backgroundColor');
-//     }
-
-//     >div {
-//       height: 33.33%;
-//       display: flex;
-
-//       .level {
-//         flex: auto;
-//       }
-
-//       .statistical {
-//         width: 20%;
-//         min-width: 100px;
-//         padding-top: 25px;
-//       }
-//     }
-//   }
-
-//   .second-colum {
-//     width: 28%;
-
-//     .spectrum {
-//       height: 33.33%;
-//     }
-//   }
-
-//   .three-colum {
-//     flex: auto;
-
-//     .spectrum {
-//       height: 28%;
-//     }
-//   }
-// }
 </style>

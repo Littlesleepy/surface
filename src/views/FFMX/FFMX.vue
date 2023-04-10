@@ -1,22 +1,18 @@
 <script setup lang='ts'>
 import { useFrameStore } from '@/store'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Modulate from './components/Modulate.vue'
 import * as Helper from 'helper/index'
-import { IMockPanleState, setLinkTrigger, CustomTheme, fftToResolutionRatio } from '@/types'
+import { IMockPanleState, setLinkTrigger, CustomTheme, fftToResolutionRatio, BaseParamsType, localStorageKey } from '@/types'
 import { ElMessage } from 'element-plus'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
-import { ISpectrumInputData, ESwitchState, IITUData, IModulateData, IHighlightItem, ILevelData, ZXISpectrumScanAndFallType, ZXILevel, UseTheme } from 'mcharts/index'
+import { ISpectrumInputData, ESwitchState, IITUData, IModulateData, IHighlightItem, ZXISpectrumScanAndFallType, ZXILevel, UseTheme } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
 import { Sundry, ToExport } from 'helper/index'
 import { useRoute } from 'vue-router'
 
-const whichTab = ref(0)
-
 const store = useFrameStore()
-
-const levelInput = ref(new Map<string, ILevelData>())
 
 const spectrumFull = ref<Array<ISpectrumInputData>>([{
   data: new Float32Array(),
@@ -56,11 +52,6 @@ const hightlightItems = computed<Array<IHighlightItem>>(() => {
 })
 
 const startAndStop = computed(() => store.s_playButton)
-
-const singleStep = computed(() => {
-  const valueHz = Helper.Device.getSamplingRateByBandwidth(Number(store.s_form.debw)) / 1000
-  return valueHz / Number(store.s_form.chfftpoints)
-})
 
 const singleParams = computed(() => {
   const form = store.s_form
@@ -123,6 +114,7 @@ function beforeSendParamChange(panle: IMockPanleState) {
       result = checkDef(panle)
     }
   }
+
   return result
 }
 
@@ -143,14 +135,6 @@ optionsChild.set('SPECTRUMDATA', {
 optionsChild.set('CHSPECTRUM', {
   control: (data) => {
     spectrumDemodulation.value = [makeSpectrumData(data)]
-  }
-})
-// 电平数据
-optionsChild.set('CHLEVEL', {
-  control: (data) => {
-    const map = new Map<string, ILevelData>()
-    map.set('1', { data: data.level, time: new Date() })
-    levelInput.value = map
   }
 })
 // ITU
@@ -195,7 +179,6 @@ watch(() => store.s_playButton, (btn) => {
 // 导出结果
 const route = useRoute()
 const spInstance0 = ref<ZXISpectrumScanAndFallType>()
-const levleInstance = ref<InstanceType<typeof ZXILevel>>()
 const spInstance1 = ref<ZXISpectrumScanAndFallType>()
 
 ToExport.beforExport.set('0', () => {
@@ -209,8 +192,6 @@ ToExport.beforExport.set('0', () => {
   if (spectrumFull.value[0].data.length > 0) ToExport.addDom('全景频谱', spInstance0.value!.root!, 1)
   // 解调频谱
   if (spectrumDemodulation.value[0].data.length > 0) ToExport.addDom('解调频谱', spInstance1.value!.root!, 2)
-  // 电平
-  if (levelInput.value.size > 0) ToExport.addDom('电平图', levleInstance.value!.root!, 3)
   // ITU
   if (ITU.value.length > 0) {
     const result = Sundry.formatITU(ITU.value)
@@ -230,6 +211,13 @@ ToExport.beforExport.set('0', () => {
 
 const tabId = ref(0)
 
+const master = ref<BaseParamsType>()
+
+onMounted(() => {
+  console.log(JSON.parse(localStorage.getItem(localStorageKey.KEY_FUNCTIONPARAMLISTS)!)[route.name!]);
+
+})
+
 </script>
 
 <template>
@@ -242,11 +230,11 @@ const tabId = ref(0)
       <hr>
     </BaseLink>
     <template #set>
-      <BaseParams ref="master" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
+      <BaseParams ref="master" :beforeSendParamChange="beforeSendParamChange" :beforeTaskStart="beforeTaskStart" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
     <template #header-center>
       <div class="header-slot">
-        <BaseTabHeader :headers="['主页','信号分析', '信道测量','调制识别','数字语音解调/解码状态']" v-model="tabId" />
+        <BaseTabHeader :headers="['主页', '信号分析', '信道测量', '调制识别', '数字语音解调/解码状态']" v-model="tabId" />
       </div>
     </template>
     <ZXITabs class="FFM-tabs" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="tabId">
@@ -255,14 +243,32 @@ const tabId = ref(0)
         <div class="first-colum">
           <ZXISpectrumAndFall class="spectrum-and-fall" name="全景频谱" ref="spInstance0" :inputData="spectrumFull"
             :params="paramsFull" :switchLever="startAndStop" :hightlightItems="hightlightItems" :markers="markers"
-            @selectFrequency="selectFrequency" />
+            @selectFrequency="selectFrequency">
+            <template #header>
+              <BaseParamsBranch class="params-branch" :params="[
+                [
+                  { name: '全景中心频率(MHz)', paramName: 'frequency', ratio: 6 },
+                  { name: '全景频谱带宽(kHz)', paramName: 'bandwidth', ratio: 6 },
+                  { name: '全景频谱分辨率', paramName: 'panfftpoints', ratio: 6 }
+                ]
+              ]" :master="master" />
+            </template>
+          </ZXISpectrumAndFall>
         </div>
         <div class="second-colum">
           <ZXISpectrumAndFall class="spectrum-and-fall-single" name="解调频谱" ref="spInstance1"
             :inputData="spectrumDemodulation" :params="singleParams" :switchLever="startAndStop"
-            :setTool="[{ name: 'pubutu', value: false }]" @selectFrequency="(result) => { defFrequency(result.value) }" />
-          <ZXILevel class="level" name="电平图" ref="levleInstance" :inputData="levelInput" :switchLever="startAndStop"
-            :deleteTool="['threshold']" />
+            :setTool="[{ name: 'pubutu', value: false }]" @selectFrequency="(result) => { defFrequency(result.value) }" >
+            <template #header>
+              <BaseParamsBranch class="params-branch" :params="[
+                [
+                  { name: '测量/解调频率(MHz)', paramName: 'def', ratio: 6 },
+                  { name: '测量/解调带宽(kHz)', paramName: 'debw', ratio: 6 },
+                  { name: '解调频谱分辨率', paramName: 'chfftpoints', ratio: 6 },
+                ]
+              ]" :master="master" />
+            </template>
+          </ZXISpectrumAndFall>
         </div>
       </div>
       <Modulate tabName="信号分析" class="tabItem" :canDraw="tabId === 1" />
@@ -289,7 +295,7 @@ const tabId = ref(0)
   width: 100%;
   height: 100%;
   display: flex;
-  
+
   .first-page {
     display: flex;
     flex-direction: column;
@@ -306,6 +312,10 @@ const tabId = ref(0)
       .spectrum-and-fall {
         flex: auto;
         box-sizing: border-box;
+
+        .params-branch {
+          padding: @btnSpace 0 0 @btnSpace;
+        }
       }
 
     }
@@ -314,21 +324,15 @@ const tabId = ref(0)
       display: flex;
       flex: auto;
       flex-direction: row;
-
       padding-right: @btnSpace;
       border-top: v-bind('CustomTheme.theme.districtBorder');
       box-sizing: border-box;
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
-
-      .level {
-        flex: auto;
-        border-left: v-bind('CustomTheme.theme.districtBorder');
-
+      .params-branch{
+        padding: @btnSpace 0 0 @btnSpace;
       }
-
       .spectrum-and-fall-single {
-        // flex: auto;
-        width: 50%;
+        flex: auto;
         padding-right: 2px;
       }
 
