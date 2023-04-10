@@ -1,8 +1,13 @@
 <script setup lang='ts'>
+
 </script>
 
 <template>
-  <div></div>
+  <BaseMonitorFrame>
+
+  </BaseMonitorFrame>
 </template>
 
-<style scoped></style>
+<style scoped lang="less">
+
+</style>

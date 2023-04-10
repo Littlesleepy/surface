@@ -2,14 +2,14 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-10 17:12:51
+ * @LastEditTime: 2023-04-10 17:23:51
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
 
 
 <script setup lang='ts'>
-import { computed, onMounted, Ref, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useFrameStore } from 'store/index'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
 import * as Helper from 'helper/index'
@@ -113,10 +113,7 @@ const master = ref<BaseParamsType>()
 
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
 
-onMounted(() => {
-  console.log(master.value?.elements);
 
-})
 
 const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
 
