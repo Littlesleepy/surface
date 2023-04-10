@@ -2,14 +2,14 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-10 11:43:30
+ * @LastEditTime: 2023-04-10 17:12:51
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
 
 
 <script setup lang='ts'>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, Ref, ref, watch } from 'vue'
 import { useFrameStore } from 'store/index'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
 import * as Helper from 'helper/index'
@@ -68,6 +68,7 @@ useFunctionArr.forEach(p => {
 })
 
 // 参数修改
+
 function inited(panle: IMockPanleState) {
   if (!route.query.name) {
     const { device } = panle
@@ -110,9 +111,14 @@ watch(() => store.s_formOneResult, (v) => {
 
 const master = ref<BaseParamsType>()
 
-const tabId = ref(0)
-
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
+
+onMounted(() => {
+  console.log(master.value?.elements);
+
+})
+
+const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
 
 
 </script>
@@ -131,11 +137,15 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
     </template>
     <!-- 头部切换视图 -->
     <template #header-center>
-      <!-- <BaseParamsBranch class="params-branch0" :master="master" :params="[[
-        { name: '射频衰减', paramName: 'rfattenuation', ratio: 5 },
-        { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 3 },
-        { name: '扫描模式', paramName: 'smmode', ratio: 5 },
-      ]]" /> -->
+      <div class="header-slot">
+        <BaseParamsBranch class="params-branch" :params="[
+            [
+              { name: '每跳频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+              { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
+              { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 6 },
+            ]
+          ]" :master="master" />
+      </div>
     </template>
     <div class="content-right">
       <ZXISpectrumScanAndFall class="spectrum-scan-and-fall" :inputData="spectrum" :params="params"
@@ -158,6 +168,17 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
 
 <style scoped lang="less">
 @import url('theme');
+
+.header-slot {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: .5rem;
+  box-sizing: border-box;
+  .params-branch{
+    width: 100%;
+  }
+}
 
 .base-link {
   display: flex;

@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-10 14:15:28
+ * @LastEditTime: 2023-04-10 17:15:32
  * @FilePath: \zxi-surface\src\views\SpectrumAnalysis\SpectrumAnalysis.vue
  * @Description: 
  -->
@@ -110,8 +110,6 @@ watch(() => store.s_formOneResult, (v) => {
 
 const master = ref<BaseParamsType>()
 
-const tabId = ref(0)
-
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
 
 const setTool = [
@@ -147,6 +145,15 @@ const deleteTool = ['pubutu']
     </template>
     <!-- 头部切换视图 -->
     <template #header-center>
+      <div class="header-slot">
+        <BaseParamsBranch class="params-branch" :params="[
+          [
+            { name: '每跳频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+            { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
+            { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 6 },
+          ]
+        ]" :master="master" />
+      </div>
     </template>
     <div class="content-right">
       <ZXISpectrumScanAndFall class="spectrum-scan-and-fall" :inputData="spectrum" :params="params"
@@ -167,6 +174,18 @@ const deleteTool = ['pubutu']
  
 <style scoped lang="less">
 @import url('theme');
+
+.header-slot {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: .5rem;
+  box-sizing: border-box;
+
+  .params-branch {
+    width: 100%;
+  }
+}
 
 .base-link {
   display: flex;
