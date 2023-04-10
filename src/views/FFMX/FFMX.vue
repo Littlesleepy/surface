@@ -1,3 +1,11 @@
+<!--
+ * @Author: 九璃怀特 1599130621@qq.com
+ * @Date: 2023-04-07 11:06:54
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-10 14:04:34
+ * @FilePath: \zxi-surface\src\views\FFMX\FFMX.vue
+ * @Description: 
+ -->
 <script setup lang='ts'>
 import { useFrameStore } from '@/store'
 import { computed, onMounted, ref, watch } from 'vue'
@@ -193,6 +201,8 @@ ToExport.beforExport.set('0', () => {
   // 解调频谱
   if (spectrumDemodulation.value[0].data.length > 0) ToExport.addDom('解调频谱', spInstance1.value!.root!, 2)
   // ITU
+
+
   if (ITU.value.length > 0) {
     const result = Sundry.formatITU(ITU.value)
     ToExport.addTable(result.title, result.headers, result.formatData, 4)
@@ -212,11 +222,6 @@ ToExport.beforExport.set('0', () => {
 const tabId = ref(0)
 
 const master = ref<BaseParamsType>()
-
-onMounted(() => {
-  console.log(JSON.parse(localStorage.getItem(localStorageKey.KEY_FUNCTIONPARAMLISTS)!)[route.name!]);
-
-})
 
 </script>
 
