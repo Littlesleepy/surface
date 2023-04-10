@@ -70,6 +70,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: { title: "FFM测量" },
     component: () => import("views/FFMX/FFMX.vue"),
   },
+  {
+    path: "/DPX",
+    name: "DPX",
+    meta: { title: "数字荧光谱" },
+    component: () => import("views/DPX/DPX.vue"),
+  },
 ];
 
 const options: RouterOptions = {
