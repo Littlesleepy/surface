@@ -1,5 +1,13 @@
+<!--
+ * @Author: 九璃怀特 1599130621@qq.com
+ * @Date: 2023-04-10 17:20:59
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-11 09:06:00
+ * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
+ * @Description: 
+ -->
 <script setup lang='ts'>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useFrameStore } from 'store/index'
 import * as Helper from 'helper/index'
 import { ReceiveData, ReceiveDataOptions } from '@/server'
@@ -111,6 +119,10 @@ ToExport.beforExport.set('0', () => {
   if (spectrum.value.data.length > 0) ToExport.addDom('荧光谱', spInstance.value!.root!, 1)
 })
 const master = ref<BaseParamsType>()
+onMounted(()=>{
+  console.log(master.value?.elements);
+  
+})
 </script>
 
 <template>
@@ -120,7 +132,13 @@ const master = ref<BaseParamsType>()
     </template>
     <template #header-center>
       <div class="header-slot">
-        <BaseParamsBranch class="params-branch" :params="[]" :master="master" />
+        <BaseParamsBranch class="params-branch" :params="[
+          [
+              { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
+              { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+              { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
+            ]
+        ]" :master="master" />
       </div>
     </template>
     <div class="content-right">

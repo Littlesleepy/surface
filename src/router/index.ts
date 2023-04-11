@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-09 14:55:45
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-07 11:07:40
+ * @LastEditTime: 2023-04-11 09:25:12
  * @FilePath: \zxi-surface\src\router\index.ts
  * @Description:
  */
@@ -75,6 +75,12 @@ const routes: Array<RouteRecordRaw> = [
     name: "DPX",
     meta: { title: "数字荧光谱" },
     component: () => import("views/DPX/DPX.vue"),
+  },
+  {
+    path: "/HandheldSingleMeasure",
+    name: "HandheldSingleMeasure",
+    meta: { title: "手持式天线测量" },
+    component: () => import("views/HandheldSingleMeasure/HandheldSingleMeasure.vue"),
   },
 ];
 
