@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-11 11:49:24
+ * @LastEditTime: 2023-04-11 17:30:02
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -17,13 +17,14 @@ import { mockPanleInited } from './mockPanleInited'
 import { mapStyle } from 'helper/index'
 import { ElMessage } from 'element-plus'
 import levelsrc from './audio/level.mp3'
-import LevelSlider from './components/LevelSlider.vue'
+import LevelSlider from './components/LevelSlider/LevelSlider.vue'
 import { localStorageKey } from '@/storage'
 import { BaseParamsType, CustomTheme, setLinkTrigger } from '@/types'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
-
-
+import maplibregl, { GeoJSONSource } from 'maplibre-gl'
+import lightStyle from '@/assets/mapStyle/light.json'
+import 'maplibre-gl/dist/maplibre-gl.css'
 
 const store = useFrameStore()
 // 列表组件
@@ -285,8 +286,90 @@ watch(() => store.s_playButton, (btn) => {
   }
 })
 
+let map: maplibregl.Map
+const observer = new ResizeObserver(() => {
+  map.resize()
+})
+// 地图容器
+const mapDom = ref<HTMLDivElement>()
+onMounted(() => {
+  map = new maplibregl.Map({
+    container: mapDom.value!,
+    style: mapStyle(lightStyle)
+  })
+
+  // map = new maplibregl.Map({
+  //   container: mapDom.value!, // container id
+  //   style: 'https://demotiles.maplibre.org/style.json', // style URL
+  //   center: [0, 0], // starting position [lng, lat]
+  //   zoom: 1, // starting zoom
+  // });
+
+  // observer.observe(mapDom.value!)
+
+  // map.on('load', () => {
+  //   map.addSource('LinesGeoJson', {
+  //     'type': 'geojson',
+  //     'lineMetrics': true,
+  //     'data': LinesGeoJson.value
+  //   })
+  //   map.addLayer({
+  //     id: 'LayerId_Lines',
+  //     type: 'line',
+  //     source: 'LinesGeoJson',
+  //     layout: {
+  //       'line-cap': 'round',
+  //       'line-join': 'round'
+  //     },
+  //     paint: {
+  //       'line-color': 'rgb(220,20,20)',
+  //       'line-width': 3,
+  //       'line-gradient': [
+  //         'interpolate',
+  //         ['linear'],
+  //         ['line-progress'],
+  //         0,
+  //         'royalblue',
+  //         1,
+  //         'red'
+  //       ]
+  //     },
+  //     filter: ['in', '$type', 'LineString']
+  //   })
+  // })
+  // // const { locationControl } = setDeviceMarker(map)
+  // map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }))
+  //   // .addControl(new MeasureControl({
+  //   //   lineColor: '#6495ED',
+  //   //   circleColor: '#6495ED',
+  //   //   labelColor: '#DC143C'
+  //   // }))
+  //   .addControl(new maplibregl.FullscreenControl({ container: mapDom.value! }))
+  //   // .addControl(locationControl)
+
+
+  // watch(() => MapLines.value, () => {
+  //   // 更新绘制的线
+  //   const lines = MapLines.value.map((v) => {
+  //     return [[v.longitude, v.latitude], [v.from_longitude, v.from_latitude]]
+  //   })
+  //   // LinesGeoJson.value.features = [multiLineString(lines)]
+  //   const geojson = map.getSource('LinesGeoJson') as GeoJSONSource
+  //   geojson.setData(LinesGeoJson.value)
+
+  // }, { deep: true })
+
+})
+onBeforeUnmount(() => {
+  // observer.unobserve(mapDom.value!)
+})
+
 const master = ref<BaseParamsType>()
 const tabId = ref(0)
+
+const modulate = ref<Array<IModulateData>>([])
+
+const startAndStop = computed(() => store.s_playButton)
 
 </script>
 
@@ -302,67 +385,60 @@ const tabId = ref(0)
     <template #set>
       <BaseParams ref="master" :inited="mockPanleInited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
-    <!-- 头部切换视图 -->
     <template #header-center>
       <BaseTabHeader style="width: 100%;height: 100%; padding: .5rem; box-sizing: border-box;"
-        :headers="['主页', '音频频谱', '信号测量结果', '调制识别', '数字语音解调/解码状态', '亚音解码']" v-model="tabId" />
+        :headers="['主页', '信号测量结果/音频频谱', '调制识别', '数字语音解调/解码状态', '亚音解码']" v-model="tabId" />
     </template>
-    <ZXITabs class="single-tabs" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="tabId">
-      <div class="single-container">
-        <div class="containerTop">
-          <audio loop ref="levelAudio">
-            <source :src="levelsrc" type="audio/mpeg">
-          </audio>
-          <div class="containerTop-header">
-            瞬时值：{{ dBuV.toFixed(1) }} dBuV
+    <div class="HandheldSingleMeasure">
+      <ZXITabs class="single-tabs" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="tabId">
+        <div class="single-container">
+          <div class="containerTop">
+            <audio loop ref="levelAudio">
+              <source :src="levelsrc" type="audio/mpeg">
+            </audio>
+            <div class="containerTop-header">
+              瞬时值：{{ dBuV.toFixed(1) }} dBuV
+            </div>
+
+            <ZXILevel ref="ZLevel" :showAxisY="false" :capacity="0.1" :scaleY="{
+              unit: 'dBuV',
+              parse: (v) => `幅度：${parseFloat((20 * Math.log10(v)).toFixed(2))}dBuV`,
+              transform: (v) => {
+                return parseFloat((20 * Math.log10(v)).toFixed(2))
+              }
+            }" class="ZLevel" :drawType="ELevelType.bar" :switchLever="store.s_playButton" :deleteTool="['threshold']"
+              :inputData="levelData" />
+            <LevelSlider @event_setLevelValue="setLevelValue" :inputData="levelData" :switchLever="store.s_playButton"
+              :inputLevel="inputLevel.level" class="ZSlider" />
+          </div>
+          <div class="containerBottom">
+            <ZXISpectrumAndFall class="spectrum-and-fall" :inputData="inputData" :params="params"
+              :switchLever="store.s_playButton" :setTool="setTool" :markers="markers"
+              @selectFrequency="selectFrequency" />
+            <div class="map" ref="mapDom" />
           </div>
 
-          <ZXILevel ref="ZLevel" :showAxisY="false" :capacity="0.1" :scaleY="{
-            unit: 'dBuV',
-            parse: (v) => `幅度：${parseFloat((20 * Math.log10(v)).toFixed(2))}dBuV`,
-            transform: (v) => {
-              return parseFloat((20 * Math.log10(v)).toFixed(2))
-            }
-          }" class="ZLevel" :drawType="ELevelType.bar" :switchLever="store.s_playButton" :deleteTool="['threshold']"
-            :inputData="levelData" />
-          <LevelSlider @event_setLevelValue="setLevelValue" :inputData="levelData" :switchLever="store.s_playButton"
-            :inputLevel="inputLevel.level" class="ZSlider" />
+        </div>
+        <div class="single-result">
+          <div class="containerTop">
+            <ZXISpectrumAndFall class="spectrum-and-fall-Audio" :inputData="spectrumData" :params="params"
+              :switchLever="store.s_playButton" :setTool="setTool" />
+            <div class="compass"></div>
+          </div>
+          <div class="containerBotom">
+            <ZXIScroll tabName="信号测量结果" class="lable">
+              <ZXIItu :inputData="ITUList" class="lable-content" />
+            </ZXIScroll>
+          </div>
+        </div>
+        <ZXIModulate :inputData="modulate" />
+        <ZXIScrollInfo :clear="startAndStop === ESwitchState.open" :inputData="decodingState" />
+        <ZXISubaudioDecoding :inputData="subaudioDecoding" />
+      </ZXITabs>
 
-        </div>
-        <div class="containerBottom">
-          <ZXISpectrumAndFall class="spectrum-and-fall" :inputData="inputData" :params="params"
-            :switchLever="store.s_playButton" :setTool="setTool" :markers="markers" @selectFrequency="selectFrequency" />
-          <div class="map" ref="mapDom" />
-          <!-- <ZXITabs class="tabsAndAudio">
-                      <ZXIScroll tabName="信号测量结果">
-                        <ZXIItu :inputData="ITUList" class="lable-content" />
-                      </ZXIScroll>
-                      <ZXISpectrumAndFall
-                          class="spectrum-and-fall-Audio"
-                          tabName="音频频谱"
-                        :inputData="spectrumData"
-                        :params="params"
-                        :switchLever="store.s_playButton"
-                        :setTool="setTool"
-                      />
-                    </ZXITabs> -->
-        </div>
-        <!-- <ZXIDrawer :criticalPoint="9999">
-                    <Tabs
-                      :compassList="compassList"
-                        :modList="modList"
-                        :decodingState="decodingState"
-                        :subaudioDecoding="subaudioDecoding"
-                        :clear="clear"
-                        @handle_Selection_Change="handleSelectionChange"
-                        ref="TabsRef"
-                      />
-                    </ZXIDrawer> -->
-      </div>
-   
-   
-     
-    </ZXITabs>
+    </div>
+
+
   </BaseMonitorFrame>
 </template>
 
@@ -372,14 +448,19 @@ const tabId = ref(0)
   justify-content: center;
 }
 
-.single-tabs {
+.HandheldSingleMeasure {
   width: 100%;
   height: 100%;
+  display: flex;
+
+  .single-tabs {
+    flex: auto;
+    display: flex;
+  }
 }
 
 .single-container {
-  width: 100%;
-  height: 100%;
+  flex: auto;
   display: flex;
   flex-direction: column;
   user-select: none;
@@ -481,9 +562,41 @@ const tabId = ref(0)
   }
 }
 
+.single-result {
+  flex: auto;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  background-color: v-bind('UseTheme.theme.var.backgroundColor');
+
+  .containerTop {
+    height: 50%;
+    display: flex;
+
+    .spectrum-and-fall-Audio {
+      flex: auto;
+    }
+    .compass{
+      width: 35%;
+      height: 100%;
+      box-sizing: border-box;
+      
+    }
+  }
+
+  .containerBotom {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+
+    .lable {
+      flex: auto;
+    }
+  }
+}
+
 .lable-content {
   position: absolute;
   width: 100%;
   height: 100%;
-}
-</style>
+}</style>
