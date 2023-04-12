@@ -1,9 +1,9 @@
 /**
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-09 14:55:45
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2022-10-13 10:28:53
- * @FilePath: \zxi-device\src\store\modules\server.ts
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-12 14:08:43
+ * @FilePath: \zxi-surface\src\store\modules\server.ts
  * @Description: 
  */
 import { IServerStateInfo } from '@/types'
@@ -49,6 +49,9 @@ export const useServerStore = defineStore('server', {
     },
     m_serverReceiveData (value) {
       this.s_serverReceiveData = value
+    },
+    m_serverStateInfo (info: IServerStateInfo) {
+      this.s_serverStateInfo = info
     }
   }
 })

@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-11 17:30:02
+ * @LastEditTime: 2023-04-12 17:29:35
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -10,7 +10,7 @@
 
 <script setup lang='ts'>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { useFrameStore } from '@/store'
+import { useFrameStore, useServerStore } from '@/store'
 import { ELevelType, ESwitchState, IAxisYValue, ILevelData, IModulateData, ISpectrumInputData, ISubaudioDecodingData, ZXILevel, UseTheme } from 'mcharts/index'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
 import { mockPanleInited } from './mockPanleInited'
@@ -22,19 +22,18 @@ import { localStorageKey } from '@/storage'
 import { BaseParamsType, CustomTheme, setLinkTrigger } from '@/types'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
+import CommonMap from './components/CommonMap/CommonMap.vue'
 import maplibregl, { GeoJSONSource } from 'maplibre-gl'
 import lightStyle from '@/assets/mapStyle/light.json'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import {  MeasureControl, setDeviceMarker } from "./components/CommonMap/Control";
 
 const store = useFrameStore()
+
 // 列表组件
 // const TabsRef = ref<InstanceType<typeof Tabs>>()
 
 const ZLevel = ref<InstanceType<typeof ZXILevel>>()
-// 开关
-// const clear = computed(() => store.s_playButton === ESwitchState.open)
-// 亚音解码列表
-const subaudioDecoding = ref<Array<ISubaudioDecodingData>>([])
 // 辅助音频
 const levelAudio = ref<HTMLAudioElement>()
 // 单频数据
@@ -68,32 +67,8 @@ const setTool = [
     value: true
   }
 ]
-// 罗盘参数列表
-// const compassData = ref<compassData>({
-//   level: 0,
-//   compass: 0
-// })
-// 最大值的方位角
-// const MaxCompass = ref(-1)
-// 信号测量结果列表
-// const compassTableData = [
-//   { prop: 'name', label: '名称' },
-//   { prop: 'curValue', label: '瞬时值' },
-//   { prop: 'maxValue', label: '最大值' },
-//   { prop: 'minValue', label: '最小值' },
-//   { prop: 'aveValue', label: '平均值' }
-// ]
-// 信号测量结果列表的数据
-const ITUList = ref<Array<any>>([])
-// 调制识别
-const modList = ref<Array<IModulateData>>([])
-// 方位列表
-// const compassList = ref<Array<compassListType>>([])
 
-const LinesGeoJson = ref<any>({
-  'type': 'FeatureCollection',
-  'features': []
-})
+
 
 const markers = ref<Array<number>>([])
 
@@ -103,23 +78,6 @@ function changeFrequency() {
   store.m_formOne({ key: 'frequency', value: trigger.value.value })
 }
 
-// 绘制到地图的方位列表(选中的方位列表)
-const MapLines = ref<Array<any>>([])
-// 音频数据
-const spectrumData = ref<Array<ISpectrumInputData>>([{
-  data: new Float32Array(),
-  time: 0
-}])
-// 数字语音解调
-const decodingState = ref<Array<string>>([])
-
-// const resideTime = computed(() => {
-//   return Number(store.s_viceForm.resideTime)
-// })
-
-// gps
-// const gps = computed(() => serveStore.s_serverStateInfo.gpsLocation)
-// const isLocated = computed(() => gps.value.isLocated)
 // 数据接收
 const options: ReceiveDataOptions = new Map()
 const optionsChild: ReceiveDataOptions = new Map()
@@ -133,10 +91,6 @@ optionsChild.set('SPECTRUMDATA', {
 const dBuV = ref(0)
 optionsChild.set('LQCB', {
   control: (data: any) => {
-    // const result = makeSingleBearing(data)
-    // compassData.value = result
-    // console.log(data)
-    // console.log(data.level)
     dBuV.value = data.level
     data.level = Math.pow(10, data.level / 20)
     levelData.value = new Map().set('level', {
@@ -147,33 +101,7 @@ optionsChild.set('LQCB', {
 
   }
 })
-// 音频数据
-optionsChild.set('AUDIOSPECTRUM', {
-  control: (data) => {
-    spectrumData.value = [{
-      data: data.spectrumData,
-      time: new Date(data.time).getTime()
-    }]
-  }
-})
-// 信号测量结果
-optionsChild.set('ITU', {
-  control: (data) => {
-    ITUList.value = data.data
-  }
-})
-// 模式识别
-optionsChild.set('MODE', {
-  control: (data) => {
-    modList.value = data.data
-  }
-})
-// 数字语音解调/解码状态
-optionsChild.set('LOGTEXTSTATE', {
-  control: (data) => {
-    decodingState.value = data.data
-  }
-})
+
 optionsChild.set(ReceiveData.key.DATA.OVERFLOW, {
   control: (data: { data: boolean }) => {
     if (data.data) {
@@ -182,31 +110,10 @@ optionsChild.set(ReceiveData.key.DATA.OVERFLOW, {
   }
 })
 
-// 亚音频解码
-optionsChild.set('SUBAUDIODATA', {
-  control: (data) => {
-    const arr: Array<ISubaudioDecodingData> = []
-    if (data) {
-      data.cdcss_n.forEach(element => {
-        arr.push(element)
-      })
-      data.cdcss_p.forEach(element => {
-        arr.push(element)
-      })
-      data.ctcss.forEach(element => {
-        arr.push(element)
-      })
-    }
-    subaudioDecoding.value = arr
-  }
-})
 
 options.set('DATA', { children: optionsChild })
 ReceiveData.add(options)
-// 获取最大值的方位角
-// function getMaxCompass (value) {
-//   MaxCompass.value = value
-// }
+
 // 设置最大小值
 const maxMinLevel = ref<IAxisYValue>({
   max: 0,
@@ -215,47 +122,6 @@ const maxMinLevel = ref<IAxisYValue>({
 function setLevelValue(value: IAxisYValue) {
   maxMinLevel.value = value
   ZLevel.value!.setMaxMin(maxMinLevel.value)
-}
-
-// 记录方位
-// function recordCompass () {
-//   if (!~MaxCompass.value) return
-//   const { longitude, latitude } = gps.value
-//   const [lon, lat] = getCoord(destination([longitude, latitude], 100, MaxCompass.value))
-//   compassList.value.push({
-//     compass: MaxCompass.value,
-//     latitude,
-//     longitude,
-//     from_longitude: lon,
-//     from_latitude: lat
-//   })
-
-// }
-// // 更新绘制到地图的线列表
-// function handleSelectionChange (value) {
-//   MapLines.value = value
-
-// }
-
-
-// // 删除记录
-// function CompassDelete () {
-//   MapLines.value.forEach((de) => {
-//     let pos = compassList.value.indexOf(de)
-//     compassList.value.splice(pos, 1)
-//   })
-// }
-// // 清空记录
-// function CompassDeleteAll () {
-//   compassList.value.length = 0
-// }
-
-function reset() {
-  subaudioDecoding.value.length = 0
-  ITUList.value.length = 0
-  modList.value.length = 0
-  decodingState.value.length = 0
-  MapLines.value.length = 0
 }
 
 watch(() => inputLevel.value.level, (newLevel) => {
@@ -275,7 +141,6 @@ watch(() => store.s_playButton, (btn) => {
   const playAudio = JSON.parse(viceForms!).HandheldSingleMeasure['playAudio'] as boolean
   if (btn === ESwitchState.open) {
     levelData.value.clear()
-    reset()
     if (playAudio) {
       levelAudio.value!.muted = false
 
@@ -286,90 +151,7 @@ watch(() => store.s_playButton, (btn) => {
   }
 })
 
-let map: maplibregl.Map
-const observer = new ResizeObserver(() => {
-  map.resize()
-})
-// 地图容器
-const mapDom = ref<HTMLDivElement>()
-onMounted(() => {
-  map = new maplibregl.Map({
-    container: mapDom.value!,
-    style: mapStyle(lightStyle)
-  })
-
-  // map = new maplibregl.Map({
-  //   container: mapDom.value!, // container id
-  //   style: 'https://demotiles.maplibre.org/style.json', // style URL
-  //   center: [0, 0], // starting position [lng, lat]
-  //   zoom: 1, // starting zoom
-  // });
-
-  // observer.observe(mapDom.value!)
-
-  // map.on('load', () => {
-  //   map.addSource('LinesGeoJson', {
-  //     'type': 'geojson',
-  //     'lineMetrics': true,
-  //     'data': LinesGeoJson.value
-  //   })
-  //   map.addLayer({
-  //     id: 'LayerId_Lines',
-  //     type: 'line',
-  //     source: 'LinesGeoJson',
-  //     layout: {
-  //       'line-cap': 'round',
-  //       'line-join': 'round'
-  //     },
-  //     paint: {
-  //       'line-color': 'rgb(220,20,20)',
-  //       'line-width': 3,
-  //       'line-gradient': [
-  //         'interpolate',
-  //         ['linear'],
-  //         ['line-progress'],
-  //         0,
-  //         'royalblue',
-  //         1,
-  //         'red'
-  //       ]
-  //     },
-  //     filter: ['in', '$type', 'LineString']
-  //   })
-  // })
-  // // const { locationControl } = setDeviceMarker(map)
-  // map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }))
-  //   // .addControl(new MeasureControl({
-  //   //   lineColor: '#6495ED',
-  //   //   circleColor: '#6495ED',
-  //   //   labelColor: '#DC143C'
-  //   // }))
-  //   .addControl(new maplibregl.FullscreenControl({ container: mapDom.value! }))
-  //   // .addControl(locationControl)
-
-
-  // watch(() => MapLines.value, () => {
-  //   // 更新绘制的线
-  //   const lines = MapLines.value.map((v) => {
-  //     return [[v.longitude, v.latitude], [v.from_longitude, v.from_latitude]]
-  //   })
-  //   // LinesGeoJson.value.features = [multiLineString(lines)]
-  //   const geojson = map.getSource('LinesGeoJson') as GeoJSONSource
-  //   geojson.setData(LinesGeoJson.value)
-
-  // }, { deep: true })
-
-})
-onBeforeUnmount(() => {
-  // observer.unobserve(mapDom.value!)
-})
-
 const master = ref<BaseParamsType>()
-const tabId = ref(0)
-
-const modulate = ref<Array<IModulateData>>([])
-
-const startAndStop = computed(() => store.s_playButton)
 
 </script>
 
@@ -386,11 +168,8 @@ const startAndStop = computed(() => store.s_playButton)
       <BaseParams ref="master" :inited="mockPanleInited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
     <template #header-center>
-      <BaseTabHeader style="width: 100%;height: 100%; padding: .5rem; box-sizing: border-box;"
-        :headers="['主页', '信号测量结果/音频频谱', '调制识别', '数字语音解调/解码状态', '亚音解码']" v-model="tabId" />
     </template>
     <div class="HandheldSingleMeasure">
-      <ZXITabs class="single-tabs" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="tabId">
         <div class="single-container">
           <div class="containerTop">
             <audio loop ref="levelAudio">
@@ -415,30 +194,10 @@ const startAndStop = computed(() => store.s_playButton)
             <ZXISpectrumAndFall class="spectrum-and-fall" :inputData="inputData" :params="params"
               :switchLever="store.s_playButton" :setTool="setTool" :markers="markers"
               @selectFrequency="selectFrequency" />
-            <div class="map" ref="mapDom" />
-          </div>
-
-        </div>
-        <div class="single-result">
-          <div class="containerTop">
-            <ZXISpectrumAndFall class="spectrum-and-fall-Audio" :inputData="spectrumData" :params="params"
-              :switchLever="store.s_playButton" :setTool="setTool" />
-            <div class="compass"></div>
-          </div>
-          <div class="containerBotom">
-            <ZXIScroll tabName="信号测量结果" class="lable">
-              <ZXIItu :inputData="ITUList" class="lable-content" />
-            </ZXIScroll>
+            <CommonMap class="map"></CommonMap>
           </div>
         </div>
-        <ZXIModulate :inputData="modulate" />
-        <ZXIScrollInfo :clear="startAndStop === ESwitchState.open" :inputData="decodingState" />
-        <ZXISubaudioDecoding :inputData="subaudioDecoding" />
-      </ZXITabs>
-
     </div>
-
-
   </BaseMonitorFrame>
 </template>
 
@@ -453,13 +212,7 @@ const startAndStop = computed(() => store.s_playButton)
   height: 100%;
   display: flex;
 
-  .single-tabs {
-    flex: auto;
-    display: flex;
-  }
-}
-
-.single-container {
+  .single-container {
   flex: auto;
   display: flex;
   flex-direction: column;
@@ -471,19 +224,20 @@ const startAndStop = computed(() => store.s_playButton)
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 1fr 80px;
-    grid-template-rows: 25px 1fr;
+    grid-template-columns: 1fr 90px;
+    grid-template-rows: 32px 1fr;
     border-bottom: v-bind('CustomTheme.theme.districtBorder');
     box-sizing: border-box;
 
     .containerTop-header {
-      height: 25px;
+      height: 100%;
       line-height: 25px;
       box-sizing: border-box;
-      // color: rgb(220, 220, 220);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: v-bind('UseTheme.theme.var.color');
-      font-size: 14px;
-      text-align: center;
+      font-size: 2rem;
       grid-column-start: 1;
       grid-row-start: 1;
     }
@@ -496,7 +250,7 @@ const startAndStop = computed(() => store.s_playButton)
     }
 
     .ZSlider {
-      width: 80px;
+      width: 100%;
       height: 100%;
       // background-color: rgb(40, 40, 40);
       grid-column-start: 2;
@@ -532,8 +286,7 @@ const startAndStop = computed(() => store.s_playButton)
 
     .map {
       box-sizing: border-box;
-      border: 1px solid rgb(245, 247, 250);
-      max-width: 400px;
+      max-width: 500px;
       width: 40%;
     }
 
@@ -561,6 +314,9 @@ const startAndStop = computed(() => store.s_playButton)
     left: -4px !important;
   }
 }
+}
+
+
 
 .single-result {
   flex: auto;
@@ -576,11 +332,12 @@ const startAndStop = computed(() => store.s_playButton)
     .spectrum-and-fall-Audio {
       flex: auto;
     }
-    .compass{
+
+    .compass {
       width: 35%;
       height: 100%;
       box-sizing: border-box;
-      
+
     }
   }
 
@@ -599,4 +356,5 @@ const startAndStop = computed(() => store.s_playButton)
   position: absolute;
   width: 100%;
   height: 100%;
-}</style>
+}
+</style>

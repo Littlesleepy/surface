@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, PropType, ref, watch, WatchStopHandle } from 'vue'
-import { AroundPile, Canvas, CompassUI, Engine, ESwitchState, ICompassOptions, Scene } from 'zcharts'
+import { AroundPile, Canvas, CompassUI, Engine, ESwitchState, ICompassOptions, Scene } from 'mcharts/index'
 import { Radar } from './types'
 import * as helpel from '@/helper'
 interface compassData {
