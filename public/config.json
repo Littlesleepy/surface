@@ -4,7 +4,7 @@
     "userName": "admin",
     "password": "zxi123456789!"
   },
-  "enableFunction": ["SingleMeasure", "PScan", "CIQStream", "XScan", "HandheldSingleMeasure", "SignalRecognitionAnalysis", "DPX"],
+  "enableFunction": ["SingleMeasure", "PScan", "XScan", "DPX", "CIQStream", "SignalRecognitionAnalysis", "HandheldSingleMeasure", "FFMX"],
   "map": {
     "sourceUrl": "http://192.168.0.141:8086/data/v3.json",
     "zoom": 9,

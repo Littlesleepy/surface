@@ -109,11 +109,8 @@ for (const [name, color] of props.lineColor) {
   legends.push({ backgroundColor: color, name })
 }
 
-const controlStyle = { wrapper: { width: '120px' } }
+const controlStyle = { wrapper: { width: '150px' } }
 if (legends.length > 0) controlStyle.wrapper.width = '240px'
-
-let showControlBtn = false
-if (controls.value.length > 0 || legends.length > 0 || props.name) showControlBtn = true
 
 const spectrumYvalue = ref({
   min: 0,
@@ -881,7 +878,7 @@ defineExpose({
   <div ref="root">
     <div class="container">
       <!-- 头部 -->
-      <div class="header" v-if="showControlBtn">
+      <div class="header" >
         <!-- 工具部分 -->
         <ZXIControlBtn
           class="single-control"
@@ -897,7 +894,11 @@ defineExpose({
           </el-tooltip>
         </ZXIControlBtn>
         <div class="header-info">
-          <span v-if="name !== undefined">{{name}}</span>
+          <span class="name" v-if="name !== undefined">{{name}}</span>
+          <div class="slot-content">
+              <!-- 头部插槽 -->
+              <slot name="header"></slot>
+            </div>
         </div>
       </div>
       <!-- 频谱 -->
@@ -936,26 +937,29 @@ defineExpose({
   flex-direction: column;
   background: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
-    height: @headerHeight;
     position: relative;
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
     .single-control{
-      width: @headerHeight;
+      z-index: 99999;
+      width: 60px;
       height: 100%;
-      position: absolute;
-      left: 10px;
-      top: 1px;
-      z-index: 2;
     }
     .header-info{
-      width: 100%;
-      padding-left: 35px;
-      height: 100%;
+      align-items: center;
+      flex: auto;
       box-sizing: border-box;
       display: flex;
-      span{
+     .name{
         line-height: @headerHeight;
-        font-size: 12px;
+        font-size: @font20;
         color: v-bind('UseTheme.theme.var.color');
+        padding-left: 10px;
+      }
+      .slot-content{
+        flex: auto;
       }
     }
     .legend{
@@ -980,12 +984,11 @@ defineExpose({
   .spectrum{
     flex: auto;
     display: flex;
-    padding-bottom: 5px;
     box-sizing: border-box;
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 28px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;

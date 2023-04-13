@@ -16,6 +16,7 @@ import { ESwitchState, IAxisXValue } from '../types'
 import { IDPXParams, IDpxPool, IDpxIputData } from './type'
 import { Device } from '../helper/device'
 import { UseTheme } from '../styles'
+import { useGlGrid } from '../ZXISpectrumAndFall/useGlGrid'
 
 interface IZXIDpxProps {
   inputData: IDpxIputData
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<IZXIDpxProps>(), {
     }
   },
   switchLever: ESwitchState.off,
+  name: '数字荧光谱'
 })
 
 const emit = defineEmits<{
@@ -168,31 +170,33 @@ function refreshByFenceCountchange () {
 }
 
 function render () {
-  if (scene.value && props.inputData.data.length > 0) {
-    const fence = scene.value.fence as LayersFenceType
-    
-    // X轴方向缩放平移
-    if (fence.currentZoom === 1 || (fence.currentZoom !== 1 && Math.log(fence.currentZoom) / Math.log(2) < fence.layers.length)) { // 无宽度缩放并且数据抽取结果唯一
-      // 顶点控制
-      rectangle.u_scale[0] = rectangle.initScale[0]
-    } else {
-      const zoomX = fence.baseFence.eachPieceWidth / fence.baseFence.eachPieceWidthInitial
-      rectangle.u_scale[0] = rectangle.initScale[0] * zoomX
+  if (scene.value) {
+    if (props.inputData.data.length > 0) {
+      const fence = scene.value.fence as LayersFenceType
+
+      // X轴方向缩放平移
+      if (fence.currentZoom === 1 || (fence.currentZoom !== 1 && Math.log(fence.currentZoom) / Math.log(2) < fence.layers.length)) { // 无宽度缩放并且数据抽取结果唯一
+        // 顶点控制
+        rectangle.u_scale[0] = rectangle.initScale[0]
+      } else {
+        const zoomX = fence.baseFence.eachPieceWidth / fence.baseFence.eachPieceWidthInitial
+        rectangle.u_scale[0] = rectangle.initScale[0] * zoomX
+      }
+      // Y轴方向缩放平移
+      const minValue = spectrumYvalue.value.min + 40
+      const maxValue = spectrumYvalue.value.max + 40
+
+      const zoomY = 160 / (maxValue - minValue)
+      fence.baseFence.modelMatrix.elements[5] = zoomY
+      rectangle.u_scale[1] = rectangle.initScale[1] * zoomY
+      const transY = (40 - Math.floor((minValue + maxValue - 80) / 2)) / 80 * zoomY
+      fence.baseFence.modelMatrix.elements[13] = transY
+
+      line.u_conversion.elements[0] = fence.baseFence.modelMatrix.elements[0]
+      line.u_conversion.elements[12] = fence.baseFence.modelMatrix.elements[12]
+
+      rectangle.mesh.setData('u_conversion', fence.baseFence.modelMatrix.elements)
     }
-    // Y轴方向缩放平移
-    const minValue = spectrumYvalue.value.min + 40
-    const maxValue = spectrumYvalue.value.max + 40
-    
-    const zoomY = 160 / (maxValue - minValue)
-    fence.baseFence.modelMatrix.elements[5] = zoomY
-    rectangle.u_scale[1] = rectangle.initScale[1] * zoomY
-    const transY = (40 - Math.floor((minValue + maxValue - 80) / 2)) / 80 * zoomY
-    fence.baseFence.modelMatrix.elements[13] = transY
-
-    line.u_conversion.elements[0] = fence.baseFence.modelMatrix.elements[0]
-    line.u_conversion.elements[12] = fence.baseFence.modelMatrix.elements[12]
-
-    rectangle.mesh.setData('u_conversion', fence.baseFence.modelMatrix.elements)
 
     scene.value.render3D()
   }
@@ -334,7 +338,7 @@ function createShaderSource () {
       attribute float a_color;
       uniform vec2 u_scale;
       uniform mat4 u_conversion;
-      varying vec3 v_color;
+      varying vec4 v_color;
       void main() {
         if (u_scale.x > u_scale.y) {
           gl_PointSize = u_scale.x;
@@ -355,26 +359,28 @@ function createShaderSource () {
             g = (a_color > 128.0 ? (256.0 - a_color) * 1.9921875 : a_color * 1.9921875) / 255.0;
             b = (256.0 - a_color) * 0.6640625 / 255.0;
           }
+          v_color = vec4(r, g, b, 1.0);
+        } else {
+          v_color = v_color = vec4(r, g, b, 0.0);
         }
-        v_color = vec3(r, g, b);
       }`
     const fragmentSource = `
       precision lowp float;
-      varying vec3 v_color;
+      varying vec4 v_color;
       uniform vec2 u_scale;
       void main () {
         float d;
         if (u_scale.x > u_scale.y) {
           d = u_scale.y / u_scale.x / 2.0;
           if (gl_PointCoord.y >= 0.5 - d && gl_PointCoord.y <= 0.5 + d) {
-            gl_FragColor = vec4(v_color, 1.0);
+            gl_FragColor = v_color;
           } else {
             discard;
           }
         } else {
           d = u_scale.x / u_scale.y / 2.0;
           if (gl_PointCoord.x >= 0.5 - d && gl_PointCoord.x <= 0.5 + d) {
-            gl_FragColor = vec4(v_color, 1.0);
+            gl_FragColor = v_color;
           } else {
             discard;
           }
@@ -389,6 +395,14 @@ function createShaderSource () {
     scene.value.addProgram(program)
   }
 }
+
+// 背景网格
+const {
+  setGridProgram,
+  spectrumAxisX,
+  spectrumAxisY,
+  setLineColor
+} = useGlGrid(render)
 
 watch(inputDataLength, () => {
   if (scene.value) {
@@ -457,6 +471,9 @@ onMounted(() => {
       if (scene.value) {
         ctx.options.backgroundColor = UseTheme.theme.nl.backgroundColor
 
+        // 背景网格颜色
+        setLineColor()
+
         scene.value.removeProgram(program.id)
         createShaderSource()
         program.add(rectangle.mesh)
@@ -482,7 +499,7 @@ onMounted(() => {
     toolTip = new ToolTip(scene.value, {
       type: ToolTip.CROSS,
       infoTag: {
-        width: 300,
+        width: 420,
         height: 56
       }
     })
@@ -505,6 +522,9 @@ onMounted(() => {
         render()
       }
     })
+
+    // 绘制背景线条网格
+    setGridProgram(scene.value)
 
     createShaderSource()
 
@@ -640,7 +660,9 @@ defineExpose({
       <!-- 头部 -->
       <div class="header">
         <p v-if="name">{{name}}</p>
-        <slot />
+        <div class="slot">
+          <slot />
+        </div>
       </div>
       <!-- 第二行 -->
       <div class="second-row">
@@ -649,6 +671,7 @@ defineExpose({
           class="axis-y"
           :scene="scene"
           :defaultValue="{ max: 80, min: -30 }"
+          ref="spectrumAxisY"
           @change="axisYCahnge" />
         <div class="second-column">
           <!-- 场景 -->
@@ -658,6 +681,7 @@ defineExpose({
           <!-- X轴 -->
           <ZXIAxisX
             class="axis-x"
+            ref="spectrumAxisX"
             :scene="scene"
             :defaultValue="defaultValueX"
             :step="step"
@@ -679,16 +703,14 @@ defineExpose({
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
     width: 100%;
-    height: @headerHeight;
-    font-size: 12px;
+    font-size: @font20;
     color: v-bind('UseTheme.theme.var.color');
-    line-height: @headerHeight;
-    padding-left: 10px;
     box-sizing: border-box;
-    .textOverflow();
-    >p{
-      line-height: @headerHeight;
-      height: @headerHeight;
+    display: flex;
+    padding-bottom: 5px;
+    align-items: center;
+    .slot{
+      flex: auto
     }
   }
   .second-row{
@@ -697,7 +719,7 @@ defineExpose({
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 28px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;

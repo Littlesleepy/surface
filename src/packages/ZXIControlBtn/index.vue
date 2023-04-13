@@ -120,7 +120,7 @@ defineExpose({
               class="form-item"
               v-if="item.type === EBtncontrolType.switch"
               v-model="btnValues[item.paramName]"
-              :style="item.activeColor ? `--el-switch-on-color: ${item.activeColor}` : ''"
+              :elStyle="item.activeColor ? `--el-switch-on-color: ${item.activeColor}` : ''"
               :active-text="item.title" />
             <el-radio
               v-if="item.type === EBtncontrolType.radio"
