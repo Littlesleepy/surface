@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 15:24:01
+ * @LastEditTime: 2023-04-13 15:43:42
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -277,7 +277,8 @@ const master = ref<BaseParamsType>()
       <Modulate tabName="信号分析" class="tabItem" :canDraw="tabId === 1" />
       <ZXIItu :inputData="ITU" />
       <ZXIModulate :inputData="modulate" />
-      <ZXIScrollInfo :clear="startAndStop === ESwitchState.open" :inputData="decodingState" />
+      <ZXIScrollInfo class="Info" :clear="startAndStop === ESwitchState.open" :inputData="decodingState" />
+
     </ZXITabs>
 
   </BaseMonitorFrame>
@@ -298,6 +299,9 @@ const master = ref<BaseParamsType>()
   width: 100%;
   height: 100%;
   display: flex;
+  :deep(.FFM-tabs>div){
+    background-color: v-bind('UseTheme.theme.var.backgroundColor');
+  }
 
   .first-page {
     display: flex;
@@ -309,7 +313,7 @@ const master = ref<BaseParamsType>()
       flex-direction: row;
       box-sizing: border-box;
       width: 100%;
-      height: 65%;
+      height: 60%;
       padding-right: @btnSpace;
 
       .spectrum-and-fall {
@@ -340,6 +344,9 @@ const master = ref<BaseParamsType>()
       }
 
     }
+  }
+  .Info{
+    background-color: v-bind('UseTheme.theme.var.backgroundColor');
   }
 
 

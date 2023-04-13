@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 11:32:08
+ * @LastEditTime: 2023-04-13 16:12:30
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -213,10 +213,20 @@ onMounted(() => {
 
 <style scoped lang="less">
 @import url('theme');
+
 .base-link {
   display: flex;
   justify-content: center;
 }
+
+//     :deep(.pull-data-panel),
+//     :deep(.push-data-panel) {
+//       border-radius: 0 !important;
+//     }
+
+//     :deep(.icon-jiantou) {
+//       left: -4px !important;
+//     }
 
 .HandheldSingleMeasure {
   width: 100%;
@@ -231,9 +241,7 @@ onMounted(() => {
     background-color: v-bind('UseTheme.theme.var.backgroundColor');
 
     .containerTop {
-      flex: 1;
-      width: 100%;
-      height: 100%;
+      height: 50%;
       display: grid;
       grid-template-columns: 1fr 90px;
       grid-template-rows: 32px 1fr;
@@ -241,59 +249,41 @@ onMounted(() => {
       box-sizing: border-box;
 
       .containerTop-header {
-        height: 100%;
-        // line-height: 25px;
         box-sizing: border-box;
         display: flex;
         align-items: center;
         justify-content: center;
         color: v-bind('UseTheme.theme.var.color');
         font-size: 2rem;
-        grid-column-start: 1;
-        grid-row-start: 1;
-      }
-
-      .containerTop-Level {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .ZSlider {
-        width: 100%;
-        height: 100%;
-        // background-color: rgb(40, 40, 40);
-        grid-column-start: 2;
-        grid-row-start: 1;
-        grid-row-end: 3;
+        grid-column: 1/2;
+        grid-row: 1/2;
       }
 
       .ZLevel {
-        height: 100%;
-        flex: 1;
-        grid-column-start: 1;
-        grid-row-start: 2;
+        grid-column: 1/2;
+        grid-row: 2/3;
         border-left: 1px solid v-bind('UseTheme.theme.var.borderColor');
-        box-sizing: border-box;
         margin-left: 5px;
       }
 
-
+      .ZSlider {
+        grid-column: 2/3;
+        grid-row: 1/3;
+      }
     }
 
     .containerBottom {
-      flex: 1;
-      // width: 480px;
+      flex: auto;
       display: flex;
       flex-direction: row;
 
       .spectrum-and-fall {
         flex: 1;
-        padding-right: 5px;
+        padding-right: @btnSpace;
         box-sizing: border-box;
         border-right: v-bind('CustomTheme.theme.districtBorder');
-        .params-branch{
+
+        .params-branch {
           padding: @btnSpace 0 0 @btnSpace;
         }
       }
@@ -303,72 +293,7 @@ onMounted(() => {
         max-width: 500px;
         width: 40%;
       }
-
-
-      .tabsAndAudio {
-        border-top: 3px solid rgb(102, 102, 102);
-        box-sizing: border-box;
-        width: 100%;
-        height: 35%;
-        min-height: 265px;
-        overflow: hidden;
-
-        :deep(.base-content) {
-          padding: 0;
-        }
-      }
-    }
-
-    :deep(.pull-data-panel),
-    :deep(.push-data-panel) {
-      border-radius: 0 !important;
-    }
-
-    :deep(.icon-jiantou) {
-      left: -4px !important;
     }
   }
-}
-
-
-
-.single-result {
-  flex: auto;
-  display: flex;
-  flex-direction: column;
-  user-select: none;
-  background-color: v-bind('UseTheme.theme.var.backgroundColor');
-
-  .containerTop {
-    height: 50%;
-    display: flex;
-
-    .spectrum-and-fall-Audio {
-      flex: auto;
-    }
-
-    .compass {
-      width: 35%;
-      height: 100%;
-      box-sizing: border-box;
-
-    }
-  }
-
-  .containerBotom {
-    flex: auto;
-    display: flex;
-    flex-direction: column;
-
-    .lable {
-      flex: auto;
-    }
-  }
-}
-
-.lable-content {
-  position: absolute;
-  width: 100%;
-  height: 100%;
 }
 </style>
