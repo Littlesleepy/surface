@@ -37,8 +37,7 @@ const props = withDefaults(defineProps<IZXIDpxProps>(), {
       fftpoints: 0
     }
   },
-  switchLever: ESwitchState.off,
-  name: '数字荧光谱'
+  switchLever: ESwitchState.off
 })
 
 const emit = defineEmits<{
