@@ -57,10 +57,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("views/SpectrumAnalysis/SpectrumAnalysis.vue"),
   },
   {
-    path: "/FFMX",
-    name: "FFMX",
-    meta: { title: "FFM测量" },
-    component: () => import("views/FFMX/FFMX.vue"),
+    path: "/SignalRecognitionAnalysis",
+    name: "SignalRecognitionAnalysis",
+    meta: { title: "信号特征分析" },
+    component: () => import("@/views/SignalRecognitionAnalysis/SignalRecognitionAnalysis.vue"),
   },
   {
     path: "/DPX",

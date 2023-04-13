@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 13:28:52
+ * @LastEditTime: 2023-04-13 14:49:13
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
@@ -152,7 +152,7 @@ const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
             [
               { name: '每跳频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
               { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
-              { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 6 },
+              { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 9 },
             ]
           ]" :master="master" />
         </template>

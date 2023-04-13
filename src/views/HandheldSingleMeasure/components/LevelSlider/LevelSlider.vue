@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2022-07-20 13:56:30
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 10:08:39
+ * @LastEditTime: 2023-04-13 14:14:42
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\components\LevelSlider\LevelSlider.vue
  * @Description:
  -->
@@ -130,6 +130,7 @@ const Color = ref('rgb(0,0,0)')
 function setColor(a_color: number) {
   const b_color: Array<Array<number>> = UseTheme.theme.SpectrumAndFall.barColor
 
+
   const L = b_color.length - 1
   const d = 1 / L
   for (let i = 1; i <= L; i++) {
@@ -139,8 +140,12 @@ function setColor(a_color: number) {
       const [r, g, b] = ((cb, ct, n) => {
         let c: Array<number> = []
         cb.forEach((e, i) => {
+          // DEBUG
+          // console.log(e,cb[i],ct[i]);
+          // console.log(cb[i],ct[i]);
           if (cb[i] > ct[i]) {
             c.push(255 - ((cb[i] - ct[i]) * (n) + ct[i]) * 255)
+            // console.log(255 - ((cb[i] - ct[i]) * (n) + ct[i]) * 255);
           } else if (cb[i] < ct[i]) {
             c.push(((ct[i] - cb[i]) * (n) + cb[i]) * 255)
           } else {
@@ -150,6 +155,7 @@ function setColor(a_color: number) {
         return c
       })(b_color[i - 1], b_color[i], n)
       Color.value = `rgb(${r},${g},${b})`
+      // console.log(r,g,b);
       return `rgb(${r},${g},${b})`
     }
   }
@@ -163,16 +169,16 @@ function setHeight(control: boolean = false) {
   // const powMax = Math.pow(10, maxLevel.value / 20)
   // 设置最大值
   maxLevel.value = 20 * Math.log10(max)//max
-  
+
   // 运行中使用这个值
   const play =
     ((props.inputLevel - min) / ((max - min) * 0.1 + max)) * 100
-    
+
   // 暂停时使用这个值
   const stop =
     ((props.inputLevel - min) / (max - min)) * 100
   heightRatio.value = (control ? props.switchLever : true) ? play : stop
-  
+
   // 动态设置颜色
   setColor(heightRatio.value / 100)
 
@@ -236,7 +242,7 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="Slider-box">
-          <span :style="{ 'height': `${heightRatio}%`, 'background-color': Color }" />
+          <span :style="{ 'height': `${heightRatio}%` }" />
         </div>
         <div class="Slider-buttons">
           <div @click.stop.prevent="setMaxMin('reduceMax')" class="Slider-button">

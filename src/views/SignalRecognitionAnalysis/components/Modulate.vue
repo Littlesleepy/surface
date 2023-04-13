@@ -2,8 +2,8 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-10 11:27:09
- * @FilePath: \zxi-surface\src\views\FFMX\components\Modulate.vue
+ * @LastEditTime: 2023-04-13 15:24:07
+ * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\components\Modulate.vue
  * @Description: 
  -->
 <script setup lang='ts'>

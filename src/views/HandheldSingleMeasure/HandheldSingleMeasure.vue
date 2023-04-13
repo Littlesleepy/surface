@@ -123,8 +123,6 @@ function setLevelValue(value: IAxisYValue) {
 }
 
 watch(() => inputLevel.value.level, (newLevel) => {
-  console.log(newLevel);
-  
   const viceForms = localStorage.getItem(localStorageKey.KEY_VICEFORMS)
   const playSpeed = JSON.parse(viceForms!).HandheldSingleMeasure['playSpeed'] as number
   const { max, min } = maxMinLevel.value
