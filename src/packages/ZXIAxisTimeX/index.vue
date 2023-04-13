@@ -115,7 +115,7 @@ defineExpose({
   <div ref="root">
     <div
       class="container">
-      <div ref="axisDom" />
+      <div class="axis-scale" ref="axisDom" />
       <div class="cut-marker">
         <span ref="cutMarker" />
       </div>
@@ -126,22 +126,25 @@ defineExpose({
 <style scoped lang="less">
 .container{
   width: 100%;
-  height: 28px;
+  height: 32px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
+  .axis-scale{
+    height: 30px;
+  }
   .cut-marker{
     position: relative;
-    height: 3px;
-    padding-bottom: 2px;
     border-bottom: 1px solid v-bind('UseTheme.theme.var.color');
-    box-sizing: border-box;
     span{
       display: block;
       position: absolute;
-      height: 100%;
+      height: 29px;
+      bottom: 0;
       background-color: v-bind('UseTheme.theme.var.color');
+      opacity: 0.25;
+      pointer-events: none;
     }
   }
 }

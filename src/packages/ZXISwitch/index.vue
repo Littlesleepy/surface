@@ -24,7 +24,8 @@ const props = defineProps({
     default: false
   },
   class: { type: String },
-  style: { type: [Object, String, Array] as PropType<StyleValue | undefined> }
+  style: { type: [Object, String, Array] as PropType<StyleValue | undefined> },
+  elStyle: { type: [Object, String, Array] as PropType<StyleValue | undefined> }
 })
 
 const emit = defineEmits<{
@@ -53,7 +54,7 @@ function handleClick () {
       <span class="marker" :style="$attrs.disabled ? { opacity: 1 } : { opacity: 0 }" />
       <!-- 名称 -->
       <div class="name" v-if="name">{{ name }}</div>
-      <el-switch class="zxi-switch" v-model="currentValue" v-bind="$attrs" />
+      <el-switch class="zxi-switch" v-model="currentValue" v-bind="$attrs" :style="elStyle" />
     </div>
   </div>
 </template>

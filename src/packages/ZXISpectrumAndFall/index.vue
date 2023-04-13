@@ -372,7 +372,6 @@ defineExpose({
       box-sizing: border-box;
       display: flex;
       .name{
-        line-height: @headerHeight;
         font-size: @font20;
         color: v-bind('UseTheme.theme.var.color');
         padding-left: 10px;

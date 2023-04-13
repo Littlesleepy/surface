@@ -32,8 +32,6 @@ interface IIconList {
 
 const router = useRouter()
 
-const sort = ["SingleMeasure", "PScan", "XScan", "DPX", "CIQStream", "SignalRecognitionAnalysis", "HandheldSingleMeasure",]
-
 const naviGationLists = ref<Array<IIconList>>([])
 
 function dataInit () {
@@ -46,34 +44,24 @@ function dataInit () {
     return
   }
   let startId = 0
-  funcs.forEach(m => {
-    // 屏蔽全景扫描——亚运会
-    const enableFunction = new Set(Config.enableFunction)
-    if (enableFunction.has(m.functionKey)) {
-      const item: IIconList = {
-        id: startId,
-        imgUrl: `imgs/${m.functionKey}.png`,
-        name: m.name,
-        title: m.description,
-        goFunc: () => { handleRoute(m.functionKey) },
-        nameEn: m.functionKey,
-        index: m.orderIndex
-      }
+  Config.enableFunction.forEach(name => {
+    funcs.forEach(m => {
+      if (m.functionKey === name) {
+        const item: IIconList = {
+          id: startId,
+          imgUrl: `imgs/${m.functionKey}.png`,
+          name: m.name,
+          title: m.description,
+          goFunc: () => { handleRoute(m.functionKey) },
+          nameEn: m.functionKey,
+          index: m.orderIndex
+        }
 
-      naviGationLists.value.push(item)
-      startId++
-    }
-  })
-  const copyLists: Array<IIconList> = []
-  // 排序
-  sort.forEach(name => {
-    naviGationLists.value.forEach(item => {
-      if (item.nameEn === name) copyLists.push(item)
+        naviGationLists.value.push(item)
+        startId++
+      }
     })
   })
-
-  naviGationLists.value = copyLists
-
 }
 
 function handleRoute (name) {
