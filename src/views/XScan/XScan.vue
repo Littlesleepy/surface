@@ -114,10 +114,6 @@ const master = ref<BaseParamsType>()
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
 
 
-
-const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
-
-
 </script>
 
 <template>
@@ -130,19 +126,10 @@ const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
       <hr>
     </BaseLink>
     <template #set>
-      <BaseParams ref="master" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
+      <BaseParams ref="master" :inited="inited" :dynamicParam="false" />
     </template>
     <!-- 头部切换视图 -->
     <template #header-center>
-      <!-- <div class="header-slot">
-        <BaseParamsBranch class="params-branch" :params="[
-            [
-              { name: '每跳频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
-              { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
-              { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 6 },
-            ]
-          ]" :master="master" />
-      </div> -->
     </template>
     <div class="content-right">
       <ZXISpectrumScanAndFall class="spectrum-scan-and-fall" :inputData="spectrum" :params="params"
