@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-10 17:23:51
+ * @LastEditTime: 2023-04-13 13:28:52
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
@@ -134,7 +134,7 @@ const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
     </template>
     <!-- 头部切换视图 -->
     <template #header-center>
-      <div class="header-slot">
+      <!-- <div class="header-slot">
         <BaseParamsBranch class="params-branch" :params="[
             [
               { name: '每跳频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
@@ -142,12 +142,21 @@ const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
               { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 6 },
             ]
           ]" :master="master" />
-      </div>
+      </div> -->
     </template>
     <div class="content-right">
       <ZXISpectrumScanAndFall class="spectrum-scan-and-fall" :inputData="spectrum" :params="params"
         :switchLever="startAndStop" @selectFrequency="selectFrequency">
-        <template #header>
+        <template  #header>
+          <BaseParamsBranch class="params-branch0" :params="[
+            [
+              { name: '每跳频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+              { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
+              { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 6 },
+            ]
+          ]" :master="master" />
+        </template>
+        <template  #middle>
           <BaseParamsBranch class="params-branch1" :params="[
             [
               { name: '开始频率', paramName: 'begin', ratio: 11 },
@@ -196,18 +205,22 @@ const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
 }
 
 .params-branch0 {
-  padding: @btnSpace;
+  // padding: @btnSpace;
+  // height: 100%;
+  // display: flex;
+
+  // div {
+  //   height: 100%;
+  // }
+  // padding: @btnSpace;
   height: 100%;
   display: flex;
-
-  div {
-    height: 100%;
-  }
+  padding-left: @btnSpace;
 }
 
 .params-branch1 {
-  padding: @btnSpace;
   height: 100%;
   display: flex;
+  padding: 0 0 @btnSpace 11.5rem;
 }
 </style>

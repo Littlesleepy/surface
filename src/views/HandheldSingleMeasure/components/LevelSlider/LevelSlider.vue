@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2022-07-20 13:56:30
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-12 17:07:49
+ * @LastEditTime: 2023-04-13 10:08:39
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\components\LevelSlider\LevelSlider.vue
  * @Description:
  -->
@@ -163,14 +163,16 @@ function setHeight(control: boolean = false) {
   // const powMax = Math.pow(10, maxLevel.value / 20)
   // 设置最大值
   maxLevel.value = 20 * Math.log10(max)//max
+  
   // 运行中使用这个值
   const play =
     ((props.inputLevel - min) / ((max - min) * 0.1 + max)) * 100
+    
   // 暂停时使用这个值
   const stop =
     ((props.inputLevel - min) / (max - min)) * 100
   heightRatio.value = (control ? props.switchLever : true) ? play : stop
-
+  
   // 动态设置颜色
   setColor(heightRatio.value / 100)
 
@@ -254,80 +256,6 @@ onUnmounted(() => {
 <style scoped lang="less">
 @import url('theme');
 
-.MLevelSlider {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 32px 1fr 32px;
-  color: v-bind('UseTheme.theme.var.color');
-
-  .header {
-    grid-row: 1/2;
-    grid-column: 1/3;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    //  font-weight: bold;
-    font-size: 2rem;
-  }
-
-  .Slider-box {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    position: relative;
-    border: 1px solid;
-    border-color: v-bind('UseTheme.theme.var.borderColor');
-    overflow: hidden;
-    cursor: pointer;
-
-    span {
-      position: absolute;
-      display: block;
-      bottom: 0;
-      width: 100%;
-      background-color: v-bind('UseTheme.theme.LevelPillar.levelColor');
-    }
-  }
-
-  .slider-buttons {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    .min,
-    .max {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      align-items: center;
-
-      >div {
-        height: 4rem;
-        display: flex;
-        align-items: center;
-      }
-    }
-  }
-
-
-  .footer {
-    grid-row: 3/4;
-    grid-column: 1/3;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    //  font-weight: bold;
-    font-size: 2rem;
-  }
-}
 
 .LevelSlider {
   width: 100%;

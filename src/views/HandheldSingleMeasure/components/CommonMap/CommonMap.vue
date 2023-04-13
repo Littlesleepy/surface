@@ -17,6 +17,8 @@ import maplibreGl, { GeoJSONSource } from 'maplibre-gl';
 import { mapStyle } from '@/helper';
 import lightStyle from '@/assets/mapStyle/light.json'
 import { MeasureControl, setDeviceMarker } from './Control';
+import 'maplibre-gl/dist/maplibre-gl.css'
+
 
 const serverStore = useServerStore()
 // 长连接获取gps信息

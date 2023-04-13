@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-12 17:29:35
+ * @LastEditTime: 2023-04-13 11:32:08
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -23,10 +23,8 @@ import { BaseParamsType, CustomTheme, setLinkTrigger } from '@/types'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
 import CommonMap from './components/CommonMap/CommonMap.vue'
-import maplibregl, { GeoJSONSource } from 'maplibre-gl'
 import lightStyle from '@/assets/mapStyle/light.json'
-import 'maplibre-gl/dist/maplibre-gl.css'
-import {  MeasureControl, setDeviceMarker } from "./components/CommonMap/Control";
+import { MeasureControl, setDeviceMarker } from "./components/CommonMap/Control";
 
 const store = useFrameStore()
 
@@ -125,6 +123,8 @@ function setLevelValue(value: IAxisYValue) {
 }
 
 watch(() => inputLevel.value.level, (newLevel) => {
+  console.log(newLevel);
+  
   const viceForms = localStorage.getItem(localStorageKey.KEY_VICEFORMS)
   const playSpeed = JSON.parse(viceForms!).HandheldSingleMeasure['playSpeed'] as number
   const { max, min } = maxMinLevel.value
@@ -152,7 +152,12 @@ watch(() => store.s_playButton, (btn) => {
 })
 
 const master = ref<BaseParamsType>()
-
+onMounted(() => {
+  console.log(master.value?.elements);
+  // frequency 频率(MHz) 
+  // bandwidth 频谱带宽(kHz)
+  // debw 解调带宽(kHz)
+})
 </script>
 
 <template>
@@ -167,41 +172,49 @@ const master = ref<BaseParamsType>()
     <template #set>
       <BaseParams ref="master" :inited="mockPanleInited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
-    <template #header-center>
-    </template>
     <div class="HandheldSingleMeasure">
-        <div class="single-container">
-          <div class="containerTop">
-            <audio loop ref="levelAudio">
-              <source :src="levelsrc" type="audio/mpeg">
-            </audio>
-            <div class="containerTop-header">
-              瞬时值：{{ dBuV.toFixed(1) }} dBuV
-            </div>
+      <div class="single-container">
+        <div class="containerTop">
+          <audio loop ref="levelAudio">
+            <source :src="levelsrc" type="audio/mpeg">
+          </audio>
+          <div class="containerTop-header">
+            瞬时值：{{ dBuV.toFixed(1) }} dBuV
+          </div>
 
-            <ZXILevel ref="ZLevel" :showAxisY="false" :capacity="0.1" :scaleY="{
-              unit: 'dBuV',
-              parse: (v) => `幅度：${parseFloat((20 * Math.log10(v)).toFixed(2))}dBuV`,
-              transform: (v) => {
-                return parseFloat((20 * Math.log10(v)).toFixed(2))
-              }
-            }" class="ZLevel" :drawType="ELevelType.bar" :switchLever="store.s_playButton" :deleteTool="['threshold']"
-              :inputData="levelData" />
-            <LevelSlider @event_setLevelValue="setLevelValue" :inputData="levelData" :switchLever="store.s_playButton"
-              :inputLevel="inputLevel.level" class="ZSlider" />
-          </div>
-          <div class="containerBottom">
-            <ZXISpectrumAndFall class="spectrum-and-fall" :inputData="inputData" :params="params"
-              :switchLever="store.s_playButton" :setTool="setTool" :markers="markers"
-              @selectFrequency="selectFrequency" />
-            <CommonMap class="map"></CommonMap>
-          </div>
+          <ZXILevel ref="ZLevel" :showAxisY="false" :capacity="0.1" :scaleY="{
+            unit: 'dBuV',
+            parse: (v) => `幅度：${parseFloat((20 * Math.log10(v)).toFixed(2))}dBuV`,
+            transform: (v) => {
+              return parseFloat((20 * Math.log10(v)).toFixed(2))
+            }
+          }" class="ZLevel" :drawType="ELevelType.bar" :switchLever="store.s_playButton" :deleteTool="['threshold']"
+            :inputData="levelData" />
+          <LevelSlider @event_setLevelValue="setLevelValue" :inputData="levelData" :switchLever="store.s_playButton"
+            :inputLevel="inputLevel.level" class="ZSlider" />
         </div>
+        <div class="containerBottom">
+          <ZXISpectrumAndFall class="spectrum-and-fall" :inputData="inputData" :params="params"
+            :switchLever="store.s_playButton" :setTool="setTool" :markers="markers" @selectFrequency="selectFrequency">
+            <template #header>
+              <BaseParamsBranch class="params-branch" :params="[
+                [
+                  { name: '频率', paramName: 'frequency', ratio: 12 },
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 12 },
+                ]
+              ]" :master="master" />
+            </template>
+          </ZXISpectrumAndFall>
+          <CommonMap class="map"></CommonMap>
+        </div>
+      </div>
     </div>
   </BaseMonitorFrame>
 </template>
 
 <style scoped lang="less">
+@import url('theme');
 .base-link {
   display: flex;
   justify-content: center;
@@ -213,107 +226,110 @@ const master = ref<BaseParamsType>()
   display: flex;
 
   .single-container {
-  flex: auto;
-  display: flex;
-  flex-direction: column;
-  user-select: none;
-  background-color: v-bind('UseTheme.theme.var.backgroundColor');
-
-  .containerTop {
-    flex: 1;
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 90px;
-    grid-template-rows: 32px 1fr;
-    border-bottom: v-bind('CustomTheme.theme.districtBorder');
-    box-sizing: border-box;
-
-    .containerTop-header {
-      height: 100%;
-      line-height: 25px;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: v-bind('UseTheme.theme.var.color');
-      font-size: 2rem;
-      grid-column-start: 1;
-      grid-row-start: 1;
-    }
-
-    .containerTop-Level {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .ZSlider {
-      width: 100%;
-      height: 100%;
-      // background-color: rgb(40, 40, 40);
-      grid-column-start: 2;
-      grid-row-start: 1;
-      grid-row-end: 3;
-    }
-
-    .ZLevel {
-      height: 100%;
-      flex: 1;
-      grid-column-start: 1;
-      grid-row-start: 2;
-      border-left: 1px solid v-bind('UseTheme.theme.var.borderColor');
-      box-sizing: border-box;
-      margin-left: 5px;
-    }
-
-
-  }
-
-  .containerBottom {
-    flex: 1;
-    // width: 480px;
+    flex: auto;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    user-select: none;
+    background-color: v-bind('UseTheme.theme.var.backgroundColor');
 
-    .spectrum-and-fall {
+    .containerTop {
       flex: 1;
-      padding-right: 5px;
-      box-sizing: border-box;
-      border-right: v-bind('CustomTheme.theme.districtBorder');
-    }
-
-    .map {
-      box-sizing: border-box;
-      max-width: 500px;
-      width: 40%;
-    }
-
-
-    .tabsAndAudio {
-      border-top: 3px solid rgb(102, 102, 102);
-      box-sizing: border-box;
       width: 100%;
-      height: 35%;
-      min-height: 265px;
-      overflow: hidden;
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 90px;
+      grid-template-rows: 32px 1fr;
+      border-bottom: v-bind('CustomTheme.theme.districtBorder');
+      box-sizing: border-box;
 
-      :deep(.base-content) {
-        padding: 0;
+      .containerTop-header {
+        height: 100%;
+        // line-height: 25px;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: v-bind('UseTheme.theme.var.color');
+        font-size: 2rem;
+        grid-column-start: 1;
+        grid-row-start: 1;
+      }
+
+      .containerTop-Level {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .ZSlider {
+        width: 100%;
+        height: 100%;
+        // background-color: rgb(40, 40, 40);
+        grid-column-start: 2;
+        grid-row-start: 1;
+        grid-row-end: 3;
+      }
+
+      .ZLevel {
+        height: 100%;
+        flex: 1;
+        grid-column-start: 1;
+        grid-row-start: 2;
+        border-left: 1px solid v-bind('UseTheme.theme.var.borderColor');
+        box-sizing: border-box;
+        margin-left: 5px;
+      }
+
+
+    }
+
+    .containerBottom {
+      flex: 1;
+      // width: 480px;
+      display: flex;
+      flex-direction: row;
+
+      .spectrum-and-fall {
+        flex: 1;
+        padding-right: 5px;
+        box-sizing: border-box;
+        border-right: v-bind('CustomTheme.theme.districtBorder');
+        .params-branch{
+          padding: @btnSpace 0 0 @btnSpace;
+        }
+      }
+
+      .map {
+        box-sizing: border-box;
+        max-width: 500px;
+        width: 40%;
+      }
+
+
+      .tabsAndAudio {
+        border-top: 3px solid rgb(102, 102, 102);
+        box-sizing: border-box;
+        width: 100%;
+        height: 35%;
+        min-height: 265px;
+        overflow: hidden;
+
+        :deep(.base-content) {
+          padding: 0;
+        }
       }
     }
-  }
 
-  :deep(.pull-data-panel),
-  :deep(.push-data-panel) {
-    border-radius: 0 !important;
-  }
+    :deep(.pull-data-panel),
+    :deep(.push-data-panel) {
+      border-radius: 0 !important;
+    }
 
-  :deep(.icon-jiantou) {
-    left: -4px !important;
+    :deep(.icon-jiantou) {
+      left: -4px !important;
+    }
   }
-}
 }
 
 
