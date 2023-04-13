@@ -130,7 +130,7 @@ const headerElements = ['bandwidth', 'rfbandwidth', 'adcamplify']
       <hr>
     </BaseLink>
     <template #set>
-      <BaseParams ref="master" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
+      <BaseParams ref="master" :inited="inited" :dynamicParam="false" />
     </template>
     <!-- 头部切换视图 -->
     <template #header-center>

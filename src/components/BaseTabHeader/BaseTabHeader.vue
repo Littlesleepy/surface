@@ -107,7 +107,7 @@ const headerTrance = computed(() => backResult(props.headers))
         @click="tabId = i"
         :selected="tabId === i"
         :style="header.style">
-        <span class="tab-item-font">{{ header.name }}</span>
+        <pre class="tab-item-font">{{ header.name }}</pre>
       </ZXIButton>
     </div>
   </div>
