@@ -2,8 +2,8 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-10 15:24:19
- * @FilePath: \zxi-surface\src\views\FFMX\FFMX.vue
+ * @LastEditTime: 2023-04-13 15:24:01
+ * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
 <script setup lang='ts'>
@@ -253,8 +253,7 @@ const master = ref<BaseParamsType>()
               <BaseParamsBranch class="params-branch" :params="[
                 [
                   { name: '全景中心频率(MHz)', paramName: 'frequency', ratio: 6 },
-                  { name: '全景频谱带宽(kHz)', paramName: 'bandwidth', ratio: 6 },
-                  { name: '全景频谱分辨率', paramName: 'panfftpoints', ratio: 6 }
+                  { name: '全景频谱带宽(kHz)', paramName: 'bandwidth', ratio: 6 }
                 ]
               ]" :master="master" />
             </template>
@@ -268,8 +267,7 @@ const master = ref<BaseParamsType>()
               <BaseParamsBranch class="params-branch" :params="[
                 [
                   { name: '测量/解调频率(MHz)', paramName: 'def', ratio: 6 },
-                  { name: '测量/解调带宽(kHz)', paramName: 'debw', ratio: 6 },
-                  { name: '解调频谱分辨率', paramName: 'chfftpoints', ratio: 6 },
+                  { name: '测量/解调带宽(kHz)', paramName: 'debw', ratio: 6 }
                 ]
               ]" :master="master" />
             </template>

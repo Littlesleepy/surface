@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-11 09:06:00
+ * @LastEditTime: 2023-04-13 14:53:22
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -119,9 +119,9 @@ ToExport.beforExport.set('0', () => {
   if (spectrum.value.data.length > 0) ToExport.addDom('荧光谱', spInstance.value!.root!, 1)
 })
 const master = ref<BaseParamsType>()
-onMounted(()=>{
+onMounted(() => {
   console.log(master.value?.elements);
-  
+
 })
 </script>
 
@@ -130,24 +130,32 @@ onMounted(()=>{
     <template #set>
       <BaseParams ref="master" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
-    <template #header-center>
+    <!-- <template #header-center>
       <div class="header-slot">
         <BaseParamsBranch class="params-branch" :params="[
           [
-              { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
-              { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
-              { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
-            ]
+            { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
+            { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+            { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
+          ]
         ]" :master="master" />
       </div>
-    </template>
+    </template> -->
     <div class="content-right">
       <div class="content-right-two">
         <ZXIDpx class="img" ref="spInstance" :params="params" :inputData="spectrum" :switchLever="store.s_playButton">
-          <p>{{ headerInfo }}</p>
+          <p class="info">{{ headerInfo }}</p>
         </ZXIDpx>
+        <BaseParamsBranch class="params-branch" :params="[
+          [
+            { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
+            { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+            { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
+          ]
+        ]" :master="master" />
       </div>
     </div>
+    
   </BaseMonitorFrame>
 </template>
 
@@ -193,6 +201,14 @@ onMounted(()=>{
       height: 100%;
       padding-right: 10px;
       box-sizing: border-box;
+
+      .info {
+        font-size: 2rem;
+
+      }
+    }
+    .params-branch{
+      padding: @btnSpace @btnSpace @btnSpace 11.5rem;
     }
   }
 }
