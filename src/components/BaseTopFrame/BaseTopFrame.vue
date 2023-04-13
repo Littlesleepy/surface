@@ -23,11 +23,9 @@ function setMinMaxClose (status: 'min' | 'max' | 'close') {
       cancelButtonText: '取消',
       type: 'warning',
     }
-  )
-    .then(() => {
+  ).then(() => {
       window.electronAPI.controlApp(status)
-    })
-    .catch(() => {
+  }).catch(() => {
       ElMessage({
         type: 'info',
         message: '取消退出'
@@ -52,18 +50,18 @@ function reload () {
         </div>
         <div class="right">
           <div class="control">
-            <BaseButton @click="reload">
+            <ZXIButton @click="reload">
               <i class="iconfont icon-shuaxin" />
-            </BaseButton>
-            <BaseButton @click="setMinMaxClose('min')">
+            </ZXIButton>
+            <ZXIButton @click="setMinMaxClose('min')">
               <i class="iconfont icon-zuixiaohua" />
-            </BaseButton>
-            <BaseButton @click="setMinMaxClose('max')">
+            </ZXIButton>
+            <ZXIButton @click="setMinMaxClose('max')">
              <i class="iconfont icon-zuidahua" />
-            </BaseButton>
-            <BaseButton @click="setMinMaxClose('close')">
+            </ZXIButton>
+            <ZXIButton @click="setMinMaxClose('close')">
               <i class="iconfont icon-guanbi1" />
-            </BaseButton>
+            </ZXIButton>
           </div>
           <div class="slot">
             <slot name="right" />

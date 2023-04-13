@@ -47,7 +47,7 @@ const containerBgColor = computed(() => props.modal ? 'rgba(0, 0, 0, 0.6)' : 'rg
 
 const contentPointerEevents = computed(() => show.value ? 'auto' : 'none')
 
-const zIndex = computed(() => show.value ? 2000 : -1)
+const zIndex = computed(() => show.value ? 1000 : -1)
 
 function close () {
   show.value = false

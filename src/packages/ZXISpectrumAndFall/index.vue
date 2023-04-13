@@ -83,6 +83,10 @@ interface IZXISpectrumAndFallProps {
    * @description: 信号标记
    */  
   markers?: Array<number>
+  /** 
+   * @description: 是否使用选中频率功能
+   */
+  useSelectFrequency?: boolean
 }
 
 const props = withDefaults(defineProps<IZXISpectrumAndFallProps>(), {
@@ -164,7 +168,6 @@ const step = computed(() => {
 })
 
 const {
-  buttons,
   controls,
   btnValues,
   inputData,
@@ -219,10 +222,12 @@ watch(() => props.inputData, (data) => {
   inputData.value = data
 })
 
-watch(() => props.refresh, () => {
+function refresh() {
   resetSpectrum()
   resetFall()
-})
+}
+
+watch([() => btnValues.reset, () => props.refresh], refresh)
 
 defineExpose({
   root,
@@ -283,7 +288,7 @@ defineExpose({
                 :icons="peakIcons"
                 :scene="spectrumScene"
                 :step="step"
-                :usingData="usingData" />
+                :usingData="usingData.data" />
               <!-- 信号标记 -->
               <ZXIIcons
                 class="tool"
@@ -292,7 +297,7 @@ defineExpose({
                 :icons="tags"
                 :scene="spectrumScene"
                 :step="step"
-                :usingData="usingData"
+                :usingData="statisticalBuffer.max"
                 :showText="showTagsText" />
               <!-- 高亮 -->
               <ZXIHighlight

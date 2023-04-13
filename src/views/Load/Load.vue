@@ -46,7 +46,7 @@ function login (): void {
             progress.value = '初始化设备失败'
           }
         })
-      }, 1500)
+      }, 1000)
       
     }
   }).catch(() => {
@@ -83,8 +83,6 @@ setTimeout(() => {
   color: v-bind('UseTheme.theme.var.color');
   display: flex;
   position: relative;
-  -webkit-app-region: drag;
-  -webkit-user-select: none;
   display: flex;
   flex-direction: column;
   .wrapper{

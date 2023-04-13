@@ -227,6 +227,22 @@ export function fall (
       zoomOneFallvertexColor.set(copy, fence.baseFence.count * 2)
     }
   }
+  /**
+   * @description: 一次性设置无抽取瀑布图的绘制数据
+   * @return {*}
+   */  
+  function setZoomOneFallvertexColorByBuffer() {
+    if (fallScene.value) {
+      const fence = fallScene.value.fence as LayersFenceType
+
+      zoomOneFallvertexColor.fill(Shader.BACKGROUND_COLOR)
+
+      for (let i = inputDataBuffer.topRow + inputDataBuffer.maxRow - 1, end = inputDataBuffer.topRow; i >= end; i--) {
+        const item = inputDataBuffer.data[i]
+        if (item) setZoomOneFallvertexColor(item.data, fence, inputDataBuffer.data)
+      }
+    }
+  }
 
   function render () {
     if (fallScene.value) {
@@ -281,6 +297,7 @@ export function fall (
         if (dsLen > 0) {
           inputDataBuffer.data = inputDataBuffer.data.slice(0, inputDataBuffer.toltalRow)
         }
+
       }
       // 纵向变化引起顶点数量变化
       refreshAsVertextCountchange()
@@ -305,11 +322,7 @@ export function fall (
       zoomOneFallvertexColor =
         new Float32Array(inputDataBuffer.maxRow * fence.baseFence.count * 2).fill(Shader.BACKGROUND_COLOR)
         
-      let item: Float32Array
-      for (let len = inputDataBuffer.data.length, i = len - 1; i >= 0; i--) {
-        item = inputDataBuffer.data[i].data
-        setZoomOneFallvertexColor(item, fence, inputDataBuffer.data)
-      }
+      setZoomOneFallvertexColorByBuffer()
 
       fallvertexColor =
         new Float32Array(inputDataBuffer.maxRow * fence.baseFence.count * 2).fill(Shader.BACKGROUND_COLOR)
@@ -361,7 +374,6 @@ export function fall (
    */  
   function fallScroll (scroll: { num: number }) {
     if (fallScene.value) {
-      const fence = fallScene.value.fence as LayersFenceType
       const maxRow = btnValues.fallCeliang ? Math.ceil(inputDataBuffer.maxRow / 11) : inputDataBuffer.maxRow
       // 设置缓存区顶部位置
       inputDataBuffer.topRow += scroll.num
@@ -369,22 +381,10 @@ export function fall (
       if (inputDataBuffer.topRow + maxRow > inputDataBuffer.data.length && inputDataBuffer.data.length > maxRow) {
         inputDataBuffer.topRow = inputDataBuffer.data.length - maxRow
       }
-      if (!btnValues.fallCeliang) {
-        // 计算瀑布图绘制数据
-        FallData.fallsDrawDataTrend(inputDataBuffer, fallvertexColor, fence) // 抽取
-        if (fence.currentZoom === 1) {
-          zoomOneFallvertexColor = new Float32Array(fallvertexColor)
 
-          fallMesh.setData('a_color', zoomOneFallvertexColor)
-        } else {
-          fallMesh.setData('a_color', fallvertexColor)
-        }
-      } else {
-        // 数据抽取
-        FallData.fallsRectangleDataTrend(inputDataBuffer, rectangle.a_color, fence, rectangle.scaleY.length)
-      }
+      setZoomOneFallvertexColorByBuffer()
       
-      fallScene.value.render3D()
+      render()
     }
   }
   /**
@@ -840,11 +840,18 @@ export function fall (
   })
 
   watch(pubutusave, (value) => {
-    if (props.switchLever === ESwitchState.open && lock.value && !props.infiniteFall) {
+    if (lock.value && !props.infiniteFall) {
       inputDataBuffer.toltalRow = inputDataBuffer.maxRow * value
       // 如果buffer长度超过总长度，减掉
       const len = inputDataBuffer.data.length
-      if (len > inputDataBuffer.toltalRow) inputDataBuffer.data.splice(inputDataBuffer.toltalRow, len - inputDataBuffer.toltalRow)
+      if (len > inputDataBuffer.toltalRow) {
+        inputDataBuffer.data.splice(inputDataBuffer.toltalRow, len - inputDataBuffer.toltalRow)
+        inputDataBuffer.topRow = 0
+
+        setZoomOneFallvertexColorByBuffer()
+      }
+
+      render()
     }
   })
 
@@ -917,6 +924,8 @@ export function fall (
         fallScene.value.removeProgram(rectangle.program!.id)
       }
     }
+
+    setZoomOneFallvertexColorByBuffer()
 
     render()
   })

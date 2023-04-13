@@ -14,6 +14,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
  */
 import { IDeviceParamsPanle, IParam, EParamsType, IParamElement } from 'types/index'
 import * as ZHelper from 'mcharts/index'
+import { ECaculate, IUnitGroup, Keyboard } from 'mcharts/index'
 
 export class Device extends ZHelper.Device {
   /**
@@ -81,13 +82,24 @@ export class Device extends ZHelper.Device {
         const arr: Array<any> = []
         x.valueList!.forEach((m: any) => {
           let label = m
-          const number = Number(m)
-          if (!isNaN(number)) label = label + `  ${unit}` ?? ''
+          let num = Number(m)
+          let useUnit: string | undefined
+          if (!isNaN(num)) {
+            useUnit = unit
+            if (unit) {
+              // 值单位转换
+              const r = Keyboard.unitMultipleFormat(num, unit)
+              if (r) {
+                label = r.num
+                useUnit = r.unit
+              }
+            }
+          }
 
           const aObj: any = {}
           aObj.id = id
           aObj.value = m
-          aObj.label = label
+          aObj.label = label + `  ${useUnit ?? ''}`
           aObj.tooltip = ''
           arr.push(aObj)
           id++
@@ -170,177 +182,6 @@ export class Device extends ZHelper.Device {
     return form
   }
 
-  /**
-  * @description: 部分功能默认参数
-  */ 
-
-  static readonly localCacheMockValue = {
-    SingleMeasure: {
-      frequency: '98',
-      bandwidth: '1000',
-      spectrummode: '快速模式',
-      avgcount: '1',
-      debw: '100',
-      demodulation: '不解调',
-      squelch: '-100',
-      attenuation: '自动',
-      detector: '平均',
-      rfworkmode: '常规模式',
-      decode: '无',
-      itumeasure: false,
-      recognise: false,
-      tcpaudio: false
-    },
-    PScan: {
-      begin: '80',
-      end: '500',
-      step: '25',
-      attenuation: '自动',
-      rfworkmode: '常规模式',
-      scanmode: '快速模式',
-      avgcount: '1',
-      framerate: '5',
-      firstrfatt: true
-    },
-    SpectrumEvaluate: {
-      begin: '30',
-      end: '6000',
-      step: '25',
-      framerate: '1'
-    },
-    SingleBearing: {
-      polarize: '垂直极化',
-      frequency: '98',
-      bandwidth: '1000',
-      demodulation: '不解调',
-      squelch: '0',
-      attenuation: '自动',
-      dfmode: '常发信号',
-      rfworkmode: '常规模式',
-      threshold: '-100',
-      spectrum: true,
-      tcpaudio: false
-    },
-    ListBearing: {
-      polarize: '垂直极化',
-      frequency: '98.1',
-      bandwidth: '4000',
-      demodulation: '不解调',
-      squelch: '-50',
-      attenuation: '自动',
-      dfmode: '常发信号',
-      rfworkmode: '常规模式',
-      threshold: '-10',
-      dwelltime: '5',
-      holdtime: '1',
-      spectrum: true
-    },
-    MScan: {
-      frequency: '101.7',
-      bandwidth: '5000',
-      demodulation: '不解调',
-      squelch: '-50',
-      attenuation: '自动',
-      rfworkmode: '常规模式',
-      threshold: '-10',
-      dwelltime: '5',
-      holdtime: '1',
-      spectrum: true,
-      tcpaudio: false,
-      itumeasure: true,
-      recognise: true
-    },
-    ADSBDemod: {
-      nacpexceptionthreshold: '5'
-    },
-    MCAnalysis: {
-      panspectrum: true
-    },
-    FFMX: {
-      itumeasure: true,
-      chspectrum: true,
-      recognise: true
-    }
-  }
-
-  /**
-   * @description: 频率表测向和频率表扫描频率表为空新建频率表方法
-   * @param {string} name 功能名称
-   * @param {() => void} addItem 添加一项的方法
-   * @return {void}
-   */  
-  static async addCarWhenEmpty (name: string, addItem: () => void) {
-    const funcParams = JSON.parse(localStorage.getItem(localStorageKey.KEY_FUNCTIONPARAMLISTS)!)[name]
-    // 输入验证
-    let validation
-    funcParams.forEach(x => {
-      if (x.paramName === 'frequency') { validation = x }
-    })
-    await ElMessageBox.prompt('请输入频率', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      inputType: 'number',
-      inputValidator: (value) => {
-        const valueT = Number(value)
-        return (valueT <= Number(validation.maxValue) && valueT >= Number(validation.minValue))
-      },
-      inputErrorMessage: `${validation.minValue}~${validation.maxValue}`
-    }).then(({ value }) => {
-      // 修改缓存的频率值
-      const ruleForm = JSON.parse(localStorage.getItem(localStorageKey.KEY_FORMS)!)[name]
-      ruleForm.frequency = value
-      Device.functionParamsLocaCache(name, ruleForm)
-      addItem()
-      ElMessage({
-        type: 'success',
-        message: '新建频率: ' + value + 'MHz'
-      })
-    }).catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消输入'
-      })
-    })
-  }
-  /**
-   * @description: 服务器返回任务的参数逆解为包含对象的数组，用于频谱图任务信息面板渲染
-   * @param {string} name 功能名
-   * @param {string} data 参数组合字符串
-   * @return { panle: Array<{ key: string, value: string }>, form: { [p: string]: any } }
-   */ 
-
-  static reverseParseParams = function (name: string, data: string):
-  { panle: Array<{ key: string, value: string }>, form: { [p: string]: any } } {
-    const arr: Array<{ key: string, value: string }> = []
-    const useFunctionArr: Array<IParam> = JSON.parse(localStorage.getItem(localStorageKey.KEY_FUNCTIONPARAMLISTS)!)[name] // 用于翻译参数名
-    const strToArray = data.split(',')
-    const form: { [p: string]: any } = {}
-
-    strToArray.forEach(str => {
-      const keyValue = str.split('=')
-      const key = keyValue[0]
-      let value = keyValue[1] as any
-
-      if (value === 'true') value = true
-      if (value === 'false') value = false
-
-      form[key] = value
-      // 找到对应的中文名，隐藏一些参数
-      const param: { key: string, value: string } = { key: '', value: '' }
-      for (let i = 0, len = useFunctionArr.length; i < len; i++) {
-        const item = useFunctionArr[i]
-        if (item.paramName === key && !item.hide) {
-          param.key = item.paramNameOfSimplifiedChinese
-          if (value === false) value = '关'
-          if (value === true) value = '开'
-          param.value = value
-          arr.push(param)
-          break
-        }
-      }
-    })
-    return { panle: arr, form }
-  }
   /** 
    * @description: 功能间跳转链接key
    * @return {*}

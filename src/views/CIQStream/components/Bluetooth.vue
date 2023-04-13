@@ -163,7 +163,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="container">
     <div class="first-column">
-      <BaseButton class="start" @click="decode">蓝牙BLE识别解码</BaseButton>
+      <ZXIButton class="start" @click="decode">蓝牙BLE识别解码</ZXIButton>
       <ZXIScrollInfo
         class="info"
         :inputData="encodeInfo"

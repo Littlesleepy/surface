@@ -12,7 +12,7 @@ import SignalList from './components/SignalList.vue'
 import BaseLink from 'cp/BaseLink/BaseLink.vue'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import { BaseParamsType } from '@/types';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Sample from './components/Sample.vue'
 import { usePScan } from '.'
 import { UseTheme } from 'mcharts/index'
@@ -45,6 +45,19 @@ const {
 
 const master = ref<BaseParamsType>()
 
+const hideParam = new Set(['occupy', 'saverowdata', 'occupyspantime'])
+
+onMounted(() => {
+  if (master.value) {
+    const elements = master.value.elements
+
+    // 隐藏部分参数
+    elements.forEach((el) => {
+      if (hideParam.has(el.paramName)) el.show = false
+    })
+  }
+})
+
 </script>
 
 <template>
@@ -54,7 +67,7 @@ const master = ref<BaseParamsType>()
       <hr style="margin-top: .5rem"/>
     </BaseLink>
     <template #set>
-      <BaseParams ref="master" :beforeTaskStart="beforeTaskStart" />
+      <BaseParams ref="master" :dynamicParam="false" :beforeTaskStart="beforeTaskStart" />
     </template>
     <!-- 头部切换视图 -->
     <template #header-center>
@@ -77,6 +90,7 @@ const master = ref<BaseParamsType>()
         :additionalCurve="additionalCurve"
         :tags="icons"
         :markers="markers"
+        useSelectFrequency
         @spectrumScene=getSpectrumScene1
         @selectFrequency="selectFrequency">
         <template #header>

@@ -196,13 +196,13 @@ defineExpose({
       @touchmove.stop="touchMove">
       <div class="control" v-show="controlBtn">
         <div>
-          <button @touchstart="maxAdd" @click="maxAdd"><i class="iconfont icon-jia" /></button>
-          <button @touchstart="maxReduce" @click="maxReduce"><i class="iconfont icon-jian" /></button>
+          <button @click="maxAdd"><i class="iconfont icon-jia" /></button>
+          <button @click="maxReduce"><i class="iconfont icon-jian" /></button>
         </div>
         <span v-show="true">{{ scale.unit }}</span>
         <div>
-          <button @touchstart="minAdd" @click="minAdd"><i class="iconfont icon-jia" /></button>
-          <button @touchstart="minReduce" @click="minReduce"><i class="iconfont icon-jian" /></button>
+          <button @click="minAdd"><i class="iconfont icon-jia" /></button>
+          <button @click="minReduce"><i class="iconfont icon-jian" /></button>
         </div>
       </div>
       <div ref="axisDom" />

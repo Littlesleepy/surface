@@ -498,11 +498,6 @@ export class ToolTip implements IViewHCI {
     if (this.options.lock || this.oldTouchMOvePosition === undefined) return
 
     if (this.event.touchPosition.size === 1) {
-      const position = this.event.touchPosition.get(0)!
-      const dx = Math.abs(position.offsetX - this.oldTouchMOvePosition.offsetX)
-      const dy = Math.abs(position.offsetY - this.oldTouchMOvePosition.offsetY)
-      if (dx < 10 && dy < 10) return
-      
       if ((this.verticalTag && !this.verticalTag.removed) || (this.transverseTag && !this.transverseTag.removed)) {
         if (this.event.touchPosition.size === 1) {
           const position = this.event.touchPosition.get(0)!

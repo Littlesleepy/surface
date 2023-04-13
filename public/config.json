@@ -4,6 +4,6 @@
     "userName": "admin",
     "password": "zxi123456789!"
   },
-  "disableFunction": ["YaYunHuiPScan"],
+  "enableFunction": ["SingleMeasure", "PScan", "CIQStream", "XScan", "HandheldSingleMeasure", "SignalRecognitionAnalysis", "DPX"],
   "paramTlMaxCount": 20
 }

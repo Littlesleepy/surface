@@ -49,10 +49,10 @@ function controlApp (e:  IpcMainEvent, status: 'min' | 'max' | 'close') {
     case 'min': if (ipcMainWin) ipcMainWin.minimize()
     break
     case 'max': {
-      if (ipcMainWin.isMaximized()) {
-        ipcMainWin.unmaximize()
+      if (ipcMainWin.isFullScreen()) {
+        ipcMainWin.setFullScreen(false)
       } else {
-        ipcMainWin.maximize()
+        ipcMainWin.setFullScreen(true)
       }
     }
     break

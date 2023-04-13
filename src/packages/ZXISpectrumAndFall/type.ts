@@ -185,6 +185,10 @@ export class Controls {
    * @description:标注
    */
   static biaozhu = 'biaozhu'
+  /**
+   * @description:重置
+   */
+  static reset = 'reset'
 }
 /**
  * @description: ZXISpectrumAndFall频谱数据池

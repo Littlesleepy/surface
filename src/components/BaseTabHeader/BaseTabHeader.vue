@@ -101,14 +101,14 @@ const headerTrance = computed(() => backResult(props.headers))
 <template>
   <div>
     <div class="container" :class="{ autoStyle }">
-      <BaseButton
+      <ZXIButton
         v-for="(header, i) in headerTrance"
         :key="i"
         @click="tabId = i"
         :selected="tabId === i"
         :style="header.style">
         <span class="tab-item-font">{{ header.name }}</span>
-      </BaseButton>
+      </ZXIButton>
     </div>
   </div>
 </template>

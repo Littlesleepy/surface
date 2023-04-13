@@ -157,7 +157,10 @@ export class Program {
       for (const [variableName, resolver] of this.dataBindManager) {
         const data = mesh.data.get(variableName)
 
-        if (data === undefined) throw new Error(`${variableName}所需数据缺失`)
+        if (data === undefined) {
+          console.warn(`${variableName}所需数据缺失`)
+          continue
+        }
 
         if ('oneGroupCount' in resolver) {
           if (Object.prototype.toString.apply(data).match(/\w+Array/) !== null) {
