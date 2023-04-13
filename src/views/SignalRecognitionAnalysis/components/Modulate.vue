@@ -252,22 +252,7 @@ const currentTabId = ref(0)
 
 <template>
   <div class="Modulate-container">
-    <!-- <div class="first-colum">
-      
-          </div> -->
     <div class="second-colum">
-      <!-- <BaseTabHeader class="tab-header" :headers="[
-              [{ name: '瞬时频率', ratio: 1 }],
-              [{ name: '瞬时幅度', ratio: 1 }],
-              [{ name: '瞬时相位', ratio: 1 }],
-              [{ name: '瞬时频率包络', ratio: 1 }],
-              [{ name: '瞬时幅度包络', ratio: 1 }],
-              [{ name: 'FM解调谱', ratio: 1 }],
-              [{ name: '功率谱', ratio: 1 }],
-              [{ name: '二次方谱', ratio: 1 }],
-              [{ name: '四次方谱', ratio: 1 }],
-              [{ name: '八次方谱', ratio: 1 }],
-            ]" v-model="currentTabId" /> -->
       <BaseTabHeader class="tab-header" :headers="[
         [{ name: '时域特征', ratio: 1 }],
         [{ name: '功率谱\n二次方谱\n四次方谱\n八次方谱', ratio: 1 }],
