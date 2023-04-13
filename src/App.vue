@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-02 14:40:33
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-14 15:59:32
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\App.vue
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-06 15:09:30
+ * @FilePath: \zxi-surface\src\App.vue
  * @Description: 
  -->
 <script setup lang="ts">

@@ -1,9 +1,13 @@
 {
-  "baseUrl": "http://192.168.0.120:5000",
+  "baseUrl": "http://192.168.0.123:5000",
   "authentication": {
     "userName": "admin",
     "password": "zxi123456789!"
   },
   "enableFunction": ["SingleMeasure", "PScan", "CIQStream", "XScan", "HandheldSingleMeasure", "SignalRecognitionAnalysis", "DPX"],
-  "paramTlMaxCount": 20
+  "map": {
+    "sourceUrl": "http://192.168.0.141:8086/data/v3.json",
+    "zoom": 9,
+    "center": [104.065, 30.657]
+  }
 }

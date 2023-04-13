@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-08 09:23:47
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-22 14:42:15
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\views\SingleMeasure\SingleMeasure.vue
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-06 13:50:31
+ * @FilePath: \zxi-surface\src\views\SingleMeasure\SingleMeasure.vue
  * @Description: 
  -->
 

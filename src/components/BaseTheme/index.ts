@@ -34,7 +34,7 @@ export function useTheme() {
           scaleColor: [40, 40, 40],
           borderColor: [160, 160, 160],
           tipBgColor: [40, 40, 40],
-          tipColor: [40, 40, 40],
+          tipColor: [220, 220, 220],
           tagBgColor: [40, 40, 40],
           tagSelectColor: [255, 0, 0],
           btnBgColor: [220, 220, 220],
@@ -79,10 +79,14 @@ export function useTheme() {
           backgroundColor: 'var(--zxi--ControlBtn--backgroundColor, rgb(200, 200, 200))'
         }
       })
+
+      document.documentElement.classList.remove(...['dark'])
     } else {
       CustomTheme.set(CustomTheme.default, name)
 
       UseTheme.set(UseTheme.default)
+
+      document.documentElement.classList.add(...['dark'])
     }
 
     localStorage.setItem(localStorageKey.KEY_THEME_NAME, name)

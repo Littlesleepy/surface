@@ -14,6 +14,11 @@ declare namespace Config {
   }
   const enableFunction: Array<string>
   const paramTlMaxCount: number
+  const map:{
+    sourceUrl:string
+    zoom:number
+    center:[number,number]
+  }
 }
 
 interface IElectronAPI {
