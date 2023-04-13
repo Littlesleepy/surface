@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 15:43:42
+ * @LastEditTime: 2023-04-13 16:51:17
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -14,7 +14,7 @@ import * as Helper from 'helper/index'
 import { IMockPanleState, setLinkTrigger, CustomTheme, fftToResolutionRatio, BaseParamsType, localStorageKey } from '@/types'
 import { ElMessage } from 'element-plus'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
-import { ISpectrumInputData, ESwitchState, IITUData, IModulateData, IHighlightItem, ZXISpectrumScanAndFallType, ZXILevel, UseTheme } from 'mcharts/index'
+import { ISpectrumInputData, ESwitchState, IITUData, IModulateData, IHighlightItem, ZXISpectrumScanAndFallType, ZXILevel, UseTheme, ILevelData } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
 import { Sundry, ToExport } from 'helper/index'
@@ -48,6 +48,8 @@ const spectrumDemodulation = ref<Array<ISpectrumInputData>>([{
 const ITU = ref<Array<IITUData>>([])
 const modulate = ref<Array<IModulateData>>([])
 const decodingState = ref<Array<string>>([])
+const levelInput = ref(new Map<string, ILevelData>())
+const levleInstance = ref<InstanceType<typeof ZXILevel>>()
 
 const hightlightItems = computed<Array<IHighlightItem>>(() => {
   if (store.s_form) {
@@ -145,6 +147,14 @@ optionsChild.set('CHSPECTRUM', {
     spectrumDemodulation.value = [makeSpectrumData(data)]
   }
 })
+// 电平
+optionsChild.set('CHLEVEL', {
+  control: (data) => {
+    const map = new Map<string, ILevelData>()
+    map.set('1', { data: data.level, time: new Date() })
+    levelInput.value = map
+  }
+})
 // ITU
 optionsChild.set('ITU', {
   control: (data) => {
@@ -192,7 +202,7 @@ const spInstance1 = ref<ZXISpectrumScanAndFallType>()
 ToExport.beforExport.set('0', () => {
   ToExport.DATA.clear()
   ToExport.DOM.clear()
-
+  if (levelInput.value.size > 0) ToExport.addDom('电平图', levleInstance.value!.root!, 3)
   // 参数
   const r = Sundry.formatParams(route.meta.functionKey!)
   ToExport.addTable(r.title, r.headers, r.formatData, 0)
@@ -220,6 +230,7 @@ ToExport.beforExport.set('0', () => {
 })
 
 const tabId = ref(0)
+const firstTabId = ref(0)
 
 const master = ref<BaseParamsType>()
 
@@ -235,7 +246,8 @@ const master = ref<BaseParamsType>()
       <hr>
     </BaseLink>
     <template #set>
-      <BaseParams ref="master" :beforeSendParamChange="beforeSendParamChange" :beforeTaskStart="beforeTaskStart" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
+      <BaseParams ref="master" :beforeSendParamChange="beforeSendParamChange" :beforeTaskStart="beforeTaskStart"
+        :inited="inited" :dynamicParam="false" />
     </template>
     <template #header-center>
       <div class="header-slot">
@@ -260,18 +272,27 @@ const master = ref<BaseParamsType>()
           </ZXISpectrumAndFall>
         </div>
         <div class="second-colum">
-          <ZXISpectrumAndFall class="spectrum-and-fall-single" name="解调频谱" ref="spInstance1"
-            :inputData="spectrumDemodulation" :params="singleParams" :switchLever="startAndStop"
-            :setTool="[{ name: 'pubutu', value: false }]" @selectFrequency="(result) => { defFrequency(result.value) }" >
-            <template #header>
-              <BaseParamsBranch class="params-branch" :params="[
-                [
-                  { name: '测量/解调频率(MHz)', paramName: 'def', ratio: 6 },
-                  { name: '测量/解调带宽(kHz)', paramName: 'debw', ratio: 6 }
-                ]
-              ]" :master="master" />
-            </template>
-          </ZXISpectrumAndFall>
+          <BaseTabHeader class="tab-header" :headers="[
+            [{ name: '解调频谱', ratio: 1 }],
+            [{ name: '电平图', ratio: 1 }],
+          ]" v-model="firstTabId" />
+          <ZXITabs :wrapperStyle="{ border: 'none' }" :hidHeader="true" class="FFM-tabs-first" v-model="firstTabId">
+            <ZXISpectrumAndFall class="spectrum-and-fall-single" name="解调频谱" ref="spInstance1"
+              :inputData="spectrumDemodulation" :params="singleParams" :switchLever="startAndStop"
+              :setTool="[{ name: 'pubutu', value: false }]" @selectFrequency="(result) => { defFrequency(result.value) }">
+              <template #header>
+                <BaseParamsBranch class="params-branch" :params="[
+                  [
+                    { name: '测量/解调频率(MHz)', paramName: 'def', ratio: 6 },
+                    { name: '测量/解调带宽(kHz)', paramName: 'debw', ratio: 6 }
+                  ]
+                ]" :master="master" />
+              </template>
+            </ZXISpectrumAndFall>
+            <ZXILevel class="level" name="电平图" ref="levleInstance" :deleteTool="['threshold']" :inputData="levelInput"
+              :switchLever="startAndStop" />
+          </ZXITabs>
+
         </div>
       </div>
       <Modulate tabName="信号分析" class="tabItem" :canDraw="tabId === 1" />
@@ -299,7 +320,8 @@ const master = ref<BaseParamsType>()
   width: 100%;
   height: 100%;
   display: flex;
-  :deep(.FFM-tabs>div){
+
+  :deep(.FFM-tabs>div) {
     background-color: v-bind('UseTheme.theme.var.backgroundColor');
   }
 
@@ -335,9 +357,20 @@ const master = ref<BaseParamsType>()
       border-top: v-bind('CustomTheme.theme.districtBorder');
       box-sizing: border-box;
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
-      .params-branch{
+
+      .FFM-tabs-first {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        flex: auto;
+        
+      }
+
+      .params-branch {
         padding: @btnSpace 0 0 @btnSpace;
       }
+
       .spectrum-and-fall-single {
         flex: auto;
         padding-right: 2px;
@@ -345,7 +378,8 @@ const master = ref<BaseParamsType>()
 
     }
   }
-  .Info{
+
+  .Info {
     background-color: v-bind('UseTheme.theme.var.backgroundColor');
   }
 

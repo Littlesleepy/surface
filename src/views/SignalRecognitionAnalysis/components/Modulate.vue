@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 15:24:07
+ * @LastEditTime: 2023-04-13 17:00:01
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\components\Modulate.vue
  * @Description: 
  -->
@@ -10,7 +10,7 @@
 import { useFrameStore } from '@/store'
 import { computed, onBeforeUnmount, Ref, ref, watch } from 'vue'
 import * as Helper from 'helper/index'
-import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme, ILevelData, ZXILevel } from 'mcharts/index'
+import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import { ReceiveData, ReceiveDataOptions } from '@/server'
 import { ToExport } from 'helper/index'
@@ -57,11 +57,7 @@ const inputData9 = ref(new Float32Array())
 
 const inputData10 = ref(new Float32Array())
 
-const levelInput = ref(new Map<string, ILevelData>())
 
-const startAndStop = computed(() => store.s_playButton)
-
-const levleInstance = ref<InstanceType<typeof ZXILevel>>()
 
 const params1 = computed(() => {
   return { bandwidth: Number(store.s_form.debw) / 1000 }
@@ -151,14 +147,6 @@ receiveSpectrum2('SQUAREDATA', inputData8, false)
 receiveSpectrum2('QUADDATA', inputData9, false)
 // 八次方谱
 receiveSpectrum2('EIGHTDATA', inputData10, false)
-// 电平
-optionsChild.set('CHLEVEL', {
-  control: (data) => {
-    const map = new Map<string, ILevelData>()
-    map.set('1', { data: data.level, time: new Date() })
-    levelInput.value = map
-  }
-})
 options.set('DATA', { children: optionsChild })
 ReceiveData.add(options)
 
@@ -238,7 +226,6 @@ onBeforeUnmount(() => {
 
 ToExport.beforExport.set('1', () => {
 
-  if (levelInput.value.size > 0) ToExport.addDom('电平图', levleInstance.value!.root!, 3)
   if (cacheData0.size > 0) {
     // 如果未观察信号分析页，则强制绘制一次
     if (!props.canDraw) drawForceAll()
@@ -265,84 +252,99 @@ const currentTabId = ref(0)
 
 <template>
   <div class="Modulate-container">
-    <div class="first-colum">
-      <ZXILevel class="level" name="电平图" ref="levleInstance" :deleteTool="['threshold']" :inputData="levelInput"
-        :switchLever="startAndStop" />
-    </div>
+    <!-- <div class="first-colum">
+      
+          </div> -->
     <div class="second-colum">
+      <!-- <BaseTabHeader class="tab-header" :headers="[
+              [{ name: '瞬时频率', ratio: 1 }],
+              [{ name: '瞬时幅度', ratio: 1 }],
+              [{ name: '瞬时相位', ratio: 1 }],
+              [{ name: '瞬时频率包络', ratio: 1 }],
+              [{ name: '瞬时幅度包络', ratio: 1 }],
+              [{ name: 'FM解调谱', ratio: 1 }],
+              [{ name: '功率谱', ratio: 1 }],
+              [{ name: '二次方谱', ratio: 1 }],
+              [{ name: '四次方谱', ratio: 1 }],
+              [{ name: '八次方谱', ratio: 1 }],
+            ]" v-model="currentTabId" /> -->
       <BaseTabHeader class="tab-header" :headers="[
-        [{ name: '瞬时频率', ratio: 1 }],
-        [{ name: '瞬时幅度', ratio: 1 }],
-        [{ name: '瞬时相位', ratio: 1 }],
-        [{ name: '瞬时频率包络', ratio: 1 }],
-        [{ name: '瞬时幅度包络', ratio: 1 }],
-        [{ name: 'FM解调谱', ratio: 1 }],
-        [{ name: '功率谱', ratio: 1 }],
-        [{ name: '二次方谱', ratio: 1 }],
-        [{ name: '四次方谱', ratio: 1 }],
-        [{ name: '八次方谱', ratio: 1 }],
+        [{ name: '时域特征', ratio: 1 }],
+        [{ name: '功率谱\n二次方谱\n四次方谱\n八次方谱', ratio: 1 }],
+        [{ name: 'FM解调谱\n瞬时频率包络\n瞬时幅度包络', ratio: 1 }],
+
       ]" v-model="currentTabId" />
       <ZXITabs class="tabItem" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="currentTabId">
-        <div ref="instance1" class="item">
-          <ZXITimeDomainLines class="level" :name="'瞬时频率'" :inputData="inputData1" :switchLever="store.s_playButton"
-            :params="params1" :capacity="0" :scaleY="{
-              unit: 'Hz',
-              parse: (v: number) => {
-                return `频偏：${v.toFixed(1)}Hz`
-              },
-              transform: (v: number) => {
-                return parseFloat(v.toFixed(1))
-              }
-            }" />
-          <ZXIStatisticalY class="statistical" :inputData="statistical1" :switchLever="store.s_playButton" />
+        <div class="time-domain">
+          <div ref="instance1" class="item">
+            <ZXITimeDomainLines class="level" :name="'瞬时频率'" :inputData="inputData1" :switchLever="store.s_playButton"
+              :params="params1" :capacity="0" :scaleY="{
+                unit: 'Hz',
+                parse: (v: number) => {
+                  return `频偏：${v.toFixed(1)}Hz`
+                },
+                transform: (v: number) => {
+                  return parseFloat(v.toFixed(1))
+                }
+              }" />
+            <ZXIStatisticalY class="statistical" :inputData="statistical1" :switchLever="store.s_playButton" />
+          </div>
+          <div ref="instance2" class="item">
+            <ZXITimeDomainLines class="level" :name="'瞬时幅度'" :inputData="inputData2" :params="params1"
+              :switchLever="store.s_playButton" :capacity="0" :scaleY="{
+                unit: 'dBuV',
+                parse: (v: number) => {
+                  return `幅度：${v.toFixed(1)}dBuV`
+                },
+                transform: (v: number) => {
+                  return parseFloat(v.toFixed(1))
+                }
+              }" />
+            <ZXIStatisticalY class="statistical" :inputData="statistical2" :switchLever="store.s_playButton" />
+          </div>
+          <div ref="instance3" class="item">
+            <ZXITimeDomainLines class="level" :name="'瞬时相位'" :inputData="inputData3" :params="params1"
+              :switchLever="store.s_playButton" :capacity="0" :scaleY="{
+                unit: 'rad',
+                parse: (v: number) => {
+                  return `相位：${v.toFixed(1)}rad`
+                },
+                transform: (v: number) => {
+                  return parseFloat(v.toFixed(1))
+                }
+              }" />
+            <ZXIStatisticalY class="statistical" :inputData="statistical3" :switchLever="store.s_playButton" />
+          </div>
         </div>
-        <div ref="instance2" class="item">
-          <ZXITimeDomainLines class="level" :name="'瞬时幅度'" :inputData="inputData2" :params="params1"
-            :switchLever="store.s_playButton" :capacity="0" :scaleY="{
-              unit: 'dBuV',
-              parse: (v: number) => {
-                return `幅度：${v.toFixed(1)}dBuV`
-              },
-              transform: (v: number) => {
-                return parseFloat(v.toFixed(1))
-              }
-            }" />
-          <ZXIStatisticalY class="statistical" :inputData="statistical2" :switchLever="store.s_playButton" />
+        <div class="frequency-domain">
+          
+          <ZXISpectrumLine class="spectrum" ref="instance7" :name="'功率谱'" :inputData="inputData7" :params="param4"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :scaleY="scaleY" />
+          <ZXISpectrumLine class="spectrum" ref="instance8" :name="'二次方谱'" :inputData="inputData8" :params="param4"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :scaleY="scaleY" />
+          <ZXISpectrumLine class="spectrum" ref="instance9" :name="'四次方谱'" :inputData="inputData9" :params="param4"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :scaleY="scaleY" />
+          <ZXISpectrumLine class="spectrum" ref="instance10" :name="'八次方谱'" :inputData="inputData10" :params="param4"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :scaleY="scaleY" />
         </div>
-        <div ref="instance3" class="item">
-          <ZXITimeDomainLines class="level" :name="'瞬时相位'" :inputData="inputData3" :params="params1"
-            :switchLever="store.s_playButton" :capacity="0" :scaleY="{
-              unit: 'rad',
-              parse: (v: number) => {
-                return `相位：${v.toFixed(1)}rad`
-              },
-              transform: (v: number) => {
-                return parseFloat(v.toFixed(1))
-              }
-            }" />
-          <ZXIStatisticalY class="statistical" :inputData="statistical3" :switchLever="store.s_playButton" />
+        <div class="shunshibaoluo">
+          <ZXISpectrumLine class="spectrum" :name="'FM解调谱'" ref="instance6" :inputData="inputData6" :params="param5"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
+          <ZXISpectrumLine class="spectrum" ref="instance4" :name="'瞬时频率包络'" :inputData="inputData4" :params="param5"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
+          <ZXISpectrumLine class="spectrum" ref="instance5" :name="'瞬时幅度包络'" :inputData="inputData5" :params="param5"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
+            
         </div>
-        <ZXISpectrumLine class="spectrum" ref="instance4" :name="'瞬时频率包络'" :inputData="inputData4" :params="param5"
-          :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-          :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
-        <ZXISpectrumLine class="spectrum" ref="instance5" :name="'瞬时幅度包络'" :inputData="inputData5" :params="param5"
-          :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-          :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
-        <ZXISpectrumLine class="spectrum" :name="'FM解调谱'" ref="instance6" :inputData="inputData6" :params="param5"
-          :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-          :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
-        <ZXISpectrumLine class="spectrum" ref="instance7" :name="'功率谱'" :inputData="inputData7" :params="param4"
-          :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-          :scaleY="scaleY" />
-        <ZXISpectrumLine class="spectrum" ref="instance8" :name="'二次方谱'" :inputData="inputData8" :params="param4"
-          :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-          :scaleY="scaleY" />
-        <ZXISpectrumLine class="spectrum" ref="instance9" :name="'四次方谱'" :inputData="inputData9" :params="param4"
-          :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-          :scaleY="scaleY" />
-        <ZXISpectrumLine class="spectrum" ref="instance10" :name="'八次方谱'" :inputData="inputData10" :params="param4"
-          :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-          :scaleY="scaleY" />
+
+
       </ZXITabs>
     </div>
 
@@ -360,15 +362,15 @@ const currentTabId = ref(0)
   display: flex;
   flex-direction: column;
 
-  .first-colum {
-    width: 100%;
-    height: 40%;
+  // .first-colum {
+  //   width: 100%;
+  //   height: 40%;
 
-    .level {
-      height: 100%;
-      width: 100%;
-    }
-  }
+  //   .level {
+  //     height: 100%;
+  //     width: 100%;
+  //   }
+  // }
 
   .second-colum {
     flex: auto;
@@ -385,10 +387,27 @@ const currentTabId = ref(0)
     flex: auto;
     display: flex;
 
+    .time-domain {
+      flex: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .frequency-domain{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+    .shunshibaoluo{
+      flex: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
     .item {
       flex: auto;
       display: flex;
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
+
       .level {
         flex: auto;
       }
@@ -403,7 +422,7 @@ const currentTabId = ref(0)
 
     .spectrum {
       flex: auto;
-      
+
     }
 
   }
