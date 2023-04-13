@@ -61,6 +61,10 @@ export interface IGlobalTheme {
    * @description: 按钮背景颜色
    */
   btnBgColor?: Array<number>
+  /**
+   * @description: 按钮选中后背景颜色
+   */
+  btnBgSelectedColor?: Array<number>
 }
 
 interface IDpx {
@@ -329,7 +333,8 @@ export class UseTheme {
       textInfoColor: [96, 98, 102],
       markerColor: [120, 120, 120, 0.2],
       markerSelectColor: [120, 120, 120, 0.5],
-      btnBgColor: [44, 44, 44]
+      btnBgColor: [44, 44, 44],
+      btnBgSelectedColor: [107, 107, 107]
     } as Required<IGlobalTheme>,
     Dpx: {
       lineColor: [1, 1, 0]
@@ -353,7 +358,7 @@ export class UseTheme {
     } as Required<IIcons>,
     Level: {
       lineColor: 'rgb(0, 255, 0)',
-      barColor: [[0, 0, 1], [0, 1, 0], [1, 1, 0], [1, 0, 0]]
+      barColor: [[0, 0, 1], [0, 0.7, 0], [1, 1, 0], [1, 0, 0]]
     } as Required<ILevel>,
     LevelPillar: {
       backgroundColor: 'var(--zxi--LevelPillar--backgroundColor, rgb(224, 56, 5))',
@@ -363,8 +368,8 @@ export class UseTheme {
       raindropColor: [[0, 0, 1], [0, 1, 0], [1, 1, 0], [1, 0, 0]]
     } as Required<IRaindrop>,
     SpectrumAndFall: {
-      barColor: [[0, 0, 1], [0, 1, 0], [1, 1, 0], [1, 0, 0]],
-      baoluotuColor: [0, 1, 0],
+      barColor: [[0, 0, 1], [0, 0.7, 0], [1, 1, 0], [1, 0, 0]],
+      baoluotuColor: [0, 1, 1],
       fengzhiColor: [1, 0, 0],
       guzhiColor: [0, 0, 1],
       junzhiColor: [1, 0, 1],
@@ -413,7 +418,8 @@ export class UseTheme {
       textInfoColor: 'rgb(96, 98, 102)',
       markerColor: 'rgba(120, 120, 120, 0.2)',
       markerSelectColor: 'rgb(120, 120, 120, 0.5)',
-      btnBgColor: 'rgb(44, 44, 44)'
+      btnBgColor: 'rgb(44, 44, 44)',
+      btnBgSelectedColor: 'rgb(107, 107, 107)'
     } as {
       [P in keyof IGlobalTheme]-?: string
     },
@@ -433,7 +439,8 @@ export class UseTheme {
       textInfoColor: [0.384, 0.384, 0.4],
       markerColor: [0.471, 0.471, 0.471, 0.2],
       markerSelectColor: [0.471, 0.471, 0.471, 0.5],
-      btnBgColor: [0.173, 0.173, 0.173]
+      btnBgColor: [0.173, 0.173, 0.173],
+      btnBgSelectedColor: [0.42, 0.42, 0.42]
     } as Required<IGlobalTheme>,
     /** 
      * @description: 自定义属性var(--zxi--name, rgb(0-255, 0-255, 0-255) | rgba(0-255, 0-255, 0-255, 0-1))
@@ -451,7 +458,8 @@ export class UseTheme {
       textInfoColor: 'var(--zxi--textInfoColor, rgb(96, 98, 102))',
       markerColor: 'var(--zxi--markerColor, rgba(120, 120, 120, 0.2))',
       markerSelectColor: 'var(--zxi--markerSelectColor, rgba(120, 120, 120, 0.5))',
-      btnBgColor: 'var(--zxi--btnBgColor, rgb(44, 44, 44))'
+      btnBgColor: 'var(--zxi--btnBgColor, rgb(44, 44, 44))',
+      btnBgSelectedColor: 'var(--zxi--btnBgSelectedColor, rgb(107, 107, 107))'
     } as {
       [P in keyof IGlobalTheme]-?: string
     },
@@ -483,7 +491,7 @@ export class UseTheme {
     } as Required<IIcons>,
     Level: {
       lineColor: 'rgb(0, 255, 0)',
-      barColor: [[0, 0, 1], [0, 1, 0], [1, 1, 0], [1, 0, 0]]
+      barColor: [[0, 0, 1], [0, 0.7, 0], [1, 1, 0], [1, 0, 0]]
     } as Required<ILevel>,
     LevelPillar: {
       backgroundColor: 'var(--zxi--LevelPillar--backgroundColor, rgb(224, 56, 5))',
@@ -493,7 +501,7 @@ export class UseTheme {
       raindropColor: [[0, 0, 1], [0, 1, 0], [1, 1, 0], [1, 0, 0]]
     } as Required<IRaindrop>,
     SpectrumAndFall: {
-      barColor: [[0, 0, 1], [0, 1, 0], [1, 1, 0], [1, 0, 0]],
+      barColor: [[0, 0, 1], [0, 0.7, 0], [1, 1, 0], [1, 0, 0]],
       baoluotuColor: [0, 1, 1],
       fengzhiColor: [1, 0, 0],
       guzhiColor: [0, 0, 1],

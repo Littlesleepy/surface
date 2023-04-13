@@ -80,6 +80,13 @@ export function useSingleMeasure () {
 
   const { trigger, selectFrequency } = setLinkTrigger()
 
+  // 重置
+  const reset = ref(false)
+
+  watch([() => store.s_form.bandwidth, () => store.s_form.frequency], () => {
+    reset.value = !reset.value
+  })
+
   // function backItem (item: number) {
   //   canReceiveAudio = item !== 0
 
@@ -227,6 +234,7 @@ export function useSingleMeasure () {
     subaudioDecoding,
     ITU,
     modulate,
-    decodingState
+    decodingState,
+    reset
   }
 }

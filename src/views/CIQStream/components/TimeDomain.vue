@@ -246,7 +246,7 @@ onBeforeUnmount(() => {
     @scene="getScene">
     <div class="control">
       <ZXISwitch name="时域选取" v-model="openClampForce" />
-      <BaseButton style="margin-left: 5px;" @click="start">开始分析</BaseButton>
+      <ZXIButton style="margin-left: 5px;" @click="start">开始分析</ZXIButton>
       <ZXISwitch class="biaozhu" name="标注" v-model="biaozhu" />
       <div class="slot">
         <slot />

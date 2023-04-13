@@ -12,7 +12,7 @@ import 'simple-keyboard/build/css/index.css'
 import { IClientPosition, Listen, PopupMenu } from '../core'
 import './index.css'
 
-enum ECaculate {
+export enum ECaculate {
   /**
    * @description: 求和
    */  
@@ -23,9 +23,9 @@ enum ECaculate {
   quadrature
 }
 
-interface IUnitGroup {
+export interface IUnitGroup {
   type: ECaculate
-  items: Map<string, { order: number, ds: number }>
+  items: Map<string, { order: number, dsS: number, dsB: number }>
 }
 
 export class Keyboard {
@@ -37,22 +37,94 @@ export class Keyboard {
     {
       type: ECaculate.quadrature,
       items: new Map([
-        ['GHz', { order: 0, ds: 1000 }], ['MHz', { order: 1, ds: 1000 }], ['kHz', { order: 2, ds: 1000 }], ['Hz', { order: 3, ds: 1 }]
+        ['GHz', { order: 0, dsS: 1000, dsB: 1 }], ['MHz', { order: 1, dsS: 1000, dsB: 0.001 }],
+        ['kHz', { order: 2, dsS: 1000, dsB: 0.001 }], ['Hz', { order: 3, dsS: 1, dsB: 0.001 }]
       ])
     },
     {
       type: ECaculate.quadrature,
       items: new Map([
-        ['s', { order: 0, ds: 1000 }], ['ms', { order: 1, ds: 0 }]
+        ['s', { order: 0, dsS: 1000, dsB: 1 }], ['ms', { order: 1, dsS: 1, dsB: 0.001 }]
       ])
     },
     {
       type: ECaculate.sum,
       items: new Map([
-        ['dBuV', { order: 0, ds: -107 }], ['dBm', { order: 1, ds: 0 }]
+        ['dBuV', { order: 0, dsS: -107, dsB: 0 }], ['dBm', { order: 1, dsS: 0, dsB: 107 }]
       ])
     }
   ]
+  /**
+   * @description: 对具有乘积关系的单位组。给定一个带单位的值，转化到一个合适的单位
+   * @return {*}
+   */  
+  static unitMultipleFormat(source: number, unit: string) {
+    // 值单位转换
+    let sGroup: IUnitGroup | undefined // 寻找单位组
+    let sItem: { unit: string, order: number, dsS: number, dsB: number } | undefined
+    Keyboard.unitGroup.forEach((item) => {
+      if (item.items.has(unit)) {
+        sGroup = item
+        sItem = { ...item.items.get(unit)!, unit }
+      }
+    })
+
+    if (sGroup && sItem && sGroup.type === ECaculate.quadrature) {
+      // 单位组转换数组
+      const sGroupArr: { unit: string, order: number, dsS: number, dsB: number }[] = []
+      for (const [name, el] of sGroup.items) {
+        sGroupArr.push({ ...el, unit: name })
+      }
+
+      let rNum = source, rUnit = sItem.unit
+      // order === 0
+      if (sItem.order === 0) {
+        if (rNum < 1) {
+          for (const [name, el] of sGroup.items) {
+            rUnit = name
+            if (rNum >= 1) break
+            rNum *= el.dsS
+          }
+        }
+      }
+
+      // order === sGroup.items.size - 1
+      if (sItem.order === sGroup.items.size - 1) {
+        if (rNum >= 1 / sItem.dsB) {
+          for (let i = sGroupArr.length - 1; i > 0; i--) {
+            const item = sGroupArr[i]
+            rUnit = item.unit
+            if (rNum < 1 / sItem.dsB) break
+            rNum *= sItem.dsB
+          }
+        }
+      }
+
+      // order处于0和sGroup.items.size - 1之间
+      if (sItem.order > 0 && sItem.order < sGroup.items.size - 1) {
+        
+        if (rNum >= sItem.dsS) { // 向前
+          for (let i = sItem.order; i > 0; i--) {
+            const item = sGroupArr[i]
+            rUnit = item.unit
+            if (rNum < sItem.dsS) break
+            rNum *= sItem.dsB
+          }
+        }
+
+        if (rNum < 1) { // 向后
+          for (let i = sItem.order, len = sGroupArr.length; i < len; i++) {
+            const item = sGroupArr[i]
+            rUnit = item.unit
+            if (rNum >= 1) break
+            rNum *= item.dsS
+          }
+        }
+      }
+
+      return { unit: rUnit, num: rNum }
+    }
+  }
 
   static confirm: (value: string) => void | undefined
 
@@ -115,12 +187,12 @@ export class Keyboard {
         if (group.type === ECaculate.quadrature) { // 求积
           let ds = 1
           // 循环两者之间的项，计算差值
-          for (const [name, item] of group.items) {
+          for (const [, item] of group.items) {
             if (item.order >= minOrder && item.order < maxOrder) {
               if (orderDs < 0) {
-                ds *= item.ds
+                ds *= item.dsS
               } else {
-                ds /= item.ds
+                ds /= item.dsS
               }
             }
           }
@@ -128,12 +200,12 @@ export class Keyboard {
         } else { // 求和
           let ds = 0
           // 循环两者之间的项，计算差值
-          for (const [name, item] of group.items) {
+          for (const [, item] of group.items) {
             if (item.order >= minOrder && item.order < maxOrder) {
               if (orderDs < 0) {
-                ds += item.ds
+                ds += item.dsS
               } else {
-                ds -= item.ds
+                ds -= item.dsS
               }
             }
           }
@@ -184,6 +256,7 @@ export class Keyboard {
       `
       firstRow.appendChild(Keyboard.input)
       Keyboard.input.setAttribute('type', 'text')
+      Keyboard.input.setAttribute('readonly', 'true')
       Keyboard.input.setAttribute('id', 'simpleKeyBoardInput')
       
       Keyboard.input.style.cssText = `

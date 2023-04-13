@@ -66,6 +66,10 @@ const props = defineProps({
   defaultWorkMode: {
     default: ''
   },
+  /**
+   * @description: 是否支持动态参数
+   */  
+  dynamicParam: { default: true },
   vice: {
     type: Object as PropType<IParamsVice>,
     default: () => {
@@ -210,36 +214,58 @@ function watchRuleForm () {
 }
 
 function watchPlayAnimation () {
-  if (frameStore.s_playButton === ESwitchState.open) { // 临时任务开启后禁用部分按钮和输入框
-    if (props.disableBtnAfterTaskStart.all) {
-      elements.value.forEach((d: any) => { d.disabled = true })
-      // 禁用附加参数
-      viceElements.value.forEach((v: any) => { v.disabled = true })
-    } else {
-      if (props.disableBtnAfterTaskStart.keys !== undefined) {
-        const deviceParams = props.disableBtnAfterTaskStart.keys.deviceParams
-        if (deviceParams) {
-          elements.value.forEach((d: any) => {
-            if (deviceParams.has(d.paramName)) d.disabled = true
-          })
-        }
+  // if (frameStore.s_playButton === ESwitchState.open) { // 临时任务开启后禁用部分按钮和输入框
+  //   if (props.disableBtnAfterTaskStart.all) {
+  //     elements.value.forEach((d: any) => { d.disabled = true })
+  //     // 禁用附加参数
+  //     viceElements.value.forEach((v: any) => { v.disabled = true })
+  //   } else {
+  //     if (props.disableBtnAfterTaskStart.keys !== undefined) {
+  //       const deviceParams = props.disableBtnAfterTaskStart.keys.deviceParams
+  //       if (deviceParams) {
+  //         elements.value.forEach((d: any) => {
+  //           if (deviceParams.has(d.paramName)) d.disabled = true
+  //         })
+  //       }
 
-        const viceParams = props.disableBtnAfterTaskStart.keys.viceParams
-        if (viceParams) {
-          viceElements.value.forEach((v: any) => {
-            if (viceParams.has(v.paramName)) v.disabled = true
-          })
-        }
-      }
-    }
-  } else { // 关闭后解禁
-    elements.value.forEach((sx: any) => { sx.disabled = false })
-    // 解禁附加参数
-    viceElements.value.forEach((vx: any) => { vx.disabled = false })
-  }
+  //       const viceParams = props.disableBtnAfterTaskStart.keys.viceParams
+  //       if (viceParams) {
+  //         viceElements.value.forEach((v: any) => {
+  //           if (viceParams.has(v.paramName)) v.disabled = true
+  //         })
+  //       }
+  //     }
+  //   }
+  // } else { // 关闭后解禁
+  //   elements.value.forEach((sx: any) => { sx.disabled = false })
+  //   // 解禁附加参数
+  //   viceElements.value.forEach((vx: any) => { vx.disabled = false })
+  // }
 }
 
 /* ..................................................长连接.................................................. */
+/**
+ * @description: 调用服务开始
+ * @return {*}
+ */
+function onMeasureStart() {
+  let str = (route.name!).toString() + '|' + Helper.Device.formDataString(form.value)
+
+  const paramString = { value: str }
+  // 发送前数据定制，如果返回false则不会启动任务
+  const result = props.beforeTaskStart(paramString, createMockStatus())
+  if (!result) {
+    frameStore.m_playButton(ESwitchState.off)
+  } else {
+    connection.invoke('onMeasureStart', taskId.value, paramString.value, connection.connectionId)
+  }
+}
+/**
+ * @description: 为了实现本不支持动态参数修改的功能获得类似动态参数修改的能力
+ * @return {*}
+ */
+let stopCallBack = () => {}
+
 function requestData () { // 临时任务获取数据控制
   if (!connection) {
     ElMessage.error('长连接还未建立，请等待或刷新页面')
@@ -250,24 +276,21 @@ function requestData () { // 临时任务获取数据控制
     return
   }
   if (frameStore.s_playButton === ESwitchState.open) { // 开启数据获取
-    let str = (route.name!).toString() + '|' + Helper.Device.formDataString(form.value)
-
-    const paramString = { value: str }
-    // 发送前数据定制，如果返回false则不会启动任务
-    const result = props.beforeTaskStart(paramString, createMockStatus())
-    if (!result) {
-      frameStore.m_playButton(ESwitchState.off)
-    } else {
-      connection.invoke('onMeasureStart', taskId.value, paramString.value, connection.connectionId)
-    }
+    onMeasureStart()
+    // 重置为空
+    stopCallBack = () => {}
   } else { // 关闭数据获取，创建遮罩，防止连续点击开始
     const marker = Helper.Sundry.createMarker({
       text: '关闭中'
     })
 
-    connection.invoke('onMeasureStop', taskId.value, connection.connectionId, 'false').finally(() => {
-      marker.close()
-      props.afterTaskEnd()
+    connection.invoke('onMeasureStop', taskId.value, connection.connectionId, 'false')
+      .then(() => {
+        stopCallBack()
+      })
+      .finally(() => {
+        marker.close()
+        props.afterTaskEnd()
     })
   }
 }
@@ -337,9 +360,31 @@ function getParams (value: any, key: string) {
   }
 }
 
-function sendParams (value: any, key: string) { // 发送
+function sendParams(value: any, key: string) { // 发送
   if (frameStore.s_playButton === ESwitchState.off || !connection) return
-  changeParam(key, value)
+  if (props.dynamicParam) {
+    changeParam(key, value)
+  } else {
+    imitateDynamicParam()
+  }
+}
+/**
+ * @description: 仿动态参数方法
+ */
+function imitateDynamicParam() {
+  if (frameStore.s_playButton === ESwitchState.off || !connection) return
+  if (!props.dynamicParam) {
+    // 先关闭再打开
+    frameStore.m_playButton()
+
+    stopCallBack = () => {
+      // 延迟50毫秒给UI反应时间
+      setTimeout(() => {
+        // 打开
+        frameStore.m_playButton()
+      }, 50)
+    }
+  }
 }
 /**
  * @description: 修改参数
@@ -686,7 +731,8 @@ defineExpose({
   viceForm,
   viceRules,
   viceElements,
-  taskId
+  taskId,
+  imitateDynamicParam
 })
 
 
@@ -757,7 +803,6 @@ defineExpose({
               @change="getParams(form[item.paramName], item.paramName)"
               v-model="form[item.paramName]"
               :name="item.title"
-              :unit="item.unit"
               :disabled="item.disabled">
                 <el-option
                   v-for="select in item.valueList"

@@ -378,6 +378,8 @@ watch(() => frameStore.s_form.bandwidth, () => {
 
 watch(() => frameStore.s_viceForm.model, () => {
   parameterMatching()
+  // 动态切换
+  if (master.value) master.value.imitateDynamicParam()
 })
 // 时域测量时间
 watch(() => frameStore.s_form.lmtime, () => {
@@ -454,7 +456,7 @@ const master = ref<BaseParamsType>()
 <template>
   <BaseMonitorFrame>
     <template #set>
-      <BaseParams ref="master" :vice="vice" :inited="mockPanleInited" />
+      <BaseParams ref="master" :dynamicParam="false" :vice="vice" :inited="mockPanleInited" />
     </template>
     <!-- 头部切换视图 -->
     <template #header-center>

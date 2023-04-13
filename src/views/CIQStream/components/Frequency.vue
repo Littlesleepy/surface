@@ -246,7 +246,7 @@ const defaultValueY = { max: 60, min: -50 }
           :switchLever="frameStore.s_playButton"
           :infiniteFall="true"
           :singleMode="true"
-          :refresh="refresh"
+          :reset="refresh"
           @fallScene="getFallScene" >
           <template #header>
             <BaseParamsBranch

@@ -89,6 +89,7 @@ onBeforeUnmount(() => {
 defineExpose({
   root
 })
+
 </script>
 
 <template>
@@ -113,7 +114,8 @@ defineExpose({
             v-for="item in selectsReal"
             :key="item.paramName"
             :prop="item.paramName"
-            :style="controlStyle.item ? controlStyle.item : {}">
+            :style="controlStyle.item ? controlStyle.item : {}"
+            v-show="item.show === undefined ? true : item.show">
             <ZXISwitch
               class="form-item"
               v-if="item.type === EBtncontrolType.switch"
@@ -126,12 +128,18 @@ defineExpose({
               :label="item.value"
               border>
                 {{ item.title }}
-              </el-radio>
+            </el-radio>
+
+            <ZXIButton
+              style="width: 100%"
+              @click="btnValues[item.paramName] = !btnValues[item.paramName]"
+              :selected="false"
+              v-if="item.type === EBtncontrolType.button">{{ item.title }}</ZXIButton>
+
           </el-form-item>
-          <el-form-item prop="pubutusave" :style="controlStyle.item ? controlStyle.item : {}">
+          <el-form-item  v-show="btnValues.pubutu" prop="pubutusave" :style="controlStyle.item ? controlStyle.item : {}">
             <ZXISelect
               class="form-item"
-              v-show="btnValues.pubutu"
               v-model="btnValues.pubutusave">
               <el-option
                 v-for="(select, i) in fallSaveOptions"
@@ -157,7 +165,7 @@ defineExpose({
 .container{
   cursor: pointer;
   position: relative;
-  background-color: v-bind('UseTheme.theme.ControlBtn.backgroundColor');
+  background-color: v-bind('UseTheme.theme.var.btnBgColor');
   display: flex;
   width: 100%;
   height: 100%;

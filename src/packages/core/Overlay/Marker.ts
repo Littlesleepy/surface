@@ -138,6 +138,10 @@ export class Marker {
         if ((this.chain.start && marker.index === this.chain.start.index) || (this.chain.end && marker.index === this.chain.end.index)) {
           this.removeChain()
         }
+
+        if (this.chain.cache && this.chain.cache.index === marker.index) {
+          this.chain.cache = undefined
+        }
       })
     })
     

@@ -13,14 +13,13 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { onMounted, PropType, ref } from 'vue'
-import { Device, Sundry } from '@/helper'
+import { PropType, ref } from 'vue'
+import { Device } from '@/helper'
 import { IBaseLink } from './type'
 import { useRoute, useRouter } from 'vue-router'
 import { IDeviceFunc } from '@/types'
 import { localStorageKey } from '@/storage'
-import { useFrameStore } from '@/store'
-import { UseTheme, ZXIMenuType } from 'mcharts/index'
+import { UseTheme } from 'mcharts/index'
 
 const props = defineProps({
   trigger: {
@@ -50,10 +49,6 @@ const props = defineProps({
   }
 })
 
-const store = useFrameStore()
-
-const whichOS = Sundry.whichOS()
-
 const router = useRouter()
 
 const route = useRoute()
@@ -62,10 +57,10 @@ const funcs:  Array<IDeviceFunc> = JSON.parse(localStorage.getItem(localStorageK
 
 const lists = ref(funcs.filter(f => {
   let hasFun = false
-  Config.disableFunction.forEach(item => {
+  Config.enableFunction.forEach(item => {
     if (item === f.functionKey) hasFun = true
   })
-  return Device.linkDescribe.has(f.functionKey) && !hasFun
+  return Device.linkDescribe.has(f.functionKey) && hasFun
 }))
 
 /**
@@ -86,32 +81,6 @@ function handleMonitor (f: IDeviceFunc) {
     name: f.functionKey,
     query
   })
-}
-/**
- * @description: 任务跳转
- */
-function handleTask (f: IDeviceFunc) {
-  // const name = (whichOS.isAndroid || whichOS.isPhone) ? 'TaskCreatePhone' : 'TaskCreatePc'
-  // const describe = Device.linkDescribe.get(f.functionKey)
-  // const query = {
-  //   linkKey: props.link.key,
-  //   functionKey: f.functionKey,
-  //   from: 'baseLink'
-  // }
-  // if (describe) {
-  //   const content = describe.get(props.link.key)!
-  //   for (const key of content) {
-  //     query[key] = props.trigger.value
-  //   }
-  // }
-
-  // if (whichOS.isPhone || whichOS.isAndroid) {
-  //   store.m_controlHeaderAndFooter(true)
-  // }
-  // router.push({
-  //   name,
-  //   query
-  // })
 }
 
 const color = props.textColor ?? UseTheme.theme.var.backgroundColor
@@ -134,7 +103,6 @@ const color = props.textColor ?? UseTheme.theme.var.backgroundColor
             <span>{{f.name}}</span>
             <div class="button">
               <el-button type="info" plain :disabled="f.functionKey === route.name" @click="handleMonitor(f)">监测</el-button>
-              <!-- <el-button type="info" plain :disabled="!f.enableTask" @click="handleTask(f)">任务</el-button> -->
             </div>
         </div>
       </div>
@@ -155,6 +123,7 @@ const color = props.textColor ?? UseTheme.theme.var.backgroundColor
     text-align: center;
     font-size: calc(@font20 * 1.2);
     font-weight: 700;
+    height: 2.4rem;
   }
   .slot{
     padding: .5rem 0;

@@ -134,9 +134,12 @@ const scaleValueY = ref<IAxisYValue>({ max: 0, min: 0})
 const inputDataLength = ref(0)
 
 const usingData = computed(() => {
-  for (const [, v] of props.inputData) {
-    return { data: v.data, time: 0 }
+  if (props.inputData.size) {
+    for (const [, v] of props.inputData) {
+      return { data: v.data, time: 0 }
+    }
   }
+  return { data: new Float32Array(), time: 0 }
 })
 
 // 峰标文字显示
@@ -400,7 +403,7 @@ defineExpose({
                 :icons="tags"
                 :scene="sceneL"
                 :step="step"
-                :usingData="usingData"
+                :usingData="usingData?.data"
                 :showText="showTagsText" />
             </div>
           </div>
@@ -436,7 +439,7 @@ defineExpose({
     box-sizing: border-box;
     .control{
       height: 100%;
-      z-index: 99999;
+      z-index: 9999;
       width: 60px;
       .legend{
         width: 100%;

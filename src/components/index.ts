@@ -13,7 +13,6 @@ import BaseTopFrame from './BaseTopFrame/BaseTopFrame.vue'
 import BaseParams from './BaseParams/BaseParams.vue'
 import BaseDialog from './BaseDialog/BaseDialog.vue'
 import BaseParamsBranch from './BaseParamsBranch/BaseParamsBranch.vue'
-import BaseButton from './BaseButton/BaseButton.vue'
 
 const components = [
   BaseMonitorFrame,
@@ -21,8 +20,7 @@ const components = [
   BaseTopFrame,
   BaseParams,
   BaseDialog,
-  BaseParamsBranch,
-  BaseButton
+  BaseParamsBranch
 ]
 
 export * from './BaseParams/type'

@@ -103,3 +103,12 @@ export interface IParamsVice {
   elements: Array<Omit<IParamElement, 'show'>>,
   form: Record<string, any>
 }
+
+export interface IParamsTemplate {
+  functionKey: string
+  name: string
+  form: any
+  viceForm: any
+  viceElements: Array<any>
+  workMode: IWorkMode | undefined
+}

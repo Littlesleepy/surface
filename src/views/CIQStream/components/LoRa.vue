@@ -258,7 +258,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="container">
     <div class="form">
-      <BaseButton class="start" @click="decode">LoRo识别解码</BaseButton>
+      <ZXIButton class="start" @click="decode">LoRo识别解码</ZXIButton>
       <el-form
       :model="form"
       label-width="0"

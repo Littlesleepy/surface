@@ -129,7 +129,7 @@ onBeforeUnmount(() => {
       </div>
     </BaseDialog>
     <!-- 导航弹出框 -->
-    <BaseDialog v-model="navigationShow" title="功能选取" width="80%" key="navigation" delay>
+    <BaseDialog v-model="navigationShow" title="控制" width="80%" key="navigation">
       <BaseNavigation class="navigation" />
     </BaseDialog>
     <!-- 头部 -->
@@ -140,18 +140,18 @@ onBeforeUnmount(() => {
           <!-- 按钮区域 -->
           <div class="button-area">
             <!-- 导航 -->
-            <BaseButton @click="handleNavigation">
+            <ZXIButton @click="handleNavigation">
               <i class="iconfont icon-gongneng"></i>
               <span>{{ title }}</span>
-            </BaseButton>
+            </ZXIButton>
             <!-- 启动 -->
-            <BaseButton @click="handleStart">
+            <ZXIButton @click="handleStart">
               <i :class="startBtnClass" />
-            </BaseButton>
+            </ZXIButton>
             <!-- 参数表单 -->
-            <BaseButton @click="handleForm">
+            <ZXIButton @click="handleForm">
               <i class="iconfont icon-zhongduancanshuguanli" />
-            </BaseButton>
+            </ZXIButton>
           </div>
           <!-- 插槽 -->
           <div class="header-center">
@@ -230,6 +230,7 @@ onBeforeUnmount(() => {
   }
   .center{
     flex: auto;
+    z-index: 0;
   }
 }
 </style>

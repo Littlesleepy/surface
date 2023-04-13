@@ -33,12 +33,26 @@ const {
   subaudioDecoding,
   ITU,
   modulate,
-  decodingState
+  decodingState,
+  reset
 } = useSingleMeasure()
 
 const master = ref<BaseParamsType>()
 
 const tabId = ref(0)
+
+const hideParam = new Set(['saveaudiodata', 'saverowdata', 'chiqdata'])
+
+onMounted(() => {
+  if (master.value) {
+    const elements = master.value.elements
+
+    // 隐藏部分参数
+    elements.forEach((el) => {
+      if (hideParam.has(el.paramName)) el.show = false
+    })
+  }
+})
 
 </script>
 
@@ -49,10 +63,10 @@ const tabId = ref(0)
         <el-button type="primary" round @click="changeFrequency">切换频率</el-button>
         <el-button type="primary" round @click="() => { markers = [trigger.value as number] }">标注</el-button>
       </div>
-      <hr>
+      <hr style="margin-top: .5rem"/>
     </BaseLink>
     <template #set>
-      <BaseParams ref="master" :disableBtnAfterTaskStart="{ all: false }" />
+      <BaseParams ref="master" />
     </template>
     <!-- 头部切换视图 -->
     <template #header-center>
@@ -74,7 +88,9 @@ const tabId = ref(0)
         :switchLever="store.s_playButton"
         :hightlightItems="hightlightItems"
         :markers="markers"
-        @selectFrequency="selectFrequency">
+        :refresh="reset"
+        @selectFrequency="selectFrequency"
+        useSelectFrequency>
         <template #header>
           <BaseParamsBranch
             class="params-branch0"
@@ -83,24 +99,24 @@ const tabId = ref(0)
                 { name: '解调模式', paramName: 'demodulation', ratio: 11 },
                 { name: '衰减', paramName: 'attenuation', ratio: 9 },
                 { name: '禁噪门限', paramName: 'squelch', ratio: 9 },
-                { name: 'Itu', paramName: 'itumeasure', ratio: 5.5 },
+                { name: 'ITU', paramName: 'itumeasure', ratio: 5.5 },
                 { name: '音频', paramName: 'tcpaudio', ratio: 5.5 }
               ]
             ]"
             :master="master" />
         </template>
         <template #middle>
-            <BaseParamsBranch
-              class="params-branch1"
-              :params="[
-                [
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
-                  { name: '中心频率', paramName: 'frequency', ratio: 18 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 11 }
-                ]
-              ]"
-              :master="master" />
-          </template>
+          <BaseParamsBranch
+            class="params-branch1"
+            :params="[
+              [
+                { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
+                { name: '中心频率', paramName: 'frequency', ratio: 18 },
+                { name: '解调带宽', paramName: 'debw', ratio: 11 }
+              ]
+            ]"
+            :master="master" />
+        </template>
       </ZXISpectrumAndFall>
       <ZXIItu :inputData="ITU" />
       <ZXIModulate :inputData="modulate" />

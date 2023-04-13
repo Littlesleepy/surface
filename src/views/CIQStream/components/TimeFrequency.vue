@@ -336,7 +336,7 @@ const defaultValueY = { max: 60, min: -50 }
         :inputData="iqData"
         :name="'IQ矢量图'"
         :switchLever="frameStore.s_playButton"
-        :pointRadius="3" />
+        :pointRadius="7" />
       <ZXIScrollInfo
         class="measure-info"
         name="测量信息"

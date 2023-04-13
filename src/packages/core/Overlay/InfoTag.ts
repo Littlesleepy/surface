@@ -119,7 +119,6 @@ export class InfoTag {
     infoTagStyle.pointerEvents = this.options.pointerEvents
     infoTagStyle.zIndex = this.options.zIndex
     infoTagStyle.position = 'absolute'
-    infoTagStyle.overflow = 'hidden'
 
     if (this.options.fixed !== undefined) {
       const fixed = this.options.fixed
@@ -261,7 +260,7 @@ export class InfoTag {
    * @param {Map} content 文字内容
    */  
   setContent (content: Map<string, { color?: string, info: string }>) {
-    if (this.el.children.length === 1 && this.defaultContent === this.el.children[0]) {
+    if (this.defaultContent === this.el.children[0]) {
       // 自动调整高度
       const height = content.size * 26 + 16
       this.el.style.height = `${height}px`

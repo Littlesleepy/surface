@@ -23,7 +23,6 @@ import { EBtncontrolType, IBtncontrols, ESwitchState, IAxisXValue, IAxisYValue, 
 import peakIcon from '../assets/imgs/peakIcon.png'
 import { createMarker } from '../ZXISpectrumScanAndFall/marker'
 import { UseTheme } from '../styles'
-import { ISwitchButtons } from '../ZXISwitchButtons/type'
 import { useGlGrid } from './useGlGrid'
 
 export function spectrum (
@@ -32,15 +31,6 @@ export function spectrum (
   defaultValueX: Ref<{ min: number, max: number }>,
   step: Ref<number>
 ) {
-  const buttons: Array<ISwitchButtons> = [{
-    paramName: Controls.zhuzhuangtu,
-    label: '柱状图',
-    repelName: [Controls.baoluotu]
-  }, {
-    paramName: Controls.baoluotu,
-    label: '包络图',
-    repelName: [Controls.zhuzhuangtu]
-  }]
 
   const controls = ref<Array<IBtncontrols>>([{
     type: EBtncontrolType.switch,
@@ -85,7 +75,8 @@ export function spectrum (
     type: EBtncontrolType.switch,
     title: '筛选',
     paramName: Controls.shaixuan,
-    repelName: [Controls.celiang, Controls.menxian, Controls.biaozhu]
+    repelName: [Controls.celiang, Controls.menxian, Controls.biaozhu],
+    show: true
   }, {
     type: EBtncontrolType.switch,
     title: '频率划分',
@@ -93,12 +84,17 @@ export function spectrum (
   }, {
     type: EBtncontrolType.switch,
     title: '瀑布图测量',
-    paramName: Controls.fallCeliang
+    paramName: Controls.fallCeliang,
+    show: true
   }, {
     type: EBtncontrolType.switch,
     title: '标注',
     paramName: Controls.biaozhu,
     repelName: [Controls.celiang, Controls.menxian, Controls.shaixuan]
+  }, {
+    type: EBtncontrolType.button,
+    title: '重置',
+    paramName: Controls.reset
   }])
 
   const defaultBtn = {
@@ -116,7 +112,8 @@ export function spectrum (
     pinlvhuafen: true,
     fallZoom: false,
     fallCeliang: false,
-    biaozhu: false
+    biaozhu: false,
+    reset: false
   }
 
   // 设置默认工具值
@@ -155,8 +152,18 @@ export function spectrum (
     shaixuan: boolean
     menxian: boolean
     pinlvhuafen: boolean
+    reset: boolean
     [p: string]: any
   }>(defaultBtn)
+  // 瀑布图开关影响筛选和瀑布图测量
+  watch(() => btnValues.pubutu, (btn) => {
+    controls.value.forEach(item => {
+      if (item.paramName === Controls.fallCeliang || item.paramName === Controls.shaixuan) {
+        item.show = btn
+        if (!btn) btnValues[item.paramName] = false
+      }
+    })
+  }, { immediate: true })
   /** 
    * @description: Y轴颜色
    */  
@@ -408,7 +415,7 @@ export function spectrum (
 
     rectangle.samplingData = new Float32Array(drawCount)
     rectangle.a_position = new Float32Array(drawCount * 2 * 6)
-    rectangle.a_color = new Float32Array(drawCount * 6)
+    rectangle.a_color = new Float32Array(drawCount * 6).fill(Shader.BACKGROUND_COLOR)
 
     changePositionByMinValue()
 
@@ -616,16 +623,31 @@ export function spectrum (
 
       spectrumScene.value.renderCtx.clearScreen()
 
-      usingData.value = { data: new Float32Array(), time: 0 }
+      usingData.value.data.fill(Shader.BACKGROUND_COLOR)
+
+      // 刷新fence
+      if (spectrumScene.value.canvas.clientWidth === 0) return
+      const fence = spectrumScene.value.fence! as LayersFenceType
+
+      fence.refresh(spectrumScene.value.canvas.clientWidth, inputDataLength.value)
+
+      // 附加曲线数据抽取
+      for (const [, line] of additionalLineManager) {
+        line.data.fill(Shader.BACKGROUND_COLOR)
+      }
+
+      inputData.value = []
+
+      render()
     }
   }
   // 初始化统计数据
   function initStatisticalBuffer () {
-    statisticalBuffer.input = new Float32Array(inputDataLength.value)
-    statisticalBuffer.max = new Float32Array(inputDataLength.value)
-    statisticalBuffer.min = new Float32Array(inputDataLength.value)
-    statisticalBuffer.sum = new Float64Array(inputDataLength.value)
-    statisticalBuffer.mean = new Float32Array(inputDataLength.value)
+    statisticalBuffer.input = new Float32Array(inputDataLength.value).fill(Shader.BACKGROUND_COLOR)
+    statisticalBuffer.max = new Float32Array(inputDataLength.value).fill(Shader.BACKGROUND_COLOR)
+    statisticalBuffer.min = new Float32Array(inputDataLength.value).fill(Shader.BACKGROUND_COLOR)
+    statisticalBuffer.sum = new Float64Array(inputDataLength.value).fill(Shader.BACKGROUND_COLOR)
+    statisticalBuffer.mean = new Float32Array(inputDataLength.value).fill(Shader.BACKGROUND_COLOR)
     statisticalBuffer.count = new Map([[0, 0]])
   }
   /**
@@ -756,14 +778,13 @@ export function spectrum (
           float h = (a_position.y - u_min_range.x) / u_min_range.y;
           float y = 2.0 * h - 1.0;
 
-          gl_Position = u_conversion * vec4(a_position.x, y, 0.0, 1.0);
-
           if (a_color == ${Shader.BACKGROUND_COLOR}.0) {
-            v_color = ${bgColor};
-          } else {
-            float color = (a_color - u_min_range.x) / u_min_range.y;
-            ${str}
+            y = -1.1;
           }
+
+          gl_Position = u_conversion * vec4(a_position.x, y, 0.0, 1.0);
+          float color = (a_color - u_min_range.x) / u_min_range.y;
+          ${str}
         }
         `
 
@@ -837,13 +858,7 @@ export function spectrum (
       zoomTrans.options.lock = true
       measureTool.options.lock = true
 
-      usingData.value = { data: new Float32Array(), time: 0 }
-
-      initStatisticalBuffer()
-
-      if (spectrumScene.value) {
-        spectrumScene.value.renderCtx.clearScreen()
-      }
+      resetSpectrum()
     } 
   })
 
@@ -877,11 +892,11 @@ export function spectrum (
           line.mesh.setData('a_positionY', line.a_positionY)
 
           lineProgram.add(line.mesh)
-          additionalLineManager.set(key, { ...line, data: item.data})
+          additionalLineManager.set(key, { ...line, data: new Float32Array(item.data) })
         }
       } else {
         const line = additionalLineManager.get(key)!
-        line.data = item.data
+        line.data = new Float32Array(item.data)
         line.mesh.setData('u_color', item.color)
         line.u_color = item.color
       }
@@ -1060,6 +1075,33 @@ export function spectrum (
   })
 
   watch([spectrumYvalue, usingData], () => setMarkerPoints(spectrumYvalue.value, new Map([['0', { data: usingData.value.data }]])))
+
+  /**......................返出选中频率...................... */
+  /**
+   * @description: 触发返出选中频率
+   */  
+  function getSelectFrequency (e: MouseEvent | TouchEvent) {
+    if (spectrumScene.value && usingData.value.time > 0 && toolTipPosition.value) {
+      const tag = toolTip.verticalTag!.instance
+      const fence = spectrumScene.value.fence as LayersFenceType
+      const event = spectrumScene.value.event
+      const offsetX = tag.positionResult.offsetMiddlePCTX
+
+      const fenceIndex = fence.baseFence.getFenceIndexByDistance(offsetX)
+      const dataIndex = fence.getDataIndexByFenceIndex(fenceIndex)
+
+      const frequency = defaultValueX.value.min + dataIndex * step.value
+
+      emit('selectFrequency', {
+        fenceIndex,
+        dataIndex,
+        value: props.scaleX.transform(frequency),
+        baseEvent: e,
+        sceneEvent: event,
+        mouseOrTouch: Listen.TOUCH
+      })
+    }
+  }
 
   let themeKey
 
@@ -1446,31 +1488,36 @@ export function spectrum (
         type: ToolTip.VERTICAL,
         verticalTag: {
           lock: { show: true }
+        },
+        infoTag: {
+          borderRadius: props.useSelectFrequency ? '10px 10px 0 0' : '10px'
         }
       })
-      // 点击锁定按钮，返出选择的值
-      toolTip.verticalTag!.lock!.addEventListener(Listen.TOUCHSTART, (e) => {
-        if (spectrumScene.value && usingData.value.time > 0 && toolTipPosition.value) {
-          const tag = toolTip.verticalTag!.instance
-          const fence = spectrumScene.value.fence as LayersFenceType
-          const event = spectrumScene.value.event
-          const offsetX = tag.positionResult.offsetMiddlePCTX
 
-          const fenceIndex = fence.baseFence.getFenceIndexByDistance(offsetX)
-          const dataIndex = fence.getDataIndexByFenceIndex(fenceIndex)
-
-          const frequency = defaultValueX.value.min + dataIndex * step.value
-
-          emit('selectFrequency', {
-            fenceIndex,
-            dataIndex,
-            value: props.scaleX.transform(frequency),
-            baseEvent: e,
-            sceneEvent: event,
-            mouseOrTouch: Listen.TOUCH
-          })
-        }
-      })
+      if (props.useSelectFrequency) {
+        // 添加一个下拉按钮
+        const tipButton = document.createElement('button')
+        tipButton.innerText = '使用频率'
+        toolTip.infoTag.instance.el.appendChild(tipButton)
+        tipButton.style.cssText = `
+        width: 100%;
+        font-size: 20px;
+        padding: 5px 0;
+        margin-top: 2px;
+        box-sizing: border-box;
+        background-color: ${UseTheme.theme.var.tipBgColor};
+        color: ${UseTheme.theme.var.tipColor};
+        border-radius: 0 0 10px 10px;
+      `
+        tipButton.addEventListener(Listen.TOUCHSTART, (e) => {
+          e.stopPropagation()
+          getSelectFrequency(e)
+        })
+        // 点击锁定按钮，返出选择的值
+        toolTip.verticalTag!.lock!.addEventListener(Listen.TOUCHSTART, (e) => {
+          getSelectFrequency(e)
+        })
+      }
 
       toolTip.afterTrigger.set('spectrum', (p) => {
         toolTipPosition.value = p.offsetMiddlePCTX
@@ -1519,7 +1566,6 @@ export function spectrum (
   })
 
   return {
-    buttons,
     controls,
     btnValues,
     inputData,

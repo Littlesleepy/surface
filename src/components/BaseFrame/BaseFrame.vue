@@ -17,11 +17,11 @@ import BaseTopFrame from '../BaseTopFrame/BaseTopFrame.vue'
 import BaseNavigation from '../BaseNavigation/BaseNavigation.vue'
 import { useRoute } from 'vue-router';
 import { UseTheme } from 'mcharts/index'
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const route = useRoute()
 
-const title = route.meta.title
+const title = computed(() => route.meta.title )
 
 /**.............................导航............................. */
 const navigationShow = ref(false)
@@ -46,10 +46,10 @@ function handleNavigation () {
           <!-- 按钮区域 -->
           <div class="button-area">
             <!-- 导航 -->
-            <BaseButton @click="handleNavigation">
+            <ZXIButton @click="handleNavigation">
               <i class="iconfont icon-gongneng"></i>
               <span>{{ title }}</span>
-            </BaseButton>
+            </ZXIButton>
           </div>
           <!-- 插槽 -->
           <div class="header-center">

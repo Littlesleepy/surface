@@ -12,7 +12,7 @@ declare namespace Config {
     userName: string
     password: string
   }
-  const disableFunction: Array<string>
+  const enableFunction: Array<string>
   const paramTlMaxCount: number
   const map:{
     sourceUrl:string

@@ -4,8 +4,7 @@
     "userName": "admin",
     "password": "zxi123456789!"
   },
-  "disableFunction": ["YaYunHuiPScan"],
-  "paramTlMaxCount": 20,
+  "enableFunction": ["SingleMeasure", "PScan", "CIQStream", "XScan", "HandheldSingleMeasure", "SignalRecognitionAnalysis", "DPX"],
   "map": {
     "sourceUrl": "http://192.168.0.141:8086/data/v3.json",
     "zoom": 9,

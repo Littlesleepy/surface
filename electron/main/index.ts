@@ -53,15 +53,16 @@ const indexHtml = join(process.env.DIST, 'index.html')
 const { getWin } = useIpcMain()
 
 async function createWindow() {
-  // const primaryDisplay = screen.getPrimaryDisplay()
-  // const { width, height } = primaryDisplay.workAreaSize
+  const primaryDisplay = screen.getPrimaryDisplay()
+  const { width, height } = primaryDisplay.workAreaSize
 
   win = new BrowserWindow({
     show: false,
-    width: 1500,
-    height: 600,
-    title: '真信智能',
-    icon: join(process.env.PUBLIC, 'favicon.ico'),
+    width,
+    height: height * 0.8,
+    fullscreen: true,
+    title: 'PM360',
+    icon: join(process.env.PUBLIC, 'pm360.ico'),
     webPreferences: {
       preload,
       // 是否启用Node integration.

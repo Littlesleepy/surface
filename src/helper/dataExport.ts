@@ -971,7 +971,9 @@ const downloadOptions = {
  */
 export function ExportDownload (data: IPdfData | Array<IExcelData>, dataType: EExportDataType, name: string) {
   const { url, blobType, extendName } = downloadOptions[dataType]
-  const loading = Sundry.createMarker(LOADING_TEXT)
+  const loading = Sundry.createMarker({
+    text: LOADING_TEXT
+  })
   Axios({
     method: 'post',
     data,

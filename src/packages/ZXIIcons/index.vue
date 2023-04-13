@@ -25,10 +25,8 @@ const props = defineProps({
   },
   step: { type: Number, default: 0 },
   usingData: {
-    type: Object as PropType<ISpectrumInputData>,
-    default: () => {
-      return { data: new Float32Array(), time: 0 }
-    }
+    type: Object as PropType<Float32Array>,
+    default: new Float32Array()
   },
   scene: {
     type: Object as PropType<Scene>
@@ -58,7 +56,7 @@ watchEffect(() => {
 
 function setPosition () {
   if (props.icons.length === 0 || iconsWrapper.value === undefined ||
-    iconsWrapper.value.clientWidth === 0 || props.usingData.data.length === 0 || props.scene === undefined) {
+    iconsWrapper.value.clientWidth === 0 || props.usingData.length === 0 || props.scene === undefined) {
     iconLists.value = []
     return
   }
@@ -98,7 +96,7 @@ function setPosition () {
         } 
         if ('color' in item.style!) li.style.color = item.style.color
       }
-      const dy = iconsWrapper.value.clientHeight * (props.usingData.data[item.dataIndex] - props.axisYValue.min) / axisYRange.value
+      const dy = iconsWrapper.value.clientHeight * (props.usingData[item.dataIndex] - props.axisYValue.min) / axisYRange.value
       const dx = dsIndex * iconsWrapper.value.clientWidth - peakWidth / 2
       li.style.left = dx + 'px'
       li.style.bottom = dy + 1 + 'px'

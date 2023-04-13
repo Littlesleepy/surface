@@ -19,6 +19,7 @@ import { localStorageKey } from 'storage/index'
 import { IDeviceFunc } from '@/types'
 import { ElMessage, ElNotification } from 'element-plus'
 import { UseTheme } from 'mcharts/index'
+import BaseTheme from 'cp/BaseTheme/BaseTheme.vue'
 interface IIconList {
   id: number
   imgUrl: string
@@ -31,48 +32,9 @@ interface IIconList {
 
 const router = useRouter()
 
-const baseLists = ref<Array<IIconList>>([{
-  id: 0,
-  imgUrl: 'imgs/FilesManager.png',
-  name: '文件管理',
-  title: '提供多种文件的管理操作',
-  goFunc: () => {
-    router.push({ name: 'FilesManager' })
-  },
-  nameEn: 'FilesManager',
-  index: 0
-}, {
-  id: 1,
-  imgUrl: 'imgs/GlobalManager.png',
-  name: '全局管理',
-  title: '提供关于全局的操作',
-  goFunc: () => {
-    router.push({ name: 'GlobalManager' })
-  },
-  nameEn: 'GlobalManager',
-  index: 1
-}
-])
-/** 
- * @description: 基本功能
- */    
-const naviGationListsRX = ref<Array<IIconList>>([])
-/** 
- * @description: 专项功能
- */  
-const naviGationListsOP = ref<Array<IIconList>>([])
-/** 
- * @description: 测向
- */  
-const naviGationListsDF = ref<Array<IIconList>>([])
-/** 
- * @description: 硬件检测
- */  
-const naviGationListsHC = ref<Array<IIconList>>([])
-/** 
- * @description: 场景应用
- */    
-const naviGationListsAPP = ref<Array<IIconList>>([])
+const sort = ["SingleMeasure", "PScan", "XScan", "DPX", "CIQStream", "SignalRecognitionAnalysis", "HandheldSingleMeasure",]
+
+const naviGationLists = ref<Array<IIconList>>([])
 
 function dataInit () {
   const funcsString = localStorage.getItem(localStorageKey.KEY_FUNCTIONS)
@@ -83,51 +45,38 @@ function dataInit () {
     ElNotification({ type: 'warning', message: '请先进入登录页初始化程序' })
     return
   }
-  let startId = baseLists.value.length
+  let startId = 0
   funcs.forEach(m => {
-    const item: IIconList = {
-      id: startId,
-      imgUrl: `/imgs/${m.functionKey}.png`,
-      name: m.name,
-      title: m.description,
-      goFunc: () => { handleRoute(m.functionKey) },
-      nameEn: m.functionKey,
-      index: m.orderIndex
-    }
-    startId++
     // 屏蔽全景扫描——亚运会
-    const disableFunction = new Set(Config.disableFunction)
-    if (!disableFunction.has(m.functionKey)) {
-      switch (m.subjectionKey) {
-      case 'RX': naviGationListsRX.value.push(item)
-        break
-      case 'OP': naviGationListsOP.value.push(item)
-        break
-      case 'DF': naviGationListsDF.value.push(item)
-        break
-      case 'HC': naviGationListsHC.value.push(item)
-        break
-      case 'APP': naviGationListsAPP.value.push(item)
-        break
+    const enableFunction = new Set(Config.enableFunction)
+    if (enableFunction.has(m.functionKey)) {
+      const item: IIconList = {
+        id: startId,
+        imgUrl: `imgs/${m.functionKey}.png`,
+        name: m.name,
+        title: m.description,
+        goFunc: () => { handleRoute(m.functionKey) },
+        nameEn: m.functionKey,
+        index: m.orderIndex
       }
+
+      naviGationLists.value.push(item)
+      startId++
     }
   })
-
+  const copyLists: Array<IIconList> = []
   // 排序
-  funcSort(naviGationListsRX.value)
-  funcSort(naviGationListsOP.value)
-  funcSort(naviGationListsDF.value)
-  funcSort(naviGationListsHC.value)
-  funcSort(naviGationListsAPP.value)
-}
-
-function funcSort (data: Array<IIconList>) {
-  data.sort((f, s) => {
-    return f.index - s.index
+  sort.forEach(name => {
+    naviGationLists.value.forEach(item => {
+      if (item.nameEn === name) copyLists.push(item)
+    })
   })
+
+  naviGationLists.value = copyLists
+
 }
 
-function handleRoute (name) { // 全屏并隐藏头和脚
+function handleRoute (name) {
   // 打上已交互标记
   if (router.hasRoute(name)) {
     router.push({ name })
@@ -143,65 +92,16 @@ dataInit()
 
 <template>
   <ZXIScroll :preventDefault="true" class="base-scroll" :wrapperStyle="{ backgroundColor: 'transparent' }">
-    <div class="group" v-if="baseLists.length">
-      <p class="title">管理器</p>
-      <ul>
-        <li v-for="item in baseLists" :key="item.id" :title="item.title">
-          <div @click="item.goFunc">
-            <img :src="item.imgUrl">
-            <p>{{item.name}}</p>
-          </div>
-        </li>
-      </ul>
+    <div class="group">
+      <p class="title">设置</p>
+      <div class="setting">
+        <BaseTheme class="item" />
+      </div>
     </div>
-    <div class="group" v-if="naviGationListsAPP.length">
-      <p class="title">场景应用</p>
+    <div class="group" v-if="naviGationLists.length">
+      <p class="title">导航</p>
       <ul>
-        <li v-for="item in naviGationListsAPP" :key="item.id" :title="item.title">
-          <div @click="item.goFunc">
-            <img :src="item.imgUrl">
-            <p>{{item.name}}</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div class="group" v-if="naviGationListsRX.length">
-      <p class="title">基本功能</p>
-      <ul>
-        <li v-for="item in naviGationListsRX" :key="item.id" :title="item.title">
-          <div @click="item.goFunc">
-            <img :src="item.imgUrl">
-            <p>{{item.name}}</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div class="group" v-if="naviGationListsOP.length">
-      <p class="title">专项功能</p>
-      <ul>
-        <li v-for="item in naviGationListsOP" :key="item.id" :title="item.title">
-          <div @click="item.goFunc">
-            <img :src="item.imgUrl">
-            <p>{{item.name}}</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div class="group" v-if="naviGationListsDF.length">
-      <p class="title">测向</p>
-      <ul>
-        <li v-for="item in naviGationListsDF" :key="item.id" :title="item.title">
-          <div @click="item.goFunc">
-            <img :src="item.imgUrl">
-            <p>{{item.name}}</p>
-          </div>
-        </li>
-      </ul>
-    </div>
-    <div class="group" v-if="naviGationListsHC.length">
-      <p class="title">硬件检测</p>
-      <ul>
-        <li v-for="item in naviGationListsHC" :key="item.id" :title="item.title">
+        <li v-for="item in naviGationLists" :key="item.id" :title="item.title">
           <div @click="item.goFunc">
             <img :src="item.imgUrl">
             <p>{{item.name}}</p>
@@ -232,11 +132,19 @@ dataInit()
     .title{
       padding: 1rem 0 1rem 1rem;
       font-size: 2rem;
-      color: rgb(31, 128, 255);
+      color: v-bind('UseTheme.theme.var.color');
       font-weight: 700;
       background-color: rgba(0, 0, 0, .08);
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
     }
+    // 中设置
+    .setting{
+      display: flex;
+      .item{
+        margin: 0 1rem;
+      }
+    }
+    // 导航
     ul{
       width: 100%;
       display: flex;

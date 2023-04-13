@@ -6,14 +6,7 @@
  * @FilePath: \zxi-surface\src\router\index.ts
  * @Description:
  */
-import {
-  createRouter,
-  RouterOptions,
-  createWebHashHistory,
-  RouteRecordRaw,
-  Router,
-} from "vue-router";
-import globalManager from "./modules/globalManager";
+import { createRouter, RouterOptions, createWebHashHistory, RouteRecordRaw, Router } from 'vue-router'
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -23,7 +16,6 @@ declare module "vue-router" {
 }
 
 const routes: Array<RouteRecordRaw> = [
-  globalManager,
   {
     path: "",
     redirect: "/Load",
