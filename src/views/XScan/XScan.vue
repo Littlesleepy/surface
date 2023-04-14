@@ -2,14 +2,14 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 14:49:13
+ * @LastEditTime: 2023-04-14 09:51:21
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
 
 
 <script setup lang='ts'>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useFrameStore } from 'store/index'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
 import * as Helper from 'helper/index'
@@ -18,7 +18,7 @@ import { ElMessage, ElNotification } from 'element-plus'
 import { IParam, localStorageKey } from '@/storage'
 import { IMockPanleState } from '@/types'
 import { useRoute } from 'vue-router'
-import { fftToResolutionRatio } from './index'
+import { fftToResolutionRatio, frequncyTrance } from './index'
 import { UseTheme } from 'mcharts/index'
 import { useSingleMeasure } from '../SingleMeasure'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
@@ -70,10 +70,25 @@ useFunctionArr.forEach(p => {
 // 参数修改
 
 function inited(panle: IMockPanleState) {
+  const { device } = panle
   if (!route.query.name) {
-    const { device } = panle
 
     fftToResolutionRatio('fftpoints', 'bandwidth', device.elements, device.form, '分辨率')
+  }
+  const form = device.form.value
+  const bandwidth = Helper.Device.getSamplingRateByBandwidth(form.bandwidth)
+  const step = bandwidth / Number(form.fftpoints)
+  if(panle){
+    console.log(device.elements.value);
+    device.elements.value.forEach(el => {
+      if (el.paramName === 'efactor') {
+        el.title = '显示分辨率'
+        el.tooltip = '显示分辨率'
+        el.valueList.forEach(li => {
+          li.label = frequncyTrance(li.value * step)
+        })
+      }
+    })
   }
 }
 
@@ -113,6 +128,10 @@ const master = ref<BaseParamsType>()
 
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
 
+onMounted(()=>{
+  console.log(master.value?.elements);
+  'efactor'//每跳频谱抽取系数
+})
 
 </script>
 
@@ -128,10 +147,9 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
     <template #set>
       <BaseParams ref="master" :inited="inited" :dynamicParam="false" />
     </template>
-    <!-- 头部切换视图 -->
     <template #header-center>
     </template>
-    <div class="content-right">
+    <div class="content-XScan">
       <ZXISpectrumScanAndFall class="spectrum-scan-and-fall" :inputData="spectrum" :params="params"
         :switchLever="startAndStop" @selectFrequency="selectFrequency">
         <template  #header>
@@ -166,7 +184,7 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
   width: 100%;
   height: 100%;
   display: flex;
-  padding: .5rem;
+  padding: @btnSpace;
   box-sizing: border-box;
   .params-branch{
     width: 100%;
@@ -178,14 +196,16 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
   justify-content: space-around;
 }
 
-.content-right {
+.content-XScan {
   width: 100%;
   height: 100%;
   display: flex;
+  box-sizing: border-box;
+  padding: @btnSpace;
 
   .spectrum-scan-and-fall {
     flex: auto;
-    padding: @btnSpace @btnSpace 0 @btnSpace;
+    // padding: @btnSpace @btnSpace 0 @btnSpace;
     box-sizing: border-box;
     background: v-bind('UseTheme.theme.var.backgroundColor');
   }
