@@ -114,14 +114,6 @@ function getScene(scene: Scene<ISampleLinesPool>) {
     }
   })
 
-  resetButton.addEventListener(Listen.TOUCHSTART, () => {
-    if (clampForce?.sectionThreshold) {
-      clampForce.sectionThreshold.threshold.init(true)
-      currentPositions = undefined
-      ElMessage.success('重置')
-    }
-  })
-
   clampForce.afterClose.set('timeDomain', () => {
     openClampForce.value = false
 
