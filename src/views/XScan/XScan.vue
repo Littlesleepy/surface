@@ -2,14 +2,14 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 15:38:17
+ * @LastEditTime: 2023-04-14 16:05:43
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
 
 
 <script setup lang='ts'>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect } from 'vue'
 import { useFrameStore } from 'store/index'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
 import * as Helper from 'helper/index'
@@ -40,9 +40,6 @@ const params = computed(() => {
   const form = store.s_form
   let step = Helper.Device.getSamplingRateByBandwidth(Number(form.bandwidth))
   step = step / Number(form.fftpoints) / 1000 * form.efactor
-
-  console.log(form)
-
   return {
     begin: Number(form.begin),
     end: Number(form.end),
@@ -70,17 +67,21 @@ useFunctionArr.forEach(p => {
 })
 
 // 参数修改
-
+let _panle: IMockPanleState
 function inited(panle: IMockPanleState) {
+  _panle = panle
   const { device } = panle
   if (!route.query.name) {
-
     fftToResolutionRatio('fftpoints', 'bandwidth', device.elements, device.form, '分辨率')
   }
-  const form = device.form.value
+}
+
+watchEffect(() => {
+  const form = store.s_form
   const bandwidth = Helper.Device.getSamplingRateByBandwidth(form.bandwidth)
   const step = bandwidth / Number(form.fftpoints)
-  if(panle){
+  if (_panle) {
+    const { device } = _panle
     device.elements.value.forEach(el => {
       if (el.paramName === 'efactor') {
         el.title = '显示分辨率'
@@ -91,7 +92,7 @@ function inited(panle: IMockPanleState) {
       }
     })
   }
-}
+})
 
 let canChange = true
 optionsChild.set(ReceiveData.key.DATA.OVERFLOW, {
@@ -129,6 +130,11 @@ const master = ref<BaseParamsType>()
 
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
 
+onMounted(()=>{
+  console.log(master.value?.elements);
+  
+})
+
 </script>
 
 <template>
@@ -162,7 +168,7 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
           <BaseParamsBranch class="params-branch1" :params="[
             [
               { name: '开始频率', paramName: 'begin', ratio: 12 },
-              { name: '分辨率', paramName: 'bandwidth', ratio: 12 },
+              { name: '分辨率', paramName: 'fftpoints', ratio: 12 },
               { name: '显示分辨率', paramName: 'efactor', ratio: 12 },
               { name: '结束频率', paramName: 'end', ratio: 12 },
             ]
