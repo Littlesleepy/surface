@@ -136,7 +136,6 @@ watch(() => inputLevel.value.level, (newLevel) => {
 
 const master = ref<BaseParamsType>()
 let $watchOne: WatchStopHandle
-
 onMounted(() => {
   $watchOne = watch(() => [store.s_playButton, master?.value?.viceForm.playAudio], ([btn, play]) => {
     if (btn === ESwitchState.open && play) {
@@ -209,7 +208,7 @@ onBeforeUnmount(() => {
               ]" :master="master" />
             </template>
           </ZXISpectrumAndFall>
-          <CommonMap class="map"></CommonMap>
+          <CommonMap class="map" ></CommonMap>
         </div>
       </div>
     </div>

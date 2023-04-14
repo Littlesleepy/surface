@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 09:53:12
+ * @LastEditTime: 2023-04-14 14:30:01
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
@@ -79,7 +79,6 @@ function inited(panle: IMockPanleState) {
   const bandwidth = Helper.Device.getSamplingRateByBandwidth(form.bandwidth)
   const step = bandwidth / Number(form.fftpoints)
   if(panle){
-    console.log(device.elements.value);
     device.elements.value.forEach(el => {
       if (el.paramName === 'efactor') {
         el.title = '显示分辨率'
@@ -127,12 +126,6 @@ watch(() => store.s_formOneResult, (v) => {
 const master = ref<BaseParamsType>()
 
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
-
-onMounted(()=>{
-  console.log(master.value?.elements);
-  'efactor'//每跳频谱抽取系数
-})
-
 </script>
 
 <template>
