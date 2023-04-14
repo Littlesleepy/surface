@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 16:12:25
+ * @LastEditTime: 2023-04-14 17:12:50
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -151,7 +151,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if ($watchOne) $watchOne()
 })
-
+onMounted(()=>{
+  console.log(master.value?.elements);
+  
+})
 </script>
 
 <template>
@@ -169,8 +172,10 @@ onBeforeUnmount(() => {
     <template #header-center>
       <BaseParamsBranch class="params-branch-header" :params="[
         [
-          { name: '辅助音频', paramName: 'playAudio', ratio: 12 },
+          { name: '辅助音频', paramName: 'playAudio', ratio: 6 },
           { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 },
+          { name: '解调模式', paramName: 'demodulation', ratio: 12 },
+          { name: '随路音频', paramName: 'tcpaudio', ratio: 6 },
         ]
       ]" :master="master" />
     </template>
@@ -181,17 +186,32 @@ onBeforeUnmount(() => {
             <source :src="levelsrc" type="audio/mpeg">
           </audio>
           <div class="containerTop-header">
-            瞬时值：{{ dBuV.toFixed(1) }} dBuV
+            <BaseParamsBranch class="params-branch-Top" :params="[
+                [
+                  { name: '频率', paramName: 'frequency', ratio: 12 },
+                  { name: '衰减', paramName: 'attenuation', ratio: 12 }
+                ]
+              ]" :master="master" />
+            <pre class="text">瞬时值：{{ dBuV.toFixed(1) }} dBuV</pre>
+
           </div>
 
-          <ZXILevel ref="ZLevel" :showAxisY="false" :capacity="0.1" :scaleY="{
+          <ZXILevel 
+          ref="ZLevel" 
+          :showAxisY="false" 
+          :capacity="0.1" 
+          :scaleY="{
             unit: 'dBuV',
             parse: (v) => `幅度：${parseFloat((20 * Math.log10(v)).toFixed(2))}dBuV`,
             transform: (v) => {
               return parseFloat((20 * Math.log10(v)).toFixed(2))
             }
-          }" class="ZLevel" :drawType="ELevelType.bar" :switchLever="store.s_playButton" :deleteTool="['threshold']"
-            :inputData="levelData" />
+          }" 
+          class="ZLevel" 
+          :drawType="ELevelType.bar" 
+          :switchLever="store.s_playButton" 
+          :deleteTool="['threshold']"
+          :inputData="levelData" />
           <LevelSlider @event_setLevelValue="setLevelValue" :inputData="levelData" :switchLever="store.s_playButton"
             :inputLevel="inputLevel.level" class="ZSlider" />
         </div>
@@ -201,9 +221,8 @@ onBeforeUnmount(() => {
             <template #header>
               <BaseParamsBranch class="params-branch" :params="[
                 [
-                  { name: '频率', paramName: 'frequency', ratio: 12 },
                   { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 12 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 12 }
                 ]
               ]" :master="master" />
             </template>
@@ -253,7 +272,7 @@ onBeforeUnmount(() => {
       height: 50%;
       display: grid;
       grid-template-columns: 1fr 90px;
-      grid-template-rows: 32px 1fr;
+      grid-template-rows: 45px 1fr;
       border-bottom: v-bind('CustomTheme.theme.districtBorder');
       padding-bottom: @btnSpace;
       box-sizing: border-box;
@@ -261,12 +280,23 @@ onBeforeUnmount(() => {
       .containerTop-header {
         box-sizing: border-box;
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        justify-content: center;
         color: v-bind('UseTheme.theme.var.color');
         font-size: 2rem;
         grid-column: 1/2;
         grid-row: 1/2;
+        padding-bottom: @btnSpace;
+        .text{
+          // flex: auto;
+          width:20%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .params-branch-Top{
+          width: 60%;
+        }
       }
 
       .ZLevel {

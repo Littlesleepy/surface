@@ -127,7 +127,7 @@ const master = ref<BaseParamsType>()
       <BaseParams ref="master" :inited="inited" :dynamicParam="false" />
     </template>
     <template #header-center>
-      <div class="header-slot">
+      <!-- <div class="header-slot">
         <BaseParamsBranch class="params-branch" :params="[
           [
             { name: '频率', paramName: 'frequency', ratio: 12 },
@@ -135,12 +135,20 @@ const master = ref<BaseParamsType>()
             { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
           ]
         ]" :master="master" />
-      </div>
+      </div> -->
     </template>
     <div class="content-DPX">
       <div class="content-DPX-two">
         <ZXIDpx class="img" ref="spInstance" :params="params" :inputData="spectrum" :switchLever="store.s_playButton">
           <!-- <p class="info">{{ headerInfo }}</p> -->
+
+          <BaseParamsBranch class="params-branch-header" :params="[
+          [
+            { name: '频率', paramName: 'frequency', ratio: 12 },
+            { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
+            { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
+          ]
+        ]" :master="master" />
         </ZXIDpx>
         <!-- <BaseParamsBranch class="params-branch" :params="[
           [
@@ -184,6 +192,9 @@ const master = ref<BaseParamsType>()
     flex: auto;
     display: flex;
     flex-direction: column;
+    .params-branch-header{
+      padding-left: 11.5rem;
+    }
 
     p {
       height: 35px;
