@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 17:00:01
+ * @LastEditTime: 2023-04-14 10:17:25
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\components\Modulate.vue
  * @Description: 
  -->
@@ -346,32 +346,21 @@ const currentTabId = ref(0)
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   display: flex;
   flex-direction: column;
-
-  // .first-colum {
-  //   width: 100%;
-  //   height: 40%;
-
-  //   .level {
-  //     height: 100%;
-  //     width: 100%;
-  //   }
-  // }
-
+  box-sizing: border-box;
+  padding: @btnSpace;
   .second-colum {
     flex: auto;
     display: flex;
-    border-top: v-bind('CustomTheme.theme.districtBorder');
 
     .tab-header {
       width: 150px;
-      margin: @btnSpace;
     }
   }
 
   .tabItem {
     flex: auto;
     display: flex;
-
+    padding-left: @btnSpace;
     .time-domain {
       flex: auto;
       display: flex;

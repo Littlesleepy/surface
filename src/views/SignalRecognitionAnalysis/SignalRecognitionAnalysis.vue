@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 16:51:17
+ * @LastEditTime: 2023-04-14 10:21:56
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -296,8 +296,8 @@ const master = ref<BaseParamsType>()
         </div>
       </div>
       <Modulate tabName="信号分析" class="tabItem" :canDraw="tabId === 1" />
-      <ZXIItu :inputData="ITU" />
-      <ZXIModulate :inputData="modulate" />
+      <ZXIItu class="table" :inputData="ITU" />
+      <ZXIModulate class="table" :inputData="modulate" />
       <ZXIScrollInfo class="Info" :clear="startAndStop === ESwitchState.open" :inputData="decodingState" />
 
     </ZXITabs>
@@ -312,7 +312,7 @@ const master = ref<BaseParamsType>()
   width: 100%;
   height: 100%;
   display: flex;
-  padding: .5rem;
+  padding: @btnSpace;
   box-sizing: border-box;
 }
 
@@ -320,6 +320,7 @@ const master = ref<BaseParamsType>()
   width: 100%;
   height: 100%;
   display: flex;
+  box-sizing: border-box;
 
   :deep(.FFM-tabs>div) {
     background-color: v-bind('UseTheme.theme.var.backgroundColor');
@@ -328,6 +329,8 @@ const master = ref<BaseParamsType>()
   .first-page {
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
+    padding: @btnSpace;
 
     .first-colum {
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
@@ -336,14 +339,13 @@ const master = ref<BaseParamsType>()
       box-sizing: border-box;
       width: 100%;
       height: 60%;
-      padding-right: @btnSpace;
 
       .spectrum-and-fall {
         flex: auto;
         box-sizing: border-box;
 
         .params-branch {
-          padding: @btnSpace 0 0 @btnSpace;
+          padding-left: @btnSpace;
         }
       }
 
@@ -353,7 +355,7 @@ const master = ref<BaseParamsType>()
       display: flex;
       flex: auto;
       flex-direction: row;
-      padding-right: @btnSpace;
+      padding-top: @btnSpace;
       border-top: v-bind('CustomTheme.theme.districtBorder');
       box-sizing: border-box;
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
@@ -364,19 +366,24 @@ const master = ref<BaseParamsType>()
         display: flex;
         flex-direction: row;
         flex: auto;
-        
+        padding-left: @btnSpace;
+
       }
 
       .params-branch {
-        padding: @btnSpace 0 0 @btnSpace;
+        padding-left: @btnSpace;
       }
 
-      .spectrum-and-fall-single {
-        flex: auto;
-        padding-right: 2px;
-      }
+      // .spectrum-and-fall-single {
+      //   flex: auto;
+      //   padding-right: 2px;
+      // }
 
     }
+  }
+  .table{
+    padding: @btnSpace;
+    box-sizing: border-box;
   }
 
   .Info {
