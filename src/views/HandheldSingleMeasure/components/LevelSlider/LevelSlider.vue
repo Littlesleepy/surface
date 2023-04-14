@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2022-07-20 13:56:30
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 14:14:42
+ * @LastEditTime: 2023-04-14 17:39:26
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\components\LevelSlider\LevelSlider.vue
  * @Description:
  -->
@@ -280,7 +280,7 @@ onUnmounted(() => {
   }
 
   .Slider-Top {
-    min-height: 32px;
+    min-height: 45px;
   }
 
   .Slider-Content {
