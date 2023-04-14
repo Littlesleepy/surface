@@ -666,6 +666,9 @@ export function spectrum (
       // 取出一帧数据
       oneFrame = inputData.value[i]
       maxCount = (oneFrame.frequency - props.params.begin) / step.value + oneFrame.data.length
+      // 处理计算精度缺失
+      maxCount = parseFloat(maxCount.toFixed(0))
+
       if (maxCount > inputDataLength.value) {
         // 截去超出部分
         oneFrame.data = oneFrame.data.subarray(0, oneFrame.data.length - (maxCount - inputDataLength.value))
@@ -1490,7 +1493,7 @@ export function spectrum (
         void main() {
           float h = (a_positionY - u_min_range.x) / u_min_range.y;
           float y = 2.0 * h - 1.0;
-          gl_Position = u_conversion * vec4(a_positionX, y, 0.0, 1.0);
+          gl_Position = u_conversion * vec4(a_positionX, y, 1.0, 1.0);
         }
         `
       const lineFragmentSource = `

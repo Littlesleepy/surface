@@ -12,6 +12,7 @@ import BScroll, { Options } from '@better-scroll/core'
 import MouseWheel, { MouseWheelOptions } from '@better-scroll/mouse-wheel'
 import ScrollBar, { ScrollbarOptions } from '@better-scroll/scroll-bar'
 import Pullup from '@better-scroll/pull-up'
+import { UseTheme } from '../styles'
 
 BScroll.use(MouseWheel)
   .use(ScrollBar)
@@ -48,7 +49,7 @@ const props = defineProps({
     type: [Object, String, Array] as PropType<StyleValue | undefined>,
     default: () => {
       return {
-        backgroundColor: 'rgb(255, 255, 255)'
+        backgroundColor: UseTheme.theme.var.backgroundColor
       }
     }
   },

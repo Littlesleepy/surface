@@ -7,17 +7,16 @@
 -->
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { PropType, StyleValue, ref } from 'vue'
 import { ElTable, ElTableColumn } from 'element-plus'
 import { ISubaudioDecodingData } from './type'
-import { UseTheme } from '../styles'
 
 const props = defineProps({
   inputData: {
     type: Array as PropType<Array<ISubaudioDecodingData>>,
     default: () => { return [] }
   },
-  wrapperStyle: { type: Object }
+  wrapperStyle: [Object, String, Array] as PropType<StyleValue | undefined>
 })
 const root = ref<HTMLDivElement>()
 
@@ -45,22 +44,6 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
-:deep(.header-cell-class){
-  background-color: v-bind('UseTheme.theme.var.textInfoBgColor')!important;
-  color: v-bind('UseTheme.theme.var.textInfoColor');
-}
-:deep(.cell-class){
-  background-color: v-bind('UseTheme.theme.var.textInfoBgColor')!important;
-  color: v-bind('UseTheme.theme.var.textInfoColor');
-}
-
-:deep(.table) {
-  background-color: v-bind('UseTheme.theme.var.textInfoBgColor')!important;
-
-  .el-table__empty-text{
-    color: v-bind('UseTheme.theme.var.textInfoColor')!important;
-  }
-}
 .base-scroll{
   width: 100%;
   height: 100%;

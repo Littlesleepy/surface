@@ -41,6 +41,8 @@ const params = computed(() => {
   let step = Helper.Device.getSamplingRateByBandwidth(Number(form.bandwidth))
   step = step / Number(form.fftpoints) / 1000 * form.efactor
 
+  console.log(form)
+
   return {
     begin: Number(form.begin),
     end: Number(form.end),

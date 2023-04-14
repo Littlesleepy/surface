@@ -5,18 +5,15 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { UseTheme } from '../styles'
 
 const props = defineProps({
   selected: { default: false },
   selectColor: {
+    type: String,
     default: UseTheme.theme.var.btnBgSelectedColor
   }
-})
-
-const selectStyle = computed(() => {
-  return props.selected ? { backgroundColor: props.selectColor } : {}
 })
 
 const buttonColor = ref(UseTheme.theme.var.btnBgColor)
@@ -31,7 +28,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <el-button class="zxi-button" :color="buttonColor" :style="selectStyle">
+  <el-button class="zxi-button" :class="{ selected }" :color="buttonColor" >
     <template #default>
       <slot />
     </template>
@@ -49,5 +46,9 @@ onBeforeUnmount(() => {
 }
 .el-button+.el-button {
   margin-left: 0;
+}
+
+.selected{
+  background-color: v-bind(selectColor)!important;
 }
 </style>

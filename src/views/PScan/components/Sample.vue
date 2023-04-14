@@ -11,8 +11,8 @@
 import { Axios } from '@/server'
 import { useFrameStore } from '@/store'
 import { ElMessage } from 'element-plus'
-import { computed, PropType, ref, watch } from 'vue'
-import { ILineData, EAxisXType, ITargetIcon, ESwitchState } from 'mcharts/index'
+import { computed, onMounted, PropType, ref, watch } from 'vue'
+import { ILineData, EAxisXType, ITargetIcon, ESwitchState, UseTheme } from 'mcharts/index'
 import { ISample, ISampleData } from '..'
 import { Sundry, UI } from '@/helper'
 import { useRoute } from 'vue-router'
@@ -120,7 +120,6 @@ function openSample () {
     ElMessage.error(err.data)
   }).finally(marker.close)
 }
-openSample()
 
 function deleteSample (sample: ISample) {
   Axios({
@@ -214,6 +213,11 @@ function seeCurrentSample () {
 }
 
 watch([() => props.viewCurrent, () => props.inputData], seeCurrentSample)
+
+onMounted(() => {
+  openSample()
+})
+
 </script>
 
 <template>
@@ -293,7 +297,7 @@ watch([() => props.viewCurrent, () => props.inputData], seeCurrentSample)
 .container{
   width: 100%;
   height: 100%;
-  background-color: white;
+  // background-color: white;
   padding: 10px;
   box-sizing: border-box;
   display: flex;
@@ -302,7 +306,8 @@ watch([() => props.viewCurrent, () => props.inputData], seeCurrentSample)
     display: flex;
     flex: auto;
     .box{
-      border: 1px solid @borderColor;
+      color: v-bind('UseTheme.theme.var.color');
+      border: 1px solid v-bind('UseTheme.theme.var.borderColor');
       padding: 10px;
       font-size: @font20;
     }

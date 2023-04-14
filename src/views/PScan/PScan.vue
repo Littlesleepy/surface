@@ -82,7 +82,7 @@ onMounted(() => {
       :hidHeader="true"
       v-model="currentTabId">
       <ZXISpectrumScanAndFall
-        class="spectrum-scan-and-fall"
+        class="spectrum-scan-and-fall tab-item"
         ref="spectrumInstance0"
         :inputData="spectrumScan"
         :params="params"
@@ -154,6 +154,8 @@ onMounted(() => {
   .spectrum-scan-and-fall{
     width: 100%;
     height: 100%;
+  }
+  .tab-item{
     padding: @btnSpace @btnSpace 0 @btnSpace;
     box-sizing: border-box;
     background: v-bind('UseTheme.theme.var.backgroundColor');
