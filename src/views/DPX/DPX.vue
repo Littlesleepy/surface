@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 13:53:23
+ * @LastEditTime: 2023-04-14 13:55:36
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -204,7 +204,8 @@ onMounted(() => {
 
       .info {
         font-size: 2rem;
-
+        display: flex;
+        align-items: center;
       }
     }
     .params-branch{
