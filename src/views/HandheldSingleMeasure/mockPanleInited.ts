@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2022-12-01 13:57:17
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 09:21:06
+ * @LastEditTime: 2023-04-14 10:52:03
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\mockPanleInited.ts
  * @Description:
  */
@@ -10,6 +10,7 @@ import { EParamsType, IMockPanleState } from "@/types";
 export function mockPanleInited(mock: IMockPanleState) {
   // 添加附加参数
   const { vice, device } = mock;
+  
   vice.elements.value = [
     {
       id: 0,
