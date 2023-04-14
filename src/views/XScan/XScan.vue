@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 14:30:01
+ * @LastEditTime: 2023-04-14 15:08:02
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
@@ -148,7 +148,7 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
         <template  #header>
           <BaseParamsBranch class="params-branch0" :params="[
             [
-              { name: '每跳频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+              { name: '每跳频谱带宽', paramName: 'bandwidth', ratio: 12 },
               { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
               { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 9 },
             ]

@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 14:29:39
+ * @LastEditTime: 2023-04-14 15:08:35
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -130,8 +130,8 @@ const master = ref<BaseParamsType>()
       <div class="header-slot">
         <BaseParamsBranch class="params-branch" :params="[
           [
-            { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
-            { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+            { name: '频率', paramName: 'frequency', ratio: 12 },
+            { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
             { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
           ]
         ]" :master="master" />
