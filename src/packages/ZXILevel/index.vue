@@ -897,7 +897,7 @@ defineExpose({
           <span class="name" v-if="name !== undefined">{{name}}</span>
           <div class="slot-content">
               <!-- 头部插槽 -->
-              <slot name="header"></slot>
+              <slot />
             </div>
         </div>
       </div>
@@ -940,7 +940,6 @@ defineExpose({
     position: relative;
     display: flex;
     align-items: center;
-    padding-bottom: 5px;
     box-sizing: border-box;
     .single-control{
       z-index: 99999;
@@ -977,7 +976,8 @@ defineExpose({
         padding-left: 5px;
         width: 0;
         .textOverflow();
-        font-size: 12px;
+        font-size: @font20;
+        color: v-bind('UseTheme.theme.var.color');
       }
     }
   }

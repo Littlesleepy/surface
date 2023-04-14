@@ -558,7 +558,7 @@ onMounted(() => {
         float h = (a_positionY - u_min_range.x) / u_min_range.y;
         float y = 2.0 * h - 1.0;
 
-        gl_Position = u_conversion * vec4(a_positionX, y, 0.0, 1.0);
+        gl_Position = u_conversion * vec4(a_positionX, y, 1.0, 1.0);
       }
       `
     const lineFragmentSource = `

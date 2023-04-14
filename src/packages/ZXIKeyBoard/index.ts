@@ -91,7 +91,7 @@ export class Keyboard {
       // order === sGroup.items.size - 1
       if (sItem.order === sGroup.items.size - 1) {
         if (rNum >= 1 / sItem.dsB) {
-          for (let i = sGroupArr.length - 1; i > 0; i--) {
+          for (let i = sGroupArr.length - 1; i >= 0; i--) {
             const item = sGroupArr[i]
             rUnit = item.unit
             if (rNum < 1 / sItem.dsB) break
@@ -113,7 +113,7 @@ export class Keyboard {
         }
 
         if (rNum < 1) { // 向后
-          for (let i = sItem.order, len = sGroupArr.length; i < len; i++) {
+          for (let i = sItem.order, len = sGroupArr.length - 1; i < len; i++) {
             const item = sGroupArr[i]
             rUnit = item.unit
             if (rNum >= 1) break

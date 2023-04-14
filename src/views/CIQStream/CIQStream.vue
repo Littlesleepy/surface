@@ -13,7 +13,7 @@ import { useFrameStore } from '@/store'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ESwitchState, ILineData, ISpectrumAndFallFallPool, Scene, UseTheme } from 'mcharts/index'
+import { ESwitchState, ILineData, ISpectrumAndFallFallPool, Keyboard, Scene, UseTheme } from 'mcharts/index'
 import { BaseParamsType, CustomTheme, EParamsType, IMockPanleState, IParamsVice } from '@/types'
 import TimeDomain from './components/TimeDomain.vue'
 import TimeFrequency from './components/TimeFrequency.vue'
@@ -263,6 +263,7 @@ function getFallScene (scene: Scene<ISpectrumAndFallFallPool>) {
 }
 
 const branchReset = ref(false)
+
 /**
  * @description: 不同使用模式下参数匹配
  */
@@ -280,7 +281,7 @@ function parameterMatching () {
     case '连续': {
       // 采样模式必须为连续
       deviceForm.samplingmode = '连续'
-      deviceForm.lmtime = 500
+      deviceForm.lmtime = '500'
       deviceForm.timewindow = 0
       deviceForm.triggerpos = '固定时长'
       // 门限不可见
@@ -292,7 +293,7 @@ function parameterMatching () {
     case '单次': {
       // 采样模式必须为触发
       deviceForm.samplingmode = '触发'
-      deviceForm.lmtime = 100
+      deviceForm.lmtime = '100'
       deviceForm.timewindow = 0.1
       deviceForm.triggerpos = '固定时长'
       // 固定时长门限不可见
@@ -305,7 +306,7 @@ function parameterMatching () {
       break
     case '上升沿': {
       deviceForm.samplingmode = '触发'
-      deviceForm.lmtime = 100
+      deviceForm.lmtime = '100'
       deviceForm.timewindow = 0.1
       deviceForm.triggerpos = '上升沿'
       //设置抽取因子为1
@@ -318,7 +319,7 @@ function parameterMatching () {
       break
     case '下降沿': {
       deviceForm.samplingmode = '触发'
-      deviceForm.lmtime = 100
+      deviceForm.lmtime = '100'
       deviceForm.timewindow = 0.1
       deviceForm.triggerpos = '下降沿'
       //设置抽取因子为1
@@ -331,7 +332,7 @@ function parameterMatching () {
       break
     default: {
       deviceForm.samplingmode = '触发'
-      deviceForm.lmtime = 1000
+      deviceForm.lmtime = '1000'
       deviceForm.timewindow = 1
       deviceForm.triggerpos = '全脉冲'
       //设置抽取因子为1

@@ -130,13 +130,10 @@ export class Listen {
   }
 
   private setMouseEvent (e: MouseEvent | WheelEvent) {
-    e.preventDefault()
     this.mousePosition = this.positionTrans(e)
   }
 
-  private setTouchEvent (e: TouchEvent) {
-    if (e.cancelable) e.preventDefault()
-    
+  private setTouchEvent (e: TouchEvent) { 
     this.touchPosition = Listen.transTouchEvent(e, this.container)
   }
 

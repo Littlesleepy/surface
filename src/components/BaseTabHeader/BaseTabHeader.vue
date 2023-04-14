@@ -102,6 +102,7 @@ const headerTrance = computed(() => backResult(props.headers))
   <div>
     <div class="container" :class="{ autoStyle }">
       <ZXIButton
+        class="button"
         v-for="(header, i) in headerTrance"
         :key="i"
         @click="tabId = i"
@@ -130,5 +131,8 @@ const headerTrance = computed(() => backResult(props.headers))
 }
 .tab-item-font{
   font-size: @font20;
+}
+.button{
+  padding: 5px 10px!important;
 }
 </style>

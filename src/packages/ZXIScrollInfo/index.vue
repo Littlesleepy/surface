@@ -21,8 +21,12 @@ const props = defineProps({
     default: () => { return { fade: true, interactive: true } }
   },
   preventDefault: { type: Boolean, default: false },
-  scrollWrapperStyle: { type: [Object, String, Array] as PropType<StyleValue | undefined>, },
-  wrapperStyle: { type: Object },
+  scrollWrapperStyle: {
+    type: [Object, String, Array] as PropType<StyleValue | undefined>
+  },
+  wrapperStyle: {
+    type: [Object, String, Array] as PropType<StyleValue | undefined>
+  },
   mouseWheel: { type: Boolean, default: true },
   name: { type: String }
 })

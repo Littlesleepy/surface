@@ -7,7 +7,7 @@
 -->
 
 <script setup lang="ts">
-import { PropType, ref } from 'vue'
+import { PropType, StyleValue, ref } from 'vue'
 import { IModulateData } from './type'
 import { ElTable, ElTableColumn } from 'element-plus'
 import { UseTheme } from '../styles'
@@ -17,7 +17,7 @@ const props = defineProps({
     type: Array as PropType<Array<IModulateData>>,
     default: () => { return [] }
   },
-  wrapperStyle: { type: Object },
+  wrapperStyle: [Object, String, Array] as PropType<StyleValue | undefined>,
   name: { type: String }
 })
 
@@ -52,22 +52,6 @@ defineExpose({
 
 <style scoped lang="less">
 @import url('../assets/styles/theme');
-:deep(.header-cell-class){
-  background-color: v-bind('UseTheme.theme.var.textInfoBgColor')!important;
-  color: v-bind('UseTheme.theme.var.textInfoColor');
-}
-:deep(.cell-class){
-  background-color: v-bind('UseTheme.theme.var.textInfoBgColor')!important;
-  color: v-bind('UseTheme.theme.var.textInfoColor');
-}
-
-:deep(.table) {
-  background-color: v-bind('UseTheme.theme.var.textInfoBgColor')!important;
-
-  .el-table__empty-text{
-    color: v-bind('UseTheme.theme.var.textInfoColor')!important;
-  }
-}
 .wrapper{
   width: 100%;
   height: 100%;

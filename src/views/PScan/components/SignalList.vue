@@ -62,10 +62,7 @@ function handleMonitor (e: MouseEvent | TouchEvent, row: IServerSignal) {
 <template>
   <div>
     <BaseLink
-      :trigger="trigger"
-      style="background-color: rgb(40, 40, 40);"
-      closeButtonColor="rgb(40, 40, 40)"
-      textColor="rgb(220, 220, 220)"/>
+      :trigger="trigger"/>
     <ZXIScroll class="zxi-scroll">
       <p class="hopSpeed" v-if="hopSpeed">{{hopSpeed}}</p>
       <el-table :data="lists" border style="width: 100%">

@@ -236,10 +236,37 @@ function getLocalRuleForms () {
         }
       })
     } else {
+      const initialParams = Config.initialParams[F]
+
       for (let i = 0, len = NParame.length; i < len; i++) {
         const P1 = NParame[i]
         const parameter = P1.paramName
-        // 是否自带默认值
+        // A、本地配置参数
+        if (initialParams) {
+          const initialV = initialParams[parameter]
+          if (initialV !== undefined) {
+            value[parameter] = initialV
+
+            // 检查默认值是否规范
+            // 1、range类型数据
+            if (P1.paramType === EParamsType.range) {
+              if (initialV <= P1.maxValue && initialV >= P1.minValue) continue
+            }
+
+            // 2、enum类型数据
+            if (P1.paramType === EParamsType.enum) {
+              let has = false
+              P1.valueList!.forEach(item => {
+                if (item === initialV) has = true
+              })
+
+              if (has) continue
+            }
+          }
+        }
+
+
+        // B、是否自带默认值
         if (P1.defaultValue !== null) {
           value[parameter] = P1.defaultValue
 
@@ -261,6 +288,7 @@ function getLocalRuleForms () {
           }
         }
 
+        // C服务没有指定默认参数
         // 1、range类型数据
         if (P1.paramType === EParamsType.range) {
           value[parameter] = P1.minValue

@@ -118,10 +118,10 @@ onMounted(() => {
             :master="master" />
         </template>
       </ZXISpectrumAndFall>
-      <ZXIItu :inputData="ITU" />
-      <ZXIModulate :inputData="modulate" />
-      <ZXIScrollInfo :clear="clear" :inputData="decodingState" :wrapperStyle="{ padding: '0' }" />
-      <ZXISubaudioDecoding :inputData="subaudioDecoding" />
+      <ZXIItu class="item" :inputData="ITU" />
+      <ZXIModulate class="item" :inputData="modulate" />
+      <ZXIScrollInfo :clear="clear" :inputData="decodingState" />
+      <ZXISubaudioDecoding class="item" :inputData="subaudioDecoding" />
     </ZXITabs>
   </BaseMonitorFrame>
 </template>
@@ -154,6 +154,10 @@ onMounted(() => {
     padding: @btnSpace @btnSpace 0 @btnSpace;
     box-sizing: border-box;
     background: v-bind('UseTheme.theme.var.backgroundColor');
+  }
+  .item{
+    padding: @btnSpace;
+    box-sizing: border-box;
   }
 }
 

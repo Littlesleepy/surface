@@ -446,7 +446,7 @@ defineExpose({
         padding-top: 5px;
         display: flex;
         line-height: @font20;
-        color: v-bind('UseTheme.theme.var.tipColor');
+        color: v-bind('UseTheme.theme.var.color');
         span{
           width: 60px;
           height: 5px;

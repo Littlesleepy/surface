@@ -28,6 +28,7 @@ export class Device extends ZHelper.Device {
     const elements: Array<IParamElement> = []
     const form: any = {}
     let id = 1
+
     data.forEach(x => {
       // 单位
       const reg = /(?<=\()[A-Za-z]+(?=\))/
