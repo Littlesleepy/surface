@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 15:08:35
+ * @LastEditTime: 2023-04-14 15:39:55
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -124,7 +124,7 @@ const master = ref<BaseParamsType>()
 <template>
   <BaseMonitorFrame>
     <template #set>
-      <BaseParams ref="master" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
+      <BaseParams ref="master" :inited="inited" :dynamicParam="false" />
     </template>
     <template #header-center>
       <div class="header-slot">
