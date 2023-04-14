@@ -773,7 +773,7 @@ onMounted(() => {
     toolTip = new ToolTip(scene.value, {
       type: ToolTip.VERTICAL,
       infoTag: {
-        width: 220,
+        width: 360,
         height: infoHeight
       }
     })
@@ -794,7 +794,7 @@ onMounted(() => {
     singleThreshold = new Threshold(scene.value.container, {
       centerTag: { type: Threshold.BOTTOM_TO_TOP },
       infoTag: {
-        width: 130
+        width: 200
       },
       showTags: new Map([[
         Threshold.BOTTOM,
