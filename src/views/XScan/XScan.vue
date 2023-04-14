@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 15:08:02
+ * @LastEditTime: 2023-04-14 15:38:17
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
@@ -39,7 +39,7 @@ const spectrum = ref<Array<ISpectrumScanInputData>>([{
 const params = computed(() => {
   const form = store.s_form
   let step = Helper.Device.getSamplingRateByBandwidth(Number(form.bandwidth))
-  step = step / Number(form.fftpoints) / 1000
+  step = step / Number(form.fftpoints) / 1000 * form.efactor
 
   console.log(form)
 
@@ -128,6 +128,7 @@ watch(() => store.s_formOneResult, (v) => {
 const master = ref<BaseParamsType>()
 
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
+
 </script>
 
 <template>
@@ -152,16 +153,18 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
             [
               { name: '每跳频谱带宽', paramName: 'bandwidth', ratio: 12 },
               { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
-              { name: '中频ADC增益开关', paramName: 'adcamplify', ratio: 9 },
+              { name: '每跳测量时间', paramName: 'smtime', ratio: 12 },
+              { name: '返回数据间隔时间', paramName: 'holdtime', ratio: 12 },
             ]
           ]" :master="master" />
         </template>
         <template  #middle>
           <BaseParamsBranch class="params-branch1" :params="[
             [
-              { name: '开始频率', paramName: 'begin', ratio: 11 },
-              { name: '分辨率', paramName: 'bandwidth', ratio: 11 },
-              { name: '结束频率', paramName: 'end', ratio: 11 },
+              { name: '开始频率', paramName: 'begin', ratio: 12 },
+              { name: '分辨率', paramName: 'bandwidth', ratio: 12 },
+              { name: '显示分辨率', paramName: 'efactor', ratio: 12 },
+              { name: '结束频率', paramName: 'end', ratio: 12 },
             ]
           ]" :master="master" />
         </template>
