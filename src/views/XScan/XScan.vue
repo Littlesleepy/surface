@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 11:07:01
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 09:51:21
+ * @LastEditTime: 2023-04-14 09:53:12
  * @FilePath: \zxi-surface\src\views\XScan\XScan.vue
  * @Description: 
  -->
@@ -179,18 +179,6 @@ onMounted(()=>{
 
 <style scoped lang="less">
 @import url('theme');
-
-.header-slot {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  padding: @btnSpace;
-  box-sizing: border-box;
-  .params-branch{
-    width: 100%;
-  }
-}
-
 .base-link {
   display: flex;
   justify-content: space-around;
