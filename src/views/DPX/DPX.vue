@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 14:53:22
+ * @LastEditTime: 2023-04-14 13:53:23
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -130,7 +130,7 @@ onMounted(() => {
     <template #set>
       <BaseParams ref="master" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
-    <!-- <template #header-center>
+    <template #header-center>
       <div class="header-slot">
         <BaseParamsBranch class="params-branch" :params="[
           [
@@ -140,19 +140,19 @@ onMounted(() => {
           ]
         ]" :master="master" />
       </div>
-    </template> -->
+    </template>
     <div class="content-right">
       <div class="content-right-two">
         <ZXIDpx class="img" ref="spInstance" :params="params" :inputData="spectrum" :switchLever="store.s_playButton">
-          <p class="info">{{ headerInfo }}</p>
+          <!-- <p class="info">{{ headerInfo }}</p> -->
         </ZXIDpx>
-        <BaseParamsBranch class="params-branch" :params="[
+        <!-- <BaseParamsBranch class="params-branch" :params="[
           [
             { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
             { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
             { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
           ]
-        ]" :master="master" />
+        ]" :master="master" /> -->
       </div>
     </div>
     
