@@ -152,6 +152,7 @@ watch(() => store.s_playButton, (btn) => {
 const master = ref<BaseParamsType>()
 onMounted(() => {
   console.log(master.value?.elements);
+  
   // frequency 频率(MHz) 
   // bandwidth 频谱带宽(kHz)
   // debw 解调带宽(kHz)
