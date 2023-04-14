@@ -5,10 +5,11 @@
     "password": "zxi123456789!"
   },
   "enableFunction": ["SingleMeasure", "PScan", "XScan", "DPX", "CIQStream", "SignalRecognitionAnalysis", "HandheldSingleMeasure"],
+  "paramTlMaxCount": 20,
   "initialParams": {
     "XScan": {
-      "smtime": 50,
-      "holdtime": 50
+      "smtime": 30,
+      "holdtime": 30
     }
   },
   "map": {
