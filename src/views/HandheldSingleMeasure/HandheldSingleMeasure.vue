@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 17:12:50
+ * @LastEditTime: 2023-04-14 17:37:20
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -172,10 +172,14 @@ onMounted(()=>{
     <template #header-center>
       <BaseParamsBranch class="params-branch-header" :params="[
         [
-          { name: '辅助音频', paramName: 'playAudio', ratio: 6 },
+          { name: '辅助音频', paramName: 'playAudio', ratio: 7.53 },
           { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 },
-          { name: '解调模式', paramName: 'demodulation', ratio: 12 },
-          { name: '随路音频', paramName: 'tcpaudio', ratio: 6 },
+         
+        ],
+        [
+        { name: '随路音频', paramName: 'tcpaudio', ratio: 7.53 },
+
+        { name: '解调模式', paramName: 'demodulation', ratio: 12 },
         ]
       ]" :master="master" />
     </template>
@@ -188,43 +192,51 @@ onMounted(()=>{
           <div class="containerTop-header">
             <BaseParamsBranch class="params-branch-Top" :params="[
                 [
-                  { name: '频率', paramName: 'frequency', ratio: 12 },
-                  { name: '衰减', paramName: 'attenuation', ratio: 12 }
+                  { name: '频率', paramName: 'frequency', ratio: 9.98 },
+                  { name: '衰减', paramName: 'attenuation', ratio: 13 },
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 9.75, mR: 2.25 }
                 ]
               ]" :master="master" />
-            <pre class="text">瞬时值：{{ dBuV.toFixed(1) }} dBuV</pre>
+            <!-- <pre class="text">瞬时值：{{ dBuV.toFixed(1) }} dBuV</pre> -->
 
           </div>
 
           <ZXILevel 
-          ref="ZLevel" 
-          :showAxisY="false" 
-          :capacity="0.1" 
-          :scaleY="{
-            unit: 'dBuV',
-            parse: (v) => `幅度：${parseFloat((20 * Math.log10(v)).toFixed(2))}dBuV`,
-            transform: (v) => {
-              return parseFloat((20 * Math.log10(v)).toFixed(2))
-            }
-          }" 
-          class="ZLevel" 
-          :drawType="ELevelType.bar" 
-          :switchLever="store.s_playButton" 
-          :deleteTool="['threshold']"
-          :inputData="levelData" />
-          <LevelSlider @event_setLevelValue="setLevelValue" :inputData="levelData" :switchLever="store.s_playButton"
-            :inputLevel="inputLevel.level" class="ZSlider" />
+            ref="ZLevel" 
+            :showAxisY="false" 
+            :capacity="0.1" 
+            :scaleY="{
+              unit: 'dBuV',
+              parse: (v) => `幅度：${parseFloat((20 * Math.log10(v)).toFixed(2))}dBuV`,
+              transform: (v) => {
+                return parseFloat((20 * Math.log10(v)).toFixed(2))
+              }
+            }" 
+            class="ZLevel" 
+            :drawType="ELevelType.bar" 
+            :switchLever="store.s_playButton" 
+            :deleteTool="['threshold']"
+            :inputData="levelData" 
+          />
+          <LevelSlider 
+            @event_setLevelValue="setLevelValue" 
+            :inputData="levelData" 
+            :switchLever="store.s_playButton"
+            :inputLevel="inputLevel.level" 
+            class="ZSlider" 
+          />
         </div>
         <div class="containerBottom">
           <ZXISpectrumAndFall class="spectrum-and-fall" :inputData="inputData" :params="params"
             :switchLever="store.s_playButton" :setTool="setTool" :markers="markers" @selectFrequency="selectFrequency">
             <template #header>
-              <BaseParamsBranch class="params-branch" :params="[
+              <!-- <BaseParamsBranch class="params-branch" :params="[
                 [
                   { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
                   { name: '解调带宽', paramName: 'debw', ratio: 12 }
                 ]
-              ]" :master="master" />
+              ]" :master="master" /> -->
             </template>
           </ZXISpectrumAndFall>
           <CommonMap class="map" ></CommonMap>
@@ -295,7 +307,7 @@ onMounted(()=>{
           justify-content: center;
         }
         .params-branch-Top{
-          width: 60%;
+          width: 100%;
         }
       }
 
