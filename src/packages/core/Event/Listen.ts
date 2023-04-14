@@ -133,7 +133,7 @@ export class Listen {
     this.mousePosition = this.positionTrans(e)
   }
 
-  private setTouchEvent (e: TouchEvent) { 
+  private setTouchEvent(e: TouchEvent) {
     this.touchPosition = Listen.transTouchEvent(e, this.container)
   }
 
@@ -241,6 +241,7 @@ export class Listen {
         this.touchStartTime = now
       } else {
         if (now - this.touchStartTime < 300) {
+          e.preventDefault()
           this.eventBind(e, Listen.DBLCLICK, Listen.TOUCH)
           this.touchStartTime = undefined
         } else {

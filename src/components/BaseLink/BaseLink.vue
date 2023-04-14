@@ -102,7 +102,7 @@ const color = props.textColor ?? UseTheme.theme.var.backgroundColor
           :key="f.functionKey">
             <span>{{f.name}}</span>
             <div class="button">
-              <el-button type="info" plain :disabled="f.functionKey === route.name" @click="handleMonitor(f)">监测</el-button>
+              <el-button type="info" :disabled="f.functionKey === route.name" @click="handleMonitor(f)">监测</el-button>
             </div>
         </div>
       </div>

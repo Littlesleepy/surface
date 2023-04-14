@@ -26,7 +26,8 @@ const props = defineProps({
     type: Array as PropType<Array<Array<IParamBranch>>>,
     default: () => []
   },
-  reset: { default: false }
+  reset: { default: false },
+  noWrap: { type: Boolean }
 })
 
 const paramsTrance = ref<Array<IParamElement & { name: string, style: string }>>([])
@@ -94,7 +95,7 @@ function backResult () {
 
         const obj = {
           ...currentEl,
-          style: marginBottom + widthStyle + marginRight,
+          style: marginBottom + widthStyle + marginRight + 'height: 100%;',
           name: item.name
         }
 
@@ -112,6 +113,8 @@ watchEffect(() => {
 
 watch(() => props.reset, backResult)
 
+const height = props.noWrap ? '100%' : 'none'
+
 </script>
 
 <template>
@@ -123,6 +126,7 @@ watch(() => props.reset, backResult)
         <div v-for="item in paramsTrance" :style="item.style" :key="item.id" v-show="item.show === undefined ? true : item.show">
           <!-- 设备参数 -->
           <ZXIInput
+            style="height: 100%;"
             v-if="item.show !== undefined && item.type === EParamsType.range"
             @change="master!.getParams(master!.form[item.paramName], item.paramName)"
             v-model="master.form[item.paramName]"
@@ -134,6 +138,7 @@ watch(() => props.reset, backResult)
             :disabled="item.disabled"
             :readonly="true" />
           <ZXISelect
+            style="height: 100%;"
             v-if="item.show !== undefined && item.type === EParamsType.enum"
             @change="master!.getParams(master!.form[item.paramName], item.paramName)"
             v-model="master.form[item.paramName]"
@@ -146,6 +151,7 @@ watch(() => props.reset, backResult)
               :value="select.value" />
           </ZXISelect>
           <ZXISwitch
+            style="height: 100%;"
             v-if="item.show !== undefined &&  item.type === EParamsType.boolean"
             @change="master!.getParams(master!.form[item.paramName], item.paramName)"
             v-model="master.form[item.paramName]"
@@ -153,6 +159,7 @@ watch(() => props.reset, backResult)
             :disabled="item.disabled" />
           <!-- 附加参数 -->
           <ZXIInput
+            style="height: 100%;"
             v-if="item.show === undefined && item.type === EParamsType.range"
             v-model="master.viceForm[item.paramName]"
             :max="item.maxValue"
@@ -163,6 +170,7 @@ watch(() => props.reset, backResult)
             :disabled="item.disabled"
             :readonly="true" />
           <ZXISelect
+            style="height: 100%;"
             v-if="item.show === undefined && item.type === EParamsType.enum"
             v-model="master.viceForm[item.paramName]"
             :name="item.name"
@@ -175,6 +183,7 @@ watch(() => props.reset, backResult)
               :value="select.value" />
           </ZXISelect>
           <ZXISwitch
+            style="height: 100%;"
             v-if="item.show === undefined && item.type === EParamsType.boolean"
             v-model="master.viceForm[item.paramName]"
             :name="item.name"
@@ -188,8 +197,10 @@ watch(() => props.reset, backResult)
 <style scoped lang="less">
 .container{
   width: 100%;
+  height: v-bind(height);
   .demo-ruleForm {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
