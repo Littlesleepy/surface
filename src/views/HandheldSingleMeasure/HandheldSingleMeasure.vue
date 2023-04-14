@@ -2,14 +2,14 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 16:12:30
+ * @LastEditTime: 2023-04-14 13:46:01
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
 
 
 <script setup lang='ts'>
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch, WatchStopHandle } from 'vue'
 import { useFrameStore, useServerStore } from '@/store'
 import { ELevelType, ESwitchState, IAxisYValue, ILevelData, IModulateData, ISpectrumInputData, ISubaudioDecodingData, ZXILevel, UseTheme } from 'mcharts/index'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
@@ -134,28 +134,24 @@ watch(() => inputLevel.value.level, (newLevel) => {
   levelAudio.value!.volume = Math.max(speed, 0.4)
 })
 
-watch(() => store.s_playButton, (btn) => {
-  const viceForms = localStorage.getItem(localStorageKey.KEY_VICEFORMS)
-  const playAudio = JSON.parse(viceForms!).HandheldSingleMeasure['playAudio'] as boolean
-  if (btn === ESwitchState.open) {
-    levelData.value.clear()
-    if (playAudio) {
-      levelAudio.value!.muted = false
-
-      levelAudio.value?.play()
-    }
-  } else {
-    levelAudio.value?.pause()
-  }
-})
-
 const master = ref<BaseParamsType>()
+let $watchOne: WatchStopHandle
 onMounted(() => {
-  console.log(master.value?.elements);
-  // frequency 频率(MHz) 
-  // bandwidth 频谱带宽(kHz)
-  // debw 解调带宽(kHz)
+  $watchOne = watch(() => [store.s_playButton, master?.value?.viceForm.playAudio], ([btn, play]) => {
+    if (btn === ESwitchState.open && play) {
+      levelData.value.clear()
+      levelAudio.value!.muted = false
+      levelAudio.value?.play()
+    } else {
+      levelAudio.value?.pause()
+    }
+  })
 })
+
+onBeforeUnmount(() => {
+  if ($watchOne) $watchOne()
+})
+
 </script>
 
 <template>
@@ -169,6 +165,14 @@ onMounted(() => {
     </BaseLink>
     <template #set>
       <BaseParams ref="master" :inited="mockPanleInited" :disableBtnAfterTaskStart="{ all: false }" />
+    </template>
+    <template #header-center>
+      <BaseParamsBranch class="params-branch-header" :params="[
+        [
+          { name: '辅助音频', paramName: 'playAudio', ratio: 12 },
+          { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 },
+        ]
+      ]" :master="master" />
     </template>
     <div class="HandheldSingleMeasure">
       <div class="single-container">
@@ -204,7 +208,7 @@ onMounted(() => {
               ]" :master="master" />
             </template>
           </ZXISpectrumAndFall>
-          <CommonMap class="map"></CommonMap>
+          <CommonMap class="map" ></CommonMap>
         </div>
       </div>
     </div>
@@ -227,11 +231,16 @@ onMounted(() => {
 //     :deep(.icon-jiantou) {
 //       left: -4px !important;
 //     }
+.params-branch-header {
+  padding: @btnSpace;
+}
 
 .HandheldSingleMeasure {
   width: 100%;
   height: 100%;
   display: flex;
+  box-sizing: border-box;
+  padding: @btnSpace;
 
   .single-container {
     flex: auto;
@@ -246,6 +255,7 @@ onMounted(() => {
       grid-template-columns: 1fr 90px;
       grid-template-rows: 32px 1fr;
       border-bottom: v-bind('CustomTheme.theme.districtBorder');
+      padding-bottom: @btnSpace;
       box-sizing: border-box;
 
       .containerTop-header {
@@ -263,7 +273,6 @@ onMounted(() => {
         grid-column: 1/2;
         grid-row: 2/3;
         border-left: 1px solid v-bind('UseTheme.theme.var.borderColor');
-        margin-left: 5px;
       }
 
       .ZSlider {
@@ -276,19 +285,26 @@ onMounted(() => {
       flex: auto;
       display: flex;
       flex-direction: row;
+      box-sizing: border-box;
+      // padding-top: @btnSpace;
 
       .spectrum-and-fall {
         flex: 1;
         padding-right: @btnSpace;
+        padding-top: @btnSpace;
+
         box-sizing: border-box;
         border-right: v-bind('CustomTheme.theme.districtBorder');
 
         .params-branch {
-          padding: @btnSpace 0 0 @btnSpace;
+          padding-left: @btnSpace;
+
         }
       }
 
       .map {
+        padding-left: @btnSpace;
+        padding-top: @btnSpace;
         box-sizing: border-box;
         max-width: 500px;
         width: 40%;

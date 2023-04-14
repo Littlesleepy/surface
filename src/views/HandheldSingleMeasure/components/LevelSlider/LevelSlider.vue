@@ -140,7 +140,7 @@ function setColor(a_color: number) {
       const [r, g, b] = ((cb, ct, n) => {
         let c: Array<number> = []
         cb.forEach((e, i) => {
-          // DEBUG
+          // GABUG 颜色不正确 高度
           // console.log(e,cb[i],ct[i]);
           // console.log(cb[i],ct[i]);
           if (cb[i] > ct[i]) {

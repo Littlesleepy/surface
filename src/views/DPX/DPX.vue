@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 14:53:22
+ * @LastEditTime: 2023-04-14 15:08:35
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -119,10 +119,6 @@ ToExport.beforExport.set('0', () => {
   if (spectrum.value.data.length > 0) ToExport.addDom('荧光谱', spInstance.value!.root!, 1)
 })
 const master = ref<BaseParamsType>()
-onMounted(() => {
-  console.log(master.value?.elements);
-
-})
 </script>
 
 <template>
@@ -130,29 +126,29 @@ onMounted(() => {
     <template #set>
       <BaseParams ref="master" :inited="inited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
-    <!-- <template #header-center>
+    <template #header-center>
       <div class="header-slot">
         <BaseParamsBranch class="params-branch" :params="[
           [
-            { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
-            { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
+            { name: '频率', paramName: 'frequency', ratio: 12 },
+            { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
             { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
           ]
         ]" :master="master" />
       </div>
-    </template> -->
-    <div class="content-right">
-      <div class="content-right-two">
+    </template>
+    <div class="content-DPX">
+      <div class="content-DPX-two">
         <ZXIDpx class="img" ref="spInstance" :params="params" :inputData="spectrum" :switchLever="store.s_playButton">
-          <p class="info">{{ headerInfo }}</p>
+          <!-- <p class="info">{{ headerInfo }}</p> -->
         </ZXIDpx>
-        <BaseParamsBranch class="params-branch" :params="[
+        <!-- <BaseParamsBranch class="params-branch" :params="[
           [
             { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
             { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
             { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
           ]
-        ]" :master="master" />
+        ]" :master="master" /> -->
       </div>
     </div>
     
@@ -175,22 +171,22 @@ onMounted(() => {
 }
 
 
-.content-right {
+.content-DPX {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  padding:@btnSpace;
 
   /* 绘图区域 */
-  .content-right-two {
+  .content-DPX-two {
     flex: auto;
     display: flex;
     flex-direction: column;
 
     p {
       height: 35px;
-      padding-left: 10px;
-      padding-bottom: 5px;
       box-sizing: border-box;
       color: v-bind('UseTheme.theme.var.color');
       font-size: 12px;
@@ -199,12 +195,12 @@ onMounted(() => {
     .img {
       flex: auto;
       height: 100%;
-      padding-right: 10px;
       box-sizing: border-box;
 
       .info {
         font-size: 2rem;
-
+        display: flex;
+        align-items: center;
       }
     }
     .params-branch{

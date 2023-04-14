@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 16:51:17
+ * @LastEditTime: 2023-04-14 14:13:24
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -251,7 +251,7 @@ const master = ref<BaseParamsType>()
     </template>
     <template #header-center>
       <div class="header-slot">
-        <BaseTabHeader :headers="['主页', '信号分析', '信道测量', '调制识别', '数字语音解调/解码状态']" v-model="tabId" />
+        <BaseTabHeader  :headers="['主页', '信号分析', '信道测量', '调制识别', '数字语音解调/解码状态']" v-model="tabId" />
       </div>
     </template>
     <ZXITabs class="FFM-tabs" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="tabId">
@@ -264,15 +264,15 @@ const master = ref<BaseParamsType>()
             <template #header>
               <BaseParamsBranch class="params-branch" :params="[
                 [
-                  { name: '全景中心频率(MHz)', paramName: 'frequency', ratio: 6 },
-                  { name: '全景频谱带宽(kHz)', paramName: 'bandwidth', ratio: 6 }
+                  { name: '全景中心频率', paramName: 'frequency', ratio: 6 },
+                  { name: '全景频谱带宽', paramName: 'bandwidth', ratio: 6 }
                 ]
               ]" :master="master" />
             </template>
           </ZXISpectrumAndFall>
         </div>
         <div class="second-colum">
-          <BaseTabHeader class="tab-header" :headers="[
+          <BaseTabHeader  class="tab-header" :headers="[
             [{ name: '解调频谱', ratio: 1 }],
             [{ name: '电平图', ratio: 1 }],
           ]" v-model="firstTabId" />
@@ -283,8 +283,8 @@ const master = ref<BaseParamsType>()
               <template #header>
                 <BaseParamsBranch class="params-branch" :params="[
                   [
-                    { name: '测量/解调频率(MHz)', paramName: 'def', ratio: 6 },
-                    { name: '测量/解调带宽(kHz)', paramName: 'debw', ratio: 6 }
+                    { name: '测量/解调频率', paramName: 'def', ratio: 6 },
+                    { name: '测量/解调带宽', paramName: 'debw', ratio: 6 }
                   ]
                 ]" :master="master" />
               </template>
@@ -296,8 +296,8 @@ const master = ref<BaseParamsType>()
         </div>
       </div>
       <Modulate tabName="信号分析" class="tabItem" :canDraw="tabId === 1" />
-      <ZXIItu :inputData="ITU" />
-      <ZXIModulate :inputData="modulate" />
+      <ZXIItu class="table" :inputData="ITU" />
+      <ZXIModulate class="table" :inputData="modulate" />
       <ZXIScrollInfo class="Info" :clear="startAndStop === ESwitchState.open" :inputData="decodingState" />
 
     </ZXITabs>
@@ -312,7 +312,7 @@ const master = ref<BaseParamsType>()
   width: 100%;
   height: 100%;
   display: flex;
-  padding: .5rem;
+  padding: @btnSpace;
   box-sizing: border-box;
 }
 
@@ -320,6 +320,7 @@ const master = ref<BaseParamsType>()
   width: 100%;
   height: 100%;
   display: flex;
+  box-sizing: border-box;
 
   :deep(.FFM-tabs>div) {
     background-color: v-bind('UseTheme.theme.var.backgroundColor');
@@ -328,6 +329,8 @@ const master = ref<BaseParamsType>()
   .first-page {
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
+    padding: @btnSpace;
 
     .first-colum {
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
@@ -336,14 +339,13 @@ const master = ref<BaseParamsType>()
       box-sizing: border-box;
       width: 100%;
       height: 60%;
-      padding-right: @btnSpace;
 
       .spectrum-and-fall {
         flex: auto;
         box-sizing: border-box;
 
         .params-branch {
-          padding: @btnSpace 0 0 @btnSpace;
+          padding-left: @btnSpace;
         }
       }
 
@@ -353,10 +355,13 @@ const master = ref<BaseParamsType>()
       display: flex;
       flex: auto;
       flex-direction: row;
-      padding-right: @btnSpace;
+      padding-top: @btnSpace;
       border-top: v-bind('CustomTheme.theme.districtBorder');
       box-sizing: border-box;
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
+      .tab-header{
+        width: 100px;
+      }
 
       .FFM-tabs-first {
         width: 100%;
@@ -364,19 +369,24 @@ const master = ref<BaseParamsType>()
         display: flex;
         flex-direction: row;
         flex: auto;
-        
+        padding-left: @btnSpace;
+
       }
 
       .params-branch {
-        padding: @btnSpace 0 0 @btnSpace;
+        padding-left: @btnSpace;
       }
 
-      .spectrum-and-fall-single {
-        flex: auto;
-        padding-right: 2px;
-      }
+      // .spectrum-and-fall-single {
+      //   flex: auto;
+      //   padding-right: 2px;
+      // }
 
     }
+  }
+  .table{
+    padding: @btnSpace;
+    box-sizing: border-box;
   }
 
   .Info {

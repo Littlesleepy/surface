@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-12 10:48:28
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-12 17:25:02
+ * @LastEditTime: 2023-04-13 17:26:51
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\components\CommonMap\Control.ts
  * @Description:
  */
@@ -143,6 +143,7 @@ export class MeasureControl implements IControl {
 
     const button = document.createElement("button");
     button.setAttribute("type", "button");
+    
     button.title = "测量";
 
     const i = document.createElement("i");
@@ -150,6 +151,7 @@ export class MeasureControl implements IControl {
 
     i.style.cssText = `
       font-weight: 700;
+      color: #333333;
     `;
 
     button.appendChild(i);

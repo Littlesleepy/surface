@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 17:00:01
+ * @LastEditTime: 2023-04-14 10:17:25
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\components\Modulate.vue
  * @Description: 
  -->
@@ -252,22 +252,7 @@ const currentTabId = ref(0)
 
 <template>
   <div class="Modulate-container">
-    <!-- <div class="first-colum">
-      
-          </div> -->
     <div class="second-colum">
-      <!-- <BaseTabHeader class="tab-header" :headers="[
-              [{ name: '瞬时频率', ratio: 1 }],
-              [{ name: '瞬时幅度', ratio: 1 }],
-              [{ name: '瞬时相位', ratio: 1 }],
-              [{ name: '瞬时频率包络', ratio: 1 }],
-              [{ name: '瞬时幅度包络', ratio: 1 }],
-              [{ name: 'FM解调谱', ratio: 1 }],
-              [{ name: '功率谱', ratio: 1 }],
-              [{ name: '二次方谱', ratio: 1 }],
-              [{ name: '四次方谱', ratio: 1 }],
-              [{ name: '八次方谱', ratio: 1 }],
-            ]" v-model="currentTabId" /> -->
       <BaseTabHeader class="tab-header" :headers="[
         [{ name: '时域特征', ratio: 1 }],
         [{ name: '功率谱\n二次方谱\n四次方谱\n八次方谱', ratio: 1 }],
@@ -361,32 +346,21 @@ const currentTabId = ref(0)
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   display: flex;
   flex-direction: column;
-
-  // .first-colum {
-  //   width: 100%;
-  //   height: 40%;
-
-  //   .level {
-  //     height: 100%;
-  //     width: 100%;
-  //   }
-  // }
-
+  box-sizing: border-box;
+  padding: @btnSpace;
   .second-colum {
     flex: auto;
     display: flex;
-    border-top: v-bind('CustomTheme.theme.districtBorder');
 
     .tab-header {
       width: 150px;
-      margin: @btnSpace;
     }
   }
 
   .tabItem {
     flex: auto;
     display: flex;
-
+    padding-left: @btnSpace;
     .time-domain {
       flex: auto;
       display: flex;
