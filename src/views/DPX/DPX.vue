@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 13:55:36
+ * @LastEditTime: 2023-04-14 14:24:09
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -141,8 +141,8 @@ onMounted(() => {
         ]" :master="master" />
       </div>
     </template>
-    <div class="content-right">
-      <div class="content-right-two">
+    <div class="content-DPX">
+      <div class="content-DPX-two">
         <ZXIDpx class="img" ref="spInstance" :params="params" :inputData="spectrum" :switchLever="store.s_playButton">
           <!-- <p class="info">{{ headerInfo }}</p> -->
         </ZXIDpx>
@@ -175,22 +175,22 @@ onMounted(() => {
 }
 
 
-.content-right {
+.content-DPX {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  padding:@btnSpace;
 
   /* 绘图区域 */
-  .content-right-two {
+  .content-DPX-two {
     flex: auto;
     display: flex;
     flex-direction: column;
 
     p {
       height: 35px;
-      padding-left: 10px;
-      padding-bottom: 5px;
       box-sizing: border-box;
       color: v-bind('UseTheme.theme.var.color');
       font-size: 12px;
@@ -199,7 +199,6 @@ onMounted(() => {
     .img {
       flex: auto;
       height: 100%;
-      padding-right: 10px;
       box-sizing: border-box;
 
       .info {

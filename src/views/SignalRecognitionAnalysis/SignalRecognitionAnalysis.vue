@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 10:21:56
+ * @LastEditTime: 2023-04-14 14:13:24
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -251,7 +251,7 @@ const master = ref<BaseParamsType>()
     </template>
     <template #header-center>
       <div class="header-slot">
-        <BaseTabHeader :headers="['主页', '信号分析', '信道测量', '调制识别', '数字语音解调/解码状态']" v-model="tabId" />
+        <BaseTabHeader  :headers="['主页', '信号分析', '信道测量', '调制识别', '数字语音解调/解码状态']" v-model="tabId" />
       </div>
     </template>
     <ZXITabs class="FFM-tabs" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="tabId">
@@ -272,7 +272,7 @@ const master = ref<BaseParamsType>()
           </ZXISpectrumAndFall>
         </div>
         <div class="second-colum">
-          <BaseTabHeader class="tab-header" :headers="[
+          <BaseTabHeader  class="tab-header" :headers="[
             [{ name: '解调频谱', ratio: 1 }],
             [{ name: '电平图', ratio: 1 }],
           ]" v-model="firstTabId" />
@@ -359,6 +359,9 @@ const master = ref<BaseParamsType>()
       border-top: v-bind('CustomTheme.theme.districtBorder');
       box-sizing: border-box;
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
+      .tab-header{
+        width: 100px;
+      }
 
       .FFM-tabs-first {
         width: 100%;
