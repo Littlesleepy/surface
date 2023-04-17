@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-17 09:32:35
+ * @LastEditTime: 2023-04-17 14:52:02
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -96,6 +96,7 @@ optionsChild.set('LQCB', {
       time: new Date()
     })
     inputLevel.value = data
+
   }
 })
 

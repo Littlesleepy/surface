@@ -264,7 +264,6 @@ const master = ref<BaseParamsType>()
               <BaseParamsBranch class="params-branch" :params="[
                 [
                   { name: '全景中心频率', paramName: 'frequency', ratio: 6 },
-                  { name: '解调模式', paramName: 'demodulation', ratio: 6 },
                   { name: '全景频谱带宽', paramName: 'bandwidth', ratio: 6 }
                 ]
               ]" :master="master" />
@@ -284,6 +283,7 @@ const master = ref<BaseParamsType>()
                 <BaseParamsBranch class="params-branch" :params="[
                   [
                     { name: '测量/解调频率', paramName: 'def', ratio: 6 },
+                    { name: '解调模式', paramName: 'demodulation', ratio: 6 },
                     { name: '测量/解调带宽', paramName: 'debw', ratio: 6 }
                   ]
                 ]" :master="master" />
