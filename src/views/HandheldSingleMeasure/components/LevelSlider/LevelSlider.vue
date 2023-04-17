@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2022-07-20 13:56:30
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 17:39:26
+ * @LastEditTime: 2023-04-17 10:30:35
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\components\LevelSlider\LevelSlider.vue
  * @Description:
  -->
@@ -166,14 +166,11 @@ const heightRatio = ref(0)
 function setHeight(control: boolean = false) {
   const max = Math.max(props.inputLevel, Math.pow(10, maxLevel.value / 20))
   const min = Math.pow(10, minLevel.value / 20)
-  // const powMax = Math.pow(10, maxLevel.value / 20)
   // 设置最大值
   maxLevel.value = 20 * Math.log10(max)//max
-
   // 运行中使用这个值
   const play =
     ((props.inputLevel - min) / ((max - min) * 0.1 + max)) * 100
-
   // 暂停时使用这个值
   const stop =
     ((props.inputLevel - min) / (max - min)) * 100

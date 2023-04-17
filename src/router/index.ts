@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-09 14:55:45
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-11 09:25:12
+ * @LastEditTime: 2023-04-17 11:15:06
  * @FilePath: \zxi-surface\src\router\index.ts
  * @Description:
  */
@@ -49,12 +49,6 @@ const routes: Array<RouteRecordRaw> = [
     name: "XScan",
     meta: { title: "高精度扫描" },
     component: () => import("views/XScan/XScan.vue"),
-  },
-  {
-    path: "/SpectrumAnalysis",
-    name: "SpectrumAnalysis",
-    meta: { title: "频谱分析仪" },
-    component: () => import("views/SpectrumAnalysis/SpectrumAnalysis.vue"),
   },
   {
     path: "/SignalRecognitionAnalysis",
