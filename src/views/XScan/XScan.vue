@@ -130,11 +130,6 @@ const master = ref<BaseParamsType>()
 
 const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure()
 
-onMounted(()=>{
-  console.log(master.value?.elements);
-  
-})
-
 </script>
 
 <template>

@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-17 14:52:02
+ * @LastEditTime: 2023-04-18 09:01:52
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -150,10 +150,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if ($watchOne) $watchOne()
-})
-onMounted(()=>{
-  console.log(master.value?.elements);
-  
 })
 </script>
 
