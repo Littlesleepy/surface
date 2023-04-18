@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import path, { join } from 'node:path'
 import { app, BrowserWindow, ipcMain, IpcMainEvent } from 'electron'
 import fs from 'fs'
 import { PreloadName } from '../preload/useElectronAPI'
@@ -28,13 +28,13 @@ export function useIpcMain () {
  */
 async function useConfig (){
   let filePath = ''
-  if (process.env.NODE_ENV === 'production') { // 生产环境
-    const appDir = app.getAppPath()
-    filePath = join(appDir, 'resources/config.json')
+  if (app.isPackaged) { // 生产环境
+    const appDir = app.getPath('exe')
+    filePath = join(path.dirname(appDir), 'config.json')
   } else {
     filePath = join(process.env.PUBLIC, 'config.json')
   }
-  
+
   return fs.readFileSync(filePath, 'utf-8')
 }
 

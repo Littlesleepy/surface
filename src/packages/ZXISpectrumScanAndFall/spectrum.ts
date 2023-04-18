@@ -1560,6 +1560,7 @@ export function spectrum (
       `
         tipButton.addEventListener(Listen.TOUCHSTART, (e) => {
           e.stopPropagation()
+          e.preventDefault()
           getSelectFrequency(e)
         })
         // 点击锁定按钮，返出选择的值

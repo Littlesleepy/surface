@@ -51,12 +51,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("views/XScan/XScan.vue"),
   },
   {
-    path: "/SpectrumAnalysis",
-    name: "SpectrumAnalysis",
-    meta: { title: "频谱分析仪" },
-    component: () => import("views/SpectrumAnalysis/SpectrumAnalysis.vue"),
-  },
-  {
     path: "/SignalRecognitionAnalysis",
     name: "SignalRecognitionAnalysis",
     meta: { title: "信号特征分析" },

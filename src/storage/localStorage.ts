@@ -229,6 +229,7 @@ function getLocalRuleForms () {
           if (P.paramType === EParamsType.boolean) {
             value[P.paramName] = LParameValue
           }
+
         } else {
           if (P.paramType === EParamsType.range) { value[P.paramName] = parseFloat(((P.minValue + P.maxValue) / 2).toFixed(0)) }
           if (P.paramType === EParamsType.enum) { value[P.paramName] = P.valueList![0] }
@@ -262,9 +263,11 @@ function getLocalRuleForms () {
 
               if (has) continue
             }
+
+            // 3、boolean类型数据
+            if (P1.paramType === EParamsType.boolean) continue
           }
         }
-
 
         // B、是否自带默认值
         if (P1.defaultValue !== null) {
@@ -286,6 +289,9 @@ function getLocalRuleForms () {
 
             if (has) continue
           }
+
+          // 3、boolean类型数据
+          if (P1.paramType === EParamsType.boolean) continue
         }
 
         // C服务没有指定默认参数
@@ -302,9 +308,11 @@ function getLocalRuleForms () {
           value[parameter] = false
         }
       }
+
     }
     localRuleForms[F] = value
   })
+
   localStorage.setItem(localStorageKey.KEY_FORMS, JSON.stringify(localRuleForms)) // 3.缓存key: local_RuleForms
 }
 /**

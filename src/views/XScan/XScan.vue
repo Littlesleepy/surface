@@ -153,7 +153,7 @@ onMounted(()=>{
     </template>
     <div class="content-XScan">
       <ZXISpectrumScanAndFall class="spectrum-scan-and-fall" :inputData="spectrum" :params="params"
-        :switchLever="startAndStop" @selectFrequency="selectFrequency">
+        :switchLever="startAndStop" useSelectFrequency @selectFrequency="selectFrequency">
         <template  #header>
           <BaseParamsBranch class="params-branch0" :params="[
             [

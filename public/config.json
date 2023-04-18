@@ -1,5 +1,5 @@
 {
-  "baseUrl": "http://192.168.0.120:5000",
+  "baseUrl": "http://192.168.1.200:80",
   "authentication": {
     "userName": "admin",
     "password": "zxi123456789!"

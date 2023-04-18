@@ -172,14 +172,14 @@ onMounted(()=>{
     <template #header-center>
       <BaseParamsBranch class="params-branch-header" :params="[
         [
-          { name: '辅助音频', paramName: 'playAudio', ratio: 7.53 },
-          { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 },
+          { name: '辅助音频', paramName: 'playAudio', ratio: 6 },
+          { name: '辅助音频速率', paramName: 'playSpeed', ratio: 6 },
          
         ],
         [
-        { name: '随路音频', paramName: 'tcpaudio', ratio: 7.53 },
+        { name: '随路音频', paramName: 'tcpaudio', ratio: 6 },
 
-        { name: '解调模式', paramName: 'demodulation', ratio: 12 },
+        { name: '解调模式', paramName: 'demodulation', ratio: 6 },
         ]
       ]" :master="master" />
     </template>
@@ -192,10 +192,9 @@ onMounted(()=>{
           <div class="containerTop-header">
             <BaseParamsBranch class="params-branch-Top" :params="[
                 [
-                  { name: '频率', paramName: 'frequency', ratio: 9.98 },
-                  { name: '衰减', paramName: 'attenuation', ratio: 13 },
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 9.75, mR: 2.25 }
+                  { name: '频率', paramName: 'frequency', ratio: 6.8 },
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 6 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 6 }
                 ]
               ]" :master="master" />
             <!-- <pre class="text">瞬时值：{{ dBuV.toFixed(1) }} dBuV</pre> -->
@@ -308,6 +307,7 @@ onMounted(()=>{
         }
         .params-branch-Top{
           width: 100%;
+          margin-right: 90px;
         }
       }
 
