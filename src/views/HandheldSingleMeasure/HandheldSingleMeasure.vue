@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 13:56:48
+ * @LastEditTime: 2023-04-18 15:36:49
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -166,16 +166,13 @@ onBeforeUnmount(() => {
       <BaseParams ref="master" :inited="mockPanleInited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
     <template #header-center>
-      <BaseParamsBranch class="params-branch-header" :params="[
+      <!-- <BaseParamsBranch class="params-branch-header" :params="[
         [
           { name: '辅助音频', paramName: 'playAudio', ratio: 6 },
           { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 },
         ],
-        [
-        { name: '解调带宽', paramName: 'debw', ratio: 6 },
-        { name: '解调模式', paramName: 'demodulation', ratio: 12 },
-        ]
-      ]" :master="master" />
+        
+      ]" :master="master" /> -->
     </template>
     <div class="HandheldSingleMeasure">
       <div class="single-container">
@@ -185,10 +182,16 @@ onBeforeUnmount(() => {
           </audio>
           <div class="containerTop-header">
             <BaseParamsBranch class="params-branch-Top" :params="[
+                // [
+                //   { name: '频率', paramName: 'frequency', ratio: 12 },
+                //   { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
+                //   { name: '衰减', paramName: 'attenuation', ratio: 12 }
+                // ]
                 [
-                  { name: '频率', paramName: 'frequency', ratio: 12 },
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-                  { name: '衰减', paramName: 'attenuation', ratio: 12 }
+                  { name: '解调带宽', paramName: 'debw', ratio: 12 },
+                  { name: '解调模式', paramName: 'demodulation', ratio: 12 },
+                  { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 },
+                  { name: '辅助音频', paramName: 'playAudio', ratio: 6 }
                 ]
               ]" :master="master" />
             <!-- <pre class="text">瞬时值：{{ dBuV.toFixed(1) }} dBuV</pre> -->
@@ -224,15 +227,15 @@ onBeforeUnmount(() => {
           <ZXISpectrumAndFall class="spectrum-and-fall" :inputData="inputData" :params="params"
             :switchLever="store.s_playButton" :setTool="setTool" :markers="markers" @selectFrequency="selectFrequency">
             <template #header>
-              <!-- <BaseParamsBranch class="params-branch" :params="[
+              <BaseParamsBranch class="params-branch" :params="[
                 [
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 12 }
+                  { name: '频率', paramName: 'frequency', ratio: 12 },
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 }
                 ]
-              ]" :master="master" /> -->
+              ]" :master="master" />
             </template>
           </ZXISpectrumAndFall>
-          <CommonMap class="map" ></CommonMap>
+          <CommonMap class="map"/>
         </div>
       </div>
     </div>
@@ -341,7 +344,7 @@ onBeforeUnmount(() => {
         padding-left: @btnSpace;
         padding-top: @btnSpace;
         box-sizing: border-box;
-        max-width: 500px;
+        max-width: 400px;
         width: 40%;
       }
     }

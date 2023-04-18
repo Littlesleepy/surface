@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 13:46:10
+ * @LastEditTime: 2023-04-18 15:39:21
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -132,12 +132,7 @@ onMounted(()=>{
     </template>
     <template #header-center>
       <div class="header-slot">
-        <BaseParamsBranch class="params-branch" :params="[
-          [
-            { name: '频率', paramName: 'frequency', ratio: 12 },
-            { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-            { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
-          ],
+        <BaseParamsBranch class="params-branch" noWrap :params="[
           [
             { name: '解调模式', paramName: 'demodulation', ratio: 12 },
             { name: '解调带宽', paramName: 'debw', ratio: 12 },
@@ -150,16 +145,11 @@ onMounted(()=>{
         <ZXIDpx class="img" ref="spInstance" :params="params" :inputData="spectrum" :switchLever="store.s_playButton">
           <!-- <p class="info">{{ headerInfo }}</p> -->
           <BaseParamsBranch class="params-branch-header" :params="[
-          // [
-          //   { name: '频率', paramName: 'frequency', ratio: 12 },
-          //   { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-          //   { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
-          // ],
-          // [
-          //   { name: '静噪门限', paramName: 'squelch', ratio: 12 },
-          //   { name: '解调模式', paramName: 'demodulation', ratio: 12 },
-          //   { name: '解调带宽', paramName: 'debw', ratio: 12 },
-          // ]
+          [
+            { name: '频率', paramName: 'frequency', ratio: 12 },
+            { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
+            { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
+          ]
         ]" :master="master" />
         </ZXIDpx>
         <!-- <BaseParamsBranch class="params-branch" :params="[
