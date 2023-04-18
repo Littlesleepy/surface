@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 14:48:19
+ * @LastEditTime: 2023-04-18 15:24:03
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -21,6 +21,11 @@ import { Sundry, ToExport } from 'helper/index'
 import { useRoute } from 'vue-router'
 
 const store = useFrameStore()
+
+const setTool = [{
+  name:'pubutu',
+  value:false
+}]
 
 const spectrumFull = ref<Array<ISpectrumInputData>>([{
   data: new Float32Array(),
@@ -273,7 +278,7 @@ const master = ref<BaseParamsType>()
 
       <div class="first-page">
         <div class="first-colum">
-          <ZXISpectrumAndFall class="spectrum-and-fall" name="" ref="spInstance0" :inputData="spectrumFull"
+          <ZXISpectrumAndFall :setTool="setTool" class="spectrum-and-fall" name="" ref="spInstance0" :inputData="spectrumFull"
             :params="paramsFull" :switchLever="startAndStop" :hightlightItems="hightlightItems" :markers="markers"
             @selectFrequency="selectFrequency">
             <template #header>
