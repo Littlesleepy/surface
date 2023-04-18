@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 09:01:52
+ * @LastEditTime: 2023-04-18 13:56:48
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -168,13 +168,11 @@ onBeforeUnmount(() => {
     <template #header-center>
       <BaseParamsBranch class="params-branch-header" :params="[
         [
-          { name: '辅助音频', paramName: 'playAudio', ratio: 7.53 },
+          { name: '辅助音频', paramName: 'playAudio', ratio: 6 },
           { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 },
-         
         ],
         [
-        { name: '随路音频', paramName: 'tcpaudio', ratio: 7.53 },
-
+        { name: '解调带宽', paramName: 'debw', ratio: 6 },
         { name: '解调模式', paramName: 'demodulation', ratio: 12 },
         ]
       ]" :master="master" />
@@ -189,9 +187,8 @@ onBeforeUnmount(() => {
             <BaseParamsBranch class="params-branch-Top" :params="[
                 [
                   { name: '频率', paramName: 'frequency', ratio: 12 },
-                  { name: '衰减', paramName: 'attenuation', ratio: 12 },
                   { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 12 }
+                  { name: '衰减', paramName: 'attenuation', ratio: 12 }
                 ]
               ]" :master="master" />
             <!-- <pre class="text">瞬时值：{{ dBuV.toFixed(1) }} dBuV</pre> -->

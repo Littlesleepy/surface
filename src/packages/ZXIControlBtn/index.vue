@@ -1,7 +1,7 @@
 <!--
  * @Author: shiershao
  * @Date: 2022-04-26 16:02:21
- * @LastEditTime: 2023-03-21 13:55:51
+ * @LastEditTime: 2023-04-18 13:36:13
  * @Description: 图像控制按钮
  * 
 -->
@@ -165,7 +165,7 @@ defineExpose({
 .container{
   cursor: pointer;
   position: relative;
-  background-color: v-bind('UseTheme.theme.var.btnBgColor');
+  // background-color: v-bind('UseTheme.theme.var.btnBgColor');
   display: flex;
   width: 100%;
   height: 100%;

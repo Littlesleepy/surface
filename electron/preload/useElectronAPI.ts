@@ -1,9 +1,9 @@
 /**
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-07 16:53:04
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-07 17:17:07
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\electron\preload\useElectronAPI.ts
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-18 10:58:34
+ * @FilePath: \zxi-surface\electron\preload\useElectronAPI.ts
  * @Description: 
  */
 import { contextBridge, ipcRenderer } from 'electron'

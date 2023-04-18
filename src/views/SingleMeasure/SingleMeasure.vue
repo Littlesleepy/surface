@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-08 09:23:47
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-06 13:50:31
+ * @LastEditTime: 2023-04-18 13:28:09
  * @FilePath: \zxi-surface\src\views\SingleMeasure\SingleMeasure.vue
  * @Description: 
  -->
@@ -89,6 +89,7 @@ onMounted(() => {
         :hightlightItems="hightlightItems"
         :markers="markers"
         :refresh="reset"
+        :name="''"
         @selectFrequency="selectFrequency"
         useSelectFrequency>
         <template #header>
@@ -96,8 +97,7 @@ onMounted(() => {
             class="params-branch0"
             :params="[
               [
-                { name: '解调模式', paramName: 'demodulation', ratio: 11 },
-                { name: '衰减', paramName: 'attenuation', ratio: 9 },
+                { name: '中心频率', paramName: 'frequency', ratio: 18 },
                 { name: '禁噪门限', paramName: 'squelch', ratio: 9 },
                 { name: 'ITU', paramName: 'itumeasure', ratio: 5.5 },
                 { name: '音频', paramName: 'tcpaudio', ratio: 5.5 }
@@ -111,7 +111,7 @@ onMounted(() => {
             :params="[
               [
                 { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
-                { name: '中心频率', paramName: 'frequency', ratio: 18 },
+                { name: '解调模式', paramName: 'demodulation', ratio: 11 },
                 { name: '解调带宽', paramName: 'debw', ratio: 11 }
               ]
             ]"
@@ -138,7 +138,7 @@ onMounted(() => {
 }
 
 .params-branch0{
-  padding: 0 0 0 @btnSpace;
+  padding: 0 0 0 4.5rem;
 }
 .params-branch1{
   padding: 0 0 @btnSpace 11.5rem;

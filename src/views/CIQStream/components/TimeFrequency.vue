@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-11-23 10:26:24
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-13 11:56:45
- * @FilePath: \zxi-device\src\views\CIQStream\components\TimeFrequency.vue
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-18 15:09:15
+ * @FilePath: \zxi-surface\src\views\CIQStream\components\TimeFrequency.vue
  * @Description: 时频特征
  -->
 
@@ -265,6 +265,7 @@ const defaultValueY = { max: 60, min: -50 }
       <ZXISpectrumAndFall
         class="spectrum-and-fall"
         ref="spSpectrum"
+        :name="''"
         :defaultValueY="defaultValueY"
         :inputData="spectrum"
         :params="params"
@@ -272,7 +273,7 @@ const defaultValueY = { max: 60, min: -50 }
         :deleteTool="['pubutu', 'fallCeliang', 'shaixuan']" />
       <ZXITimeDomainLines
         class="level"
-        :name="'瞬时频率'"
+        :name="''"
         :inputData="inputData1"
         :switchLever="frameStore.s_playButton"
         :defaultValueX="defaultValueX"
@@ -292,7 +293,7 @@ const defaultValueY = { max: 60, min: -50 }
         @scene="getScene1"/>
       <ZXITimeDomainLines
         class="level"
-        :name="'瞬时幅度'"
+        :name="''"
         :inputData="inputData2"
         :defaultValueX="defaultValueX"
         :switchLever="frameStore.s_playButton"
@@ -312,7 +313,7 @@ const defaultValueY = { max: 60, min: -50 }
         @scene="getScene2"/>
       <ZXITimeDomainLines
         class="level"
-        :name="'瞬时相位'"
+        :name="''"
         :inputData="inputData3"
         :defaultValueX="defaultValueX"
         :switchLever="frameStore.s_playButton"
@@ -334,12 +335,12 @@ const defaultValueY = { max: 60, min: -50 }
         ref="spIQVector"
         class="iq-vector-image"
         :inputData="iqData"
-        :name="'IQ矢量图'"
+        :name="''"
         :switchLever="frameStore.s_playButton"
         :pointRadius="7" />
       <ZXIScrollInfo
         class="measure-info"
-        name="测量信息"
+        name=""
         :inputData="celiangInfo"
         :clear="clear"
         :color="UseTheme.theme.var.color"

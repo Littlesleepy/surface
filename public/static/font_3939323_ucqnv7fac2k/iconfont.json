@@ -6,6 +6,104 @@
   "description": "真信智能surface go软件",
   "glyphs": [
     {
+      "icon_id": "14191069",
+      "name": "暂停",
+      "font_class": "zanting1",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "18452295",
+      "name": "太阳2",
+      "font_class": "taiyang",
+      "unicode": "e697",
+      "unicode_decimal": 59031
+    },
+    {
+      "icon_id": "21899158",
+      "name": "icon-月亮",
+      "font_class": "icon-taikong2",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "33940358",
+      "name": "开始",
+      "font_class": "kaishi",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "1130",
+      "name": "锁定",
+      "font_class": "suoding",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "1334",
+      "name": "解锁",
+      "font_class": "jiesuo",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "2325911",
+      "name": "解锁",
+      "font_class": "jiesuo1",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "6798073",
+      "name": "菜单管理",
+      "font_class": "caidanguanli",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "10043674",
+      "name": "锁定",
+      "font_class": "suoding1",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "11839497",
+      "name": "导出",
+      "font_class": "daochu",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "12550617",
+      "name": "菜单",
+      "font_class": "caidan",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "15726955",
+      "name": "相机拍照",
+      "font_class": "xiangjipaizhao",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "11674274",
+      "name": "夜间",
+      "font_class": "yejian",
+      "unicode": "e712",
+      "unicode_decimal": 59154
+    },
+    {
+      "icon_id": "18441414",
+      "name": "天气，太阳，，白天，起床",
+      "font_class": "tianqitaiyangqichuang",
+      "unicode": "e713",
+      "unicode_decimal": 59155
+    },
+    {
       "icon_id": "4686545",
       "name": "刷新",
       "font_class": "shuaxin",

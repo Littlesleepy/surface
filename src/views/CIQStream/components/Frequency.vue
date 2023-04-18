@@ -239,7 +239,7 @@ const defaultValueY = { max: 60, min: -50 }
         <ZXISpectrumAndFall
           class="spectrum-and-fall"
           ref="spSpectrum"
-          name="滑动频谱"
+          name=""
           :inputData="spectrum"
           :defaultValueY="defaultValueY"
           :params="params"
@@ -262,7 +262,7 @@ const defaultValueY = { max: 60, min: -50 }
         <ZXISpectrumLine
           class="spectrum"
           ref="spctrumLine0"
-          :name="'功率谱'"
+          :name="''"
           :inputData="inputData1"
           :params="params"
           :switchLever="frameStore.s_playButton"
@@ -273,7 +273,7 @@ const defaultValueY = { max: 60, min: -50 }
         <ZXISpectrumLine
           class="spectrum"
           ref="spctrumLine2"
-          :name="'二次方谱'"
+          :name="''"
           :inputData="inputData3"
           :params="params"
           :switchLever="frameStore.s_playButton"
@@ -284,7 +284,7 @@ const defaultValueY = { max: 60, min: -50 }
         <ZXISpectrumLine
           class="spectrum"
           ref="spctrumLine1"
-          :name="'四次方谱'"
+          :name="''"
           :inputData="inputData2"
           :params="params"
           :switchLever="frameStore.s_playButton"
@@ -295,7 +295,7 @@ const defaultValueY = { max: 60, min: -50 }
         <ZXISpectrumLine
           class="spectrum"
           ref="spctrumLine3"
-          :name="'八次方谱'"
+          :name="''"
           :inputData="inputData4"
           :params="params"
           :switchLever="frameStore.s_playButton"
@@ -306,7 +306,7 @@ const defaultValueY = { max: 60, min: -50 }
         <ZXISpectrumLine
           class="spectrum"
           ref="spctrumLine4"
-          :name="'瞬时频率包络'"
+          :name="''"
           :inputData="inputData5"
           :params="param5"
           :switchLever="frameStore.s_playButton"
@@ -318,7 +318,7 @@ const defaultValueY = { max: 60, min: -50 }
         <ZXISpectrumLine
           ref="spctrumLine5"
           class="spectrum"
-          :name="'瞬时幅度包络'"
+          :name="''"
           :inputData="inputData6"
           :params="param5"
           :switchLever="frameStore.s_playButton"
@@ -330,7 +330,7 @@ const defaultValueY = { max: 60, min: -50 }
         <ZXISpectrumLine
           ref="spctrumLine6"
           class="spectrum"
-          :name="'FM解调谱'"
+          :name="''"
           :inputData="inputData7"
           :params="param5"
           :switchLever="frameStore.s_playButton"

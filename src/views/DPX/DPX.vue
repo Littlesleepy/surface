@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 15:39:55
+ * @LastEditTime: 2023-04-18 13:46:10
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -119,6 +119,10 @@ ToExport.beforExport.set('0', () => {
   if (spectrum.value.data.length > 0) ToExport.addDom('荧光谱', spInstance.value!.root!, 1)
 })
 const master = ref<BaseParamsType>()
+onMounted(()=>{
+  console.log(master.value?.elements);
+  
+})
 </script>
 
 <template>
@@ -127,34 +131,42 @@ const master = ref<BaseParamsType>()
       <BaseParams ref="master" :inited="inited" :dynamicParam="false" />
     </template>
     <template #header-center>
-      <!-- <div class="header-slot">
+      <div class="header-slot">
         <BaseParamsBranch class="params-branch" :params="[
           [
             { name: '频率', paramName: 'frequency', ratio: 12 },
             { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
             { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
+          ],
+          [
+            { name: '解调模式', paramName: 'demodulation', ratio: 12 },
+            { name: '解调带宽', paramName: 'debw', ratio: 12 },
           ]
         ]" :master="master" />
-      </div> -->
+      </div>
     </template>
     <div class="content-DPX">
       <div class="content-DPX-two">
         <ZXIDpx class="img" ref="spInstance" :params="params" :inputData="spectrum" :switchLever="store.s_playButton">
           <!-- <p class="info">{{ headerInfo }}</p> -->
-
           <BaseParamsBranch class="params-branch-header" :params="[
-          [
-            { name: '频率', paramName: 'frequency', ratio: 12 },
-            { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-            { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
-          ]
+          // [
+          //   { name: '频率', paramName: 'frequency', ratio: 12 },
+          //   { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
+          //   { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
+          // ],
+          // [
+          //   { name: '静噪门限', paramName: 'squelch', ratio: 12 },
+          //   { name: '解调模式', paramName: 'demodulation', ratio: 12 },
+          //   { name: '解调带宽', paramName: 'debw', ratio: 12 },
+          // ]
         ]" :master="master" />
         </ZXIDpx>
         <!-- <BaseParamsBranch class="params-branch" :params="[
           [
-            { name: '频率(MHz)', paramName: 'frequency', ratio: 12 },
-            { name: '频谱带宽(kHz)', paramName: 'bandwidth', ratio: 12 },
-            { name: '分辨率', paramName: 'fftpoints', ratio: 12 }
+            { name: '解调模式', paramName: 'demodulation', ratio: 12 },
+            { name: '解调带宽', paramName: 'debw', ratio: 12 },
+            { name: '静噪门限', paramName: 'squelch', ratio: 12 }
           ]
         ]" :master="master" /> -->
       </div>
@@ -215,7 +227,8 @@ const master = ref<BaseParamsType>()
       }
     }
     .params-branch{
-      padding: @btnSpace @btnSpace @btnSpace 11.5rem;
+      padding: @btnSpace 0 0 11.5rem;
+      
     }
   }
 }
