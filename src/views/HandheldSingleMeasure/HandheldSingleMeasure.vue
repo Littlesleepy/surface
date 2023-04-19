@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-19 14:30:35
+ * @LastEditTime: 2023-04-19 14:47:19
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -170,7 +170,7 @@ onBeforeUnmount(() => {
         <BaseParamsBranch class="params-branch-header" noWrap :params="[
           [
             { name: '辅助音频', paramName: 'playAudio', ratio: 6 },
-            { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 ,mR:6},
+            { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 },
           ]
           
         ]" :master="master" />
@@ -350,7 +350,7 @@ onBeforeUnmount(() => {
         padding-left: @btnSpace;
         padding-top: @btnSpace;
         box-sizing: border-box;
-        max-width: 400px;
+        max-width: 500px;
         width: 40%;
       }
     }
