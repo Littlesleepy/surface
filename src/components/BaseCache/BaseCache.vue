@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-18 16:05:31
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 16:47:30
+ * @LastEditTime: 2023-04-19 15:59:45
  * @FilePath: \zxi-surface\src\components\BaseCache\BaseCache.vue
  * @Description: 
  -->
@@ -22,7 +22,7 @@ function cleanCache(){
   <div>
     <div class="container" @click="cleanCache">
       <ZXIButton class="button">
-        <i class="iconfont icon-shuaxin"></i>
+        <i class="iconfont icon--huancunguanli"></i>
       </ZXIButton>
     </div>
   </div>

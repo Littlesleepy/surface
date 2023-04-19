@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 15:39:21
+ * @LastEditTime: 2023-04-19 15:56:52
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -131,14 +131,14 @@ onMounted(()=>{
       <BaseParams ref="master" :inited="inited" :dynamicParam="false" />
     </template>
     <template #header-center>
-      <div class="header-slot">
+      <!-- <div class="header-slot">
         <BaseParamsBranch class="params-branch" noWrap :params="[
           [
             { name: '解调模式', paramName: 'demodulation', ratio: 12 },
             { name: '解调带宽', paramName: 'debw', ratio: 12 },
           ]
         ]" :master="master" />
-      </div>
+      </div> -->
     </template>
     <div class="content-DPX">
       <div class="content-DPX-two">
