@@ -78,6 +78,20 @@ export class NoSampleLines {
       }
     })
 
+    /**
+     * @description: 磁吸组
+     */
+    let magnetGroup: Array<Float32Array> = []
+
+    toolTip.afterActive.set('spectrum', (p) => {
+      if  (magnetGroup.length > 0) {
+        const r = toolTip.magnetByMax(fence, magnetGroup)
+        if (r) {
+          toolTipPosition.value = r.offsetMiddlePCTX
+        }
+      }
+    })
+
     toolTip.afterTrigger.set('spectrum', (p) => {
       toolTipPosition.value = p.offsetMiddlePCTX
     })
@@ -159,7 +173,10 @@ export class NoSampleLines {
 
         let fenceIndex, y
         renderCtx.clearScreen()
+        magnetGroup = []
         for (const [, item] of inputData.value) {
+          // 是否加入磁吸组
+          if (item.magnet) magnetGroup.push(item.data)
           // 线条
           fenceIndex = baseFence.visibleIndex.min
           ctx.strokeStyle = item.color
@@ -177,6 +194,12 @@ export class NoSampleLines {
               }
             }
             ctx.stroke()
+          }
+        }
+
+        if (magnetGroup.length === 0) {
+          for (const [, item] of inputData.value) {
+            magnetGroup = [item.data]
           }
         }
         scene.value.render2D()

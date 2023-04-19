@@ -166,6 +166,8 @@ const scene = ref<Scene<ISpectrumLinePool>>()
 
 let toolTip: ToolTip
 
+let sampleInputData: Float32Array | undefined = undefined
+
 let zoomTrans: ZoomTrans
 
 /**
@@ -324,6 +326,8 @@ function render () {
     for (const [key, item] of renderData.value) {
       if (key === '输入') {
         SpectrumData.getSamplingData(item.data, lineYvalues, fence)
+        // 拷贝一份输入数据的抽取，用于toolTip最大值磁吸
+        sampleInputData = new Float32Array(lineYvalues)
       } else {
         SpectrumData.getSamplingDataLine(item.data, lineYvalues, fence)
       }
@@ -460,6 +464,15 @@ onMounted(() => {
     toolTip = new ToolTip(scene.value, {
       type: ToolTip.VERTICAL,
       infoTag: props.toolTip
+    })
+
+    toolTip.afterActive.set('spectrum', (p) => {
+      if (sampleInputData) {
+        const r = toolTip.magnetByMax(fence, [sampleInputData])
+        if (r) {
+          toolTipPosition.value = r.offsetMiddlePCTX
+        }
+      }
     })
 
     toolTip.afterTrigger.set('spectrum', (p: IPositionResult) => {

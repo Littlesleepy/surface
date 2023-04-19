@@ -19,18 +19,5 @@ export default function plugin(): Plugin {
 
       return html
     }
-    // closeBundle() {
-    //   // 配置文件内容改写
-    //   let data = fs.readFileSync('./dist/config.json', { encoding: 'utf-8' })
-
-    //   console.log(data)
-
-    //   const config = JSON.parse(data)
-
-    //   config.baseUrl = ''
-    //   config.map.sourceUrl = ''
-
-    //   fs.writeFile('./dist/config.json', JSON.stringify(config), { encoding: 'utf-8', flag: 'w' }, () => { })
-    // }
   }
 }

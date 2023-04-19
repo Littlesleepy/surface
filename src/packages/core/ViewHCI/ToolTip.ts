@@ -10,7 +10,7 @@ import { Scene } from '../Scene'
 import { IOffsetPosition, Listen} from '../Event'
 import { Public } from '../Tools'
 import { IPositionResult, IViewHCI } from './types'
-import { Fence } from '../Fence'
+import { Fence, FencesType } from '../Fence'
 import { IInfoTagOptions, InfoTag } from '../Overlay/InfoTag'
 import { Tag, ITagOptions } from './Tag'
 import { UseTheme } from '../../styles'
@@ -406,6 +406,21 @@ export class ToolTip implements IViewHCI {
     this.infoTag.instance.setContent(content)
   }
 
+  /**
+   * @description: 磁吸功能
+   */
+  magnetByMax(fence: FencesType, group: Array<Float32Array> | Array<Array<number>>) {
+    if (group.length > 0) {
+      const tag = this.options.type === ToolTip.TRANSVERSE ? this.transverseTag!.instance : this.verticalTag!.instance
+      const result = tag.magnetByMax(fence, group)
+
+      if (result) {
+        this.setInfoStyle(result)
+      }
+      return result
+    }
+  }
+
   private createValueTag (backgroundColor: string ) {
     const span = document.createElement('span')
     span.style.position = 'absolute'
@@ -576,11 +591,11 @@ export class ToolTip implements IViewHCI {
 
     this.setInfoStyle(result)
 
+    this.setAfterTrigger(result)
+
     for (const [, callBack] of this.afterActive) {
       callBack(result)
     }
-
-    this.setAfterTrigger(result)
 
     return result
   }
@@ -680,11 +695,12 @@ export class ToolTip implements IViewHCI {
 
       target.setInfoStyle(result)
 
+      target.setAfterTrigger(result)
+
       for (const [, callBack] of target.afterActive) {
         callBack(result)
       }
 
-      target.setAfterTrigger(result)
     }
   }
 

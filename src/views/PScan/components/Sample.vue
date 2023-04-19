@@ -184,7 +184,8 @@ function view (
   const data: Map<string, ILineData> = new Map()
   data.set('峰值', {
     color: 'red',
-    data: peak
+    data: peak,
+    magnet: true
   })
 
   data.set('样本', {

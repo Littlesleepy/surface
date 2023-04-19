@@ -488,7 +488,8 @@ const master = ref<BaseParamsType>()
             { name: '频率', paramName: 'frequency', ratio: 10 },
             { name: '采样带宽', paramName: 'bandwidth', ratio: 10 },
             { name: '时域测量时间', paramName: 'lmtime', ratio: 10 },
-            { name: '时域分辨率', paramName: 'efactor', ratio: 12 }
+            { name: '时域分辨率', paramName: 'efactor', ratio: 12 },
+            { name: '幅度触发门限', paramName: 'threshold', ratio: 12 }
           ]
         ]"
         :master="master"

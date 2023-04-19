@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2022-07-20 13:56:30
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 17:39:26
+ * @LastEditTime: 2023-04-17 16:55:18
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\components\LevelSlider\LevelSlider.vue
  * @Description:
  -->
@@ -126,37 +126,31 @@ function setMaxMin(str: string) {
 }
 // 设置颜色
 const Color = ref('rgb(0,0,0)')
-
-function setColor(a_color: number) {
+function setColor(height: number) {
+  // 获取当前主题配置颜色(柱状图)
   const b_color: Array<Array<number>> = UseTheme.theme.SpectrumAndFall.barColor
-
-
-  const L = b_color.length - 1
-  const d = 1 / L
-  for (let i = 1; i <= L; i++) {
-
-    if (a_color <= (d * i)) {
-      const n = (a_color - d * (i - 1)) * L
+  // 顶点数量
+  const cut = b_color.length - 1
+  const d = 1 / cut
+  const toRGB = 255
+  for (let i = 1; i <= cut; i++) {
+    if (height <= (d * i)) {
+      const n = (height - d * (i - 1)) * cut
       const [r, g, b] = ((cb, ct, n) => {
         let c: Array<number> = []
         cb.forEach((e, i) => {
-          // GABUG 颜色不正确 高度
-          // console.log(e,cb[i],ct[i]);
-          // console.log(cb[i],ct[i]);
           if (cb[i] > ct[i]) {
-            c.push(255 - ((cb[i] - ct[i]) * (n) + ct[i]) * 255)
-            // console.log(255 - ((cb[i] - ct[i]) * (n) + ct[i]) * 255);
+            c.push(toRGB*cb[i] - ((cb[i] - ct[i]) * (n) + ct[i]) * toRGB)
           } else if (cb[i] < ct[i]) {
-            c.push(((ct[i] - cb[i]) * (n) + cb[i]) * 255)
+            c.push(((ct[i] - cb[i]) * (n) + cb[i]) * toRGB)
           } else {
-            c.push(cb[i] * 255)
+            c.push(cb[i] * toRGB)
           }
         })
         return c
       })(b_color[i - 1], b_color[i], n)
       Color.value = `rgb(${r},${g},${b})`
-      // console.log(r,g,b);
-      return `rgb(${r},${g},${b})`
+      return
     }
   }
 
@@ -166,14 +160,11 @@ const heightRatio = ref(0)
 function setHeight(control: boolean = false) {
   const max = Math.max(props.inputLevel, Math.pow(10, maxLevel.value / 20))
   const min = Math.pow(10, minLevel.value / 20)
-  // const powMax = Math.pow(10, maxLevel.value / 20)
   // 设置最大值
   maxLevel.value = 20 * Math.log10(max)//max
-
   // 运行中使用这个值
   const play =
     ((props.inputLevel - min) / ((max - min) * 0.1 + max)) * 100
-
   // 暂停时使用这个值
   const stop =
     ((props.inputLevel - min) / (max - min)) * 100
@@ -242,7 +233,8 @@ onUnmounted(() => {
           </div>
         </div>
         <div class="Slider-box">
-          <span :style="{ 'height': `${heightRatio}%` }" />
+          <span :style="{ 'height': `${heightRatio}%`,backgroundColor:Color }" />
+          
         </div>
         <div class="Slider-buttons">
           <div @click.stop.prevent="setMaxMin('reduceMax')" class="Slider-button">
@@ -329,6 +321,7 @@ onUnmounted(() => {
 
     .Slider-box {
       width: 100%;
+      width: 20px;
       height: 100%;
       box-sizing: border-box;
       position: relative;

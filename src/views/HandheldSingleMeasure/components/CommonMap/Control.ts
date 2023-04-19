@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-12 10:48:28
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-13 17:26:51
+ * @LastEditTime: 2023-04-17 09:18:14
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\components\CommonMap\Control.ts
  * @Description:
  */
@@ -494,8 +494,6 @@ export function setDeviceMarker(map: maplibregl.Map) {
         const image = document.createElement("img");
         image.src = v.isLocated ? stationSuccess : stationFail;
         image.style.cursor = "pointer";
-        console.log(image.src);
-
         deviceMarker = new MarkerExtension({
           element: image,
         })

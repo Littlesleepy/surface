@@ -2,13 +2,13 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 14:13:24
+ * @LastEditTime: 2023-04-17 11:45:16
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
 <script setup lang='ts'>
 import { useFrameStore } from '@/store'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Modulate from './components/Modulate.vue'
 import * as Helper from 'helper/index'
 import { IMockPanleState, setLinkTrigger, CustomTheme, fftToResolutionRatio, BaseParamsType, localStorageKey } from '@/types'
@@ -233,7 +233,6 @@ const tabId = ref(0)
 const firstTabId = ref(0)
 
 const master = ref<BaseParamsType>()
-
 </script>
 
 <template>
@@ -284,6 +283,7 @@ const master = ref<BaseParamsType>()
                 <BaseParamsBranch class="params-branch" :params="[
                   [
                     { name: '测量/解调频率', paramName: 'def', ratio: 6 },
+                    { name: '解调模式', paramName: 'demodulation', ratio: 6 },
                     { name: '测量/解调带宽', paramName: 'debw', ratio: 6 }
                   ]
                 ]" :master="master" />

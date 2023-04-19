@@ -266,6 +266,8 @@ export function spectrum (
   let zoomTrans: ZoomTrans
 
   let toolTip: ToolTip
+
+  let magnetGroup: Array<Float32Array> = []
   /**
    * @description: 禁用toolTip的信息计算
    */  
@@ -529,6 +531,8 @@ export function spectrum (
           case Controls.baoluotu: {
             if (btnValues.baoluotu) {
               SpectrumData.getSamplingData(usingData.value.data, samplingData, fence)
+              magnetGroup = [samplingData]
+
               lineProgram.add(line.mesh)
 
               setPeakIcon(samplingData)
@@ -578,6 +582,7 @@ export function spectrum (
         if (btnValues.zhuzhuangtu) {
           const  samplingData = rectangle.samplingData
           SpectrumData.getSamplingData(usingData.value.data, samplingData, fence)
+          magnetGroup = [samplingData]
 
           let currentValue = 0, startIndex = 0, colorIndex = 0
           const rectangle_a_position = rectangle.a_position, rectangle_a_color = rectangle.a_color
@@ -1157,6 +1162,8 @@ export function spectrum (
 
           refreshByFenceCountchange()
         }
+
+        changeInterval()
       })
 
       fence.afterTrans.add(() => {
@@ -1189,23 +1196,27 @@ export function spectrum (
           const event = spectrumScene.value.event
           const offsetX = type === Listen.MOUSE ? event.mousePosition!.offsetX : event.touchPosition.get(0)!.offsetX
 
-          const fenceIndex = fence.baseFence.getFenceIndexByDistance(offsetX / spectrumScene.value.canvas.clientWidth)
-          const dataIndex = fence.getDataIndexByFenceIndex(fenceIndex)
-
-          const frequency = defaultValueX.value.min + dataIndex * step.value
-
-          emit('selectFrequency', {
-            fenceIndex,
-            dataIndex,
-            value: props.scaleX.transform(frequency),
-            baseEvent: e,
-            sceneEvent: event,
-            mouseOrTouch: type
-          })
-
           // 双击位置显示
           dblclickTag.append()
           dblclickTag.setPosition({ offsetX, offsetY: 0 }, fence)
+          const result = dblclickTag.magnetByMax(fence, magnetGroup)
+
+          if (result) {
+            const fenceIndex = result.fenceIndex!
+            const dataIndex = fence.getDataIndexByFenceIndex(fenceIndex)
+
+            const frequency = defaultValueX.value.min + dataIndex * step.value
+
+
+            emit('selectFrequency', {
+              fenceIndex,
+              dataIndex,
+              value: props.scaleX.transform(frequency),
+              baseEvent: e,
+              sceneEvent: event,
+              mouseOrTouch: type
+            })
+          }
         }
       })
 
@@ -1487,7 +1498,7 @@ export function spectrum (
       toolTip = new ToolTip(spectrumScene.value, {
         type: ToolTip.VERTICAL,
         verticalTag: {
-          lock: { show: true }
+          lock: { show: false }
         },
         infoTag: {
           borderRadius: props.useSelectFrequency ? '10px 10px 0 0' : '10px'
@@ -1515,10 +1526,17 @@ export function spectrum (
           getSelectFrequency(e)
         })
         // 点击锁定按钮，返出选择的值
-        toolTip.verticalTag!.lock!.addEventListener(Listen.TOUCHSTART, (e) => {
-          getSelectFrequency(e)
-        })
+        // toolTip.verticalTag!.lock!.addEventListener(Listen.TOUCHSTART, (e) => {
+        //   getSelectFrequency(e)
+        // })
       }
+
+      toolTip.afterActive.set('spectrum', (p) => {
+        const r = toolTip.magnetByMax(fence, magnetGroup)
+        if (r) {
+          toolTipPosition.value = r.offsetMiddlePCTX
+        }
+      })
 
       toolTip.afterTrigger.set('spectrum', (p) => {
         toolTipPosition.value = p.offsetMiddlePCTX

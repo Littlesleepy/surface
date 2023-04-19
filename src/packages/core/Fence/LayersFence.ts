@@ -280,7 +280,7 @@ export class LayersFence {
         }
       },
 
-      getDataIndexByDistance (distance: number) {
+      getDataIndexByDistance(distance: number) {
         const index = baseFence.getFenceIndexByDistance(distance)
         return methods.getDataIndexByFenceIndex(index)
       }

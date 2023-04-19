@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 17:37:20
+ * @LastEditTime: 2023-04-17 14:52:02
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -192,9 +192,10 @@ onMounted(()=>{
           <div class="containerTop-header">
             <BaseParamsBranch class="params-branch-Top" :params="[
                 [
-                  { name: '频率', paramName: 'frequency', ratio: 6.8 },
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 6 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 6 }
+                  { name: '频率', paramName: 'frequency', ratio: 12 },
+                  { name: '衰减', paramName: 'attenuation', ratio: 12 },
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 12 }
                 ]
               ]" :master="master" />
             <!-- <pre class="text">瞬时值：{{ dBuV.toFixed(1) }} dBuV</pre> -->
