@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-19 14:30:25
+ * @LastEditTime: 2023-04-19 15:40:40
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -294,8 +294,10 @@ const master = ref<BaseParamsType>()
             <template #header>
               <BaseParamsBranch class="params-branch" :params="[
                 [
-                  { name: '全景中心频率', paramName: 'frequency', ratio: 6 },
-                  { name: '全景频谱带宽', paramName: 'bandwidth', ratio: 6 }
+                  { name: '全景中心频率', paramName: 'frequency', ratio: 12 },
+                  { name: '全景频谱带宽', paramName: 'bandwidth', ratio: 12 },
+                  { name: '测量/解调频率', paramName: 'def', ratio: 12 },
+
                 ]
               ]" :master="master" />
             </template>
@@ -303,27 +305,41 @@ const master = ref<BaseParamsType>()
         </div>
         <div class="second-colum">
           <BaseTabHeader class="tab-header" :headers="[
-            [{ name: '解调频谱', ratio: 1 }],
+            [{ name: '解调频谱\nIQ矢量图', ratio: 1 }],
             [{ name: '电平图', ratio: 1 }],
-            [{ name: 'IQ矢量图', ratio: 1 }],
           ]" v-model="firstTabId" />
           <ZXITabs :wrapperStyle="{ border: 'none' }" :hidHeader="true" class="FFM-tabs-first" v-model="firstTabId">
-            <ZXISpectrumAndFall class="spectrum-and-fall-single" name="" ref="spInstance1"
-              :inputData="spectrumDemodulation" :params="singleParams" :switchLever="startAndStop"
-              :setTool="[{ name: 'pubutu', value: false }]" @selectFrequency="(result) => { defFrequency(result.value) }">
+            
+            <div class="IQ-spectrum">
+              <ZXISpectrumAndFall class="spectrum-and-fall-single" 
+              name="" ref="spInstance1"
+              :inputData="spectrumDemodulation" 
+              :params="singleParams" 
+              :switchLever="startAndStop"
+              :setTool="[{ name: 'pubutu', value: false }]" 
+              @selectFrequency="(result) => { defFrequency(result.value) }"
+              >
               <template #header>
                 <BaseParamsBranch class="params-branch" :params="[
                   [
-                    { name: '测量/解调频率', paramName: 'def', ratio: 6 },
-                    { name: '解调模式', paramName: 'demodulation', ratio: 6 },
-                    { name: '测量/解调带宽', paramName: 'debw', ratio: 6 }
+                    { name: '解调模式', paramName: 'demodulation', ratio: 12 },
+                    { name: '测量/解调带宽', paramName: 'debw', ratio: 12 }
                   ]
                 ]" :master="master" />
               </template>
             </ZXISpectrumAndFall>
+            <ZXIIQVector 
+                ref="spIQVector" 
+                class="iq-vector-image" 
+                :name="'IQ矢量图'" 
+                :pointRadius="7"
+                :inputData="iqData"
+                :switchLever="startAndStop"
+                 />
+            </div>
             <ZXILevel class="level" name="" ref="levleInstance" :deleteTool="['threshold']" :inputData="levelInput"
               :switchLever="startAndStop" />
-            <div class="IQ-container">
+            <!-- <div class="IQ-container">
               <ZXIIQVector 
                 ref="spIQVector" 
                 class="iq-vector-image" 
@@ -333,7 +349,7 @@ const master = ref<BaseParamsType>()
                 :switchLever="startAndStop"
                  />
               
-            </div>
+            </div> -->
           </ZXITabs>
 
         </div>
@@ -417,20 +433,34 @@ const master = ref<BaseParamsType>()
         flex-direction: row;
         flex: auto;
         padding-left: @btnSpace;
-
-        .IQ-container {
+        .IQ-spectrum{
           width: 100%;
           height: 100%;
-          background-color: v-bind('UseTheme.theme.var.backgroundColor');
           display: flex;
-          justify-content: center;
-
-          .iq-vector-image {
-              height: 100%;
-              aspect-ratio:1/1;
-            }
+          background-color: v-bind('UseTheme.theme.var.backgroundColor');
+          .spectrum-and-fall-single{
+            flex: auto;
+          }
+          .iq-vector-image{
+            height: 100%;
+            aspect-ratio:1/1;
+          }
 
         }
+
+        // .IQ-container {
+        //   width: 100%;
+        //   height: 100%;
+        //   background-color: v-bind('UseTheme.theme.var.backgroundColor');
+        //   display: flex;
+        //   justify-content: center;
+
+        //   .iq-vector-image {
+        //       height: 100%;
+        //       aspect-ratio:1/1;
+        //     }
+
+        // }
 
       }
 

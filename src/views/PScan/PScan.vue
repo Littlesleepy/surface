@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-09 14:55:45
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 13:34:12
+ * @LastEditTime: 2023-04-19 15:16:33
  * @FilePath: \zxi-surface\src\views\PScan\PScan.vue
  * @Description: 全景扫描
  -->
@@ -118,7 +118,7 @@ onMounted(() => {
             :params="[
               [
                 { name: '开始频率', paramName: 'begin', ratio: 11 },
-                { name: '分辨率', paramName: 'step', ratio: 18 },
+                { name: '频率步进', paramName: 'step', ratio: 18 },
                 { name: '结束频率', paramName: 'end', ratio: 11 }
               ]
             ]"
