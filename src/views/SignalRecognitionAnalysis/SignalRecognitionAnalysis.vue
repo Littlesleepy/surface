@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 15:24:03
+ * @LastEditTime: 2023-04-19 11:28:29
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -278,9 +278,19 @@ const master = ref<BaseParamsType>()
 
       <div class="first-page">
         <div class="first-colum">
-          <ZXISpectrumAndFall :setTool="setTool" class="spectrum-and-fall" name="" ref="spInstance0" :inputData="spectrumFull"
-            :params="paramsFull" :switchLever="startAndStop" :hightlightItems="hightlightItems" :markers="markers"
-            @selectFrequency="selectFrequency">
+          <ZXISpectrumAndFall 
+            :setTool="setTool" 
+            class="spectrum-and-fall" 
+            name="" 
+            ref="spInstance0" 
+            :inputData="spectrumFull"
+            :params="paramsFull" 
+            :switchLever="startAndStop" 
+            :hightlightItems="hightlightItems" 
+            :markers="markers"
+            @selectFrequency="selectFrequency"
+            useSelectFrequency
+            >
             <template #header>
               <BaseParamsBranch class="params-branch" :params="[
                 [
@@ -340,7 +350,10 @@ const master = ref<BaseParamsType>()
 
 <style scoped lang="less">
 @import url('theme');
-
+.base-link{
+  display: flex;
+  justify-content:space-around;
+}
 .header-slot {
   width: 100%;
   height: 100%;
