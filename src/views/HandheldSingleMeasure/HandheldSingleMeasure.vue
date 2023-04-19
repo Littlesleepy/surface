@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 15:56:06
+ * @LastEditTime: 2023-04-19 14:30:35
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -160,7 +160,7 @@ onBeforeUnmount(() => {
         <el-button type="primary" round @click="changeFrequency">切换频率</el-button>
         <el-button type="primary" round @click="() => { markers = [trigger.value as number] }">标注</el-button>
       </div>
-      <hr>
+      <hr style="margin-top: .5rem"/>
     </BaseLink>
     <template #set>
       <BaseParams ref="master" :inited="mockPanleInited" :disableBtnAfterTaskStart="{ all: false }" />

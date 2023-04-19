@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-19 11:28:29
+ * @LastEditTime: 2023-04-19 14:30:25
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -263,7 +263,7 @@ const master = ref<BaseParamsType>()
         <el-button type="primary" round @click="defFrequency(trigger.value as number)">解调</el-button>
         <el-button type="primary" round @click="() => { markers = [trigger.value as number] }">标注</el-button>
       </div>
-      <hr>
+      <hr style="margin-top: .5rem"/>
     </BaseLink>
     <template #set>
       <BaseParams ref="master" :beforeSendParamChange="beforeSendParamChange" :beforeTaskStart="beforeTaskStart"
