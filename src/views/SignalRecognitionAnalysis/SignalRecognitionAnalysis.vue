@@ -2,25 +2,30 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-17 11:45:16
+ * @LastEditTime: 2023-04-19 14:30:25
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
 <script setup lang='ts'>
 import { useFrameStore } from '@/store'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import Modulate from './components/Modulate.vue'
 import * as Helper from 'helper/index'
 import { IMockPanleState, setLinkTrigger, CustomTheme, fftToResolutionRatio, BaseParamsType, localStorageKey } from '@/types'
 import { ElMessage } from 'element-plus'
 import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
-import { ISpectrumInputData, ESwitchState, IITUData, IModulateData, IHighlightItem, ZXISpectrumScanAndFallType, ZXILevel, UseTheme, ILevelData } from 'mcharts/index'
+import { ISpectrumInputData, ESwitchState, IITUData, IModulateData, IHighlightItem, ZXISpectrumScanAndFallType, ZXILevel, UseTheme, ILevelData, IIQData, ZXIIQVector } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
 import { Sundry, ToExport } from 'helper/index'
 import { useRoute } from 'vue-router'
 
 const store = useFrameStore()
+
+const setTool = [{
+  name:'pubutu',
+  value:false
+}]
 
 const spectrumFull = ref<Array<ISpectrumInputData>>([{
   data: new Float32Array(),
@@ -128,6 +133,13 @@ function beforeSendParamChange(panle: IMockPanleState) {
   return result
 }
 
+// IQ
+const iqData = ref<IIQData>({
+  iData: new Float32Array(),
+  qData: new Float32Array()
+})
+const spIQVector = ref<InstanceType<typeof ZXIIQVector>>()
+
 const markers = ref<Array<number>>([])
 
 const { trigger, selectFrequency } = setLinkTrigger()
@@ -136,7 +148,7 @@ const { trigger, selectFrequency } = setLinkTrigger()
 const options: ReceiveDataOptions = new Map()
 const optionsChild: ReceiveDataOptions = new Map()
 // 全景频谱
-optionsChild.set('SPECTRUMDATA', {
+optionsChild.set(ReceiveData.key.DATA.SPECTRUMDATA, {
   control: (data) => {
     spectrumFull.value = [makeSpectrumData(data)]
   }
@@ -156,23 +168,32 @@ optionsChild.set('CHLEVEL', {
   }
 })
 // ITU
-optionsChild.set('ITU', {
+optionsChild.set(ReceiveData.key.DATA.ITU, {
   control: (data) => {
     ITU.value = data.data
   }
 })
+// IQ数据
+optionsChild.set(ReceiveData.key.DATA.IQDATA, {
+  control: (data) => {
+    iqData.value = { iData: new Float32Array(data.iData), qData: new Float32Array(data.qData) }
+  }
+})
+
 // 模式识别
-optionsChild.set('MODE', {
+optionsChild.set(ReceiveData.key.DATA.MODE, {
   control: (data) => {
     modulate.value = data.data
   }
 })
+
 // 数字语音解调/解码状态
-optionsChild.set('LOGTEXTSTATE', {
+optionsChild.set(ReceiveData.key.DATA.LOGTEXTSTATE, {
   control: (data) => {
     decodingState.value = data.data
   }
 })
+
 
 // 溢出
 optionsChild.set(ReceiveData.key.DATA.OVERFLOW, {
@@ -211,8 +232,6 @@ ToExport.beforExport.set('0', () => {
   // 解调频谱
   if (spectrumDemodulation.value[0].data.length > 0) ToExport.addDom('解调频谱', spInstance1.value!.root!, 2)
   // ITU
-
-
   if (ITU.value.length > 0) {
     const result = Sundry.formatITU(ITU.value)
     ToExport.addTable(result.title, result.headers, result.formatData, 4)
@@ -227,6 +246,8 @@ ToExport.beforExport.set('0', () => {
     const r = Sundry.formatDecodingState(decodingState.value)
     ToExport.addText(r.title, r.str, 6)
   }
+  // IQ
+  if (iqData.value.iData.length > 0) ToExport.addDom('IQ矢量图', spIQVector.value!.root!, 7)
 })
 
 const tabId = ref(0)
@@ -242,7 +263,7 @@ const master = ref<BaseParamsType>()
         <el-button type="primary" round @click="defFrequency(trigger.value as number)">解调</el-button>
         <el-button type="primary" round @click="() => { markers = [trigger.value as number] }">标注</el-button>
       </div>
-      <hr>
+      <hr style="margin-top: .5rem"/>
     </BaseLink>
     <template #set>
       <BaseParams ref="master" :beforeSendParamChange="beforeSendParamChange" :beforeTaskStart="beforeTaskStart"
@@ -250,16 +271,26 @@ const master = ref<BaseParamsType>()
     </template>
     <template #header-center>
       <div class="header-slot">
-        <BaseTabHeader  :headers="['主页', '信号分析', '信道测量', '调制识别', '数字语音解调/解码状态']" v-model="tabId" />
+        <BaseTabHeader :headers="['全景频谱', '信号分析', '信道测量', '调制识别', '数字语音解调/解码状态']" v-model="tabId" />
       </div>
     </template>
     <ZXITabs class="FFM-tabs" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="tabId">
 
       <div class="first-page">
         <div class="first-colum">
-          <ZXISpectrumAndFall class="spectrum-and-fall" name="全景频谱" ref="spInstance0" :inputData="spectrumFull"
-            :params="paramsFull" :switchLever="startAndStop" :hightlightItems="hightlightItems" :markers="markers"
-            @selectFrequency="selectFrequency">
+          <ZXISpectrumAndFall 
+            :setTool="setTool" 
+            class="spectrum-and-fall" 
+            name="" 
+            ref="spInstance0" 
+            :inputData="spectrumFull"
+            :params="paramsFull" 
+            :switchLever="startAndStop" 
+            :hightlightItems="hightlightItems" 
+            :markers="markers"
+            @selectFrequency="selectFrequency"
+            useSelectFrequency
+            >
             <template #header>
               <BaseParamsBranch class="params-branch" :params="[
                 [
@@ -271,12 +302,13 @@ const master = ref<BaseParamsType>()
           </ZXISpectrumAndFall>
         </div>
         <div class="second-colum">
-          <BaseTabHeader  class="tab-header" :headers="[
+          <BaseTabHeader class="tab-header" :headers="[
             [{ name: '解调频谱', ratio: 1 }],
             [{ name: '电平图', ratio: 1 }],
+            [{ name: 'IQ矢量图', ratio: 1 }],
           ]" v-model="firstTabId" />
           <ZXITabs :wrapperStyle="{ border: 'none' }" :hidHeader="true" class="FFM-tabs-first" v-model="firstTabId">
-            <ZXISpectrumAndFall class="spectrum-and-fall-single" name="解调频谱" ref="spInstance1"
+            <ZXISpectrumAndFall class="spectrum-and-fall-single" name="" ref="spInstance1"
               :inputData="spectrumDemodulation" :params="singleParams" :switchLever="startAndStop"
               :setTool="[{ name: 'pubutu', value: false }]" @selectFrequency="(result) => { defFrequency(result.value) }">
               <template #header>
@@ -289,8 +321,19 @@ const master = ref<BaseParamsType>()
                 ]" :master="master" />
               </template>
             </ZXISpectrumAndFall>
-            <ZXILevel class="level" name="电平图" ref="levleInstance" :deleteTool="['threshold']" :inputData="levelInput"
+            <ZXILevel class="level" name="" ref="levleInstance" :deleteTool="['threshold']" :inputData="levelInput"
               :switchLever="startAndStop" />
+            <div class="IQ-container">
+              <ZXIIQVector 
+                ref="spIQVector" 
+                class="iq-vector-image" 
+                :name="'IQ矢量图'" 
+                :pointRadius="7"
+                :inputData="iqData"
+                :switchLever="startAndStop"
+                 />
+              
+            </div>
           </ZXITabs>
 
         </div>
@@ -307,7 +350,10 @@ const master = ref<BaseParamsType>()
 
 <style scoped lang="less">
 @import url('theme');
-
+.base-link{
+  display: flex;
+  justify-content:space-around;
+}
 .header-slot {
   width: 100%;
   height: 100%;
@@ -345,7 +391,7 @@ const master = ref<BaseParamsType>()
         box-sizing: border-box;
 
         .params-branch {
-          padding-left: @btnSpace;
+          padding-left: 4.5rem;
         }
       }
 
@@ -359,7 +405,8 @@ const master = ref<BaseParamsType>()
       border-top: v-bind('CustomTheme.theme.districtBorder');
       box-sizing: border-box;
       background-color: v-bind('UseTheme.theme.var.backgroundColor');
-      .tab-header{
+
+      .tab-header {
         width: 100px;
       }
 
@@ -371,10 +418,24 @@ const master = ref<BaseParamsType>()
         flex: auto;
         padding-left: @btnSpace;
 
+        .IQ-container {
+          width: 100%;
+          height: 100%;
+          background-color: v-bind('UseTheme.theme.var.backgroundColor');
+          display: flex;
+          justify-content: center;
+
+          .iq-vector-image {
+              height: 100%;
+              aspect-ratio:1/1;
+            }
+
+        }
+
       }
 
       .params-branch {
-        padding-left: @btnSpace;
+        padding-left: 4.5rem;
       }
 
       // .spectrum-and-fall-single {
@@ -384,7 +445,8 @@ const master = ref<BaseParamsType>()
 
     }
   }
-  .table{
+
+  .table {
     padding: @btnSpace;
     box-sizing: border-box;
   }

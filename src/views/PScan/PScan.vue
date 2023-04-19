@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-09 14:55:45
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-01-12 10:24:03
- * @FilePath: \zxi-device\src\views\PScan\PScan.vue
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-18 13:34:12
+ * @FilePath: \zxi-surface\src\views\PScan\PScan.vue
  * @Description: 全景扫描
  -->
 
@@ -90,6 +90,7 @@ onMounted(() => {
         :additionalCurve="additionalCurve"
         :tags="icons"
         :markers="markers"
+        :name="''"
         useSelectFrequency
         @spectrumScene=getSpectrumScene1
         @selectFrequency="selectFrequency">
@@ -143,7 +144,7 @@ onMounted(() => {
 <style scoped lang="less">
 @import url('theme');
 .params-branch0{
-  padding: 0 0 0 @btnSpace;
+  padding-left: 4.5rem;
 }
 .params-branch1{
   padding: 0 0 @btnSpace 11.5rem;
@@ -158,6 +159,7 @@ onMounted(() => {
   .tab-item{
     padding: @btnSpace @btnSpace 0 @btnSpace;
     box-sizing: border-box;
+    
     background: v-bind('UseTheme.theme.var.backgroundColor');
   }
 }

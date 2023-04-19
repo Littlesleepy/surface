@@ -349,9 +349,9 @@ export class Marker {
         this.handlAddLink(link, marker)
       })
 
-      link.addEventListener(Listen.TOUCHEND, () => {
-        this.handlAddLink(link, marker)
-      })
+      // link.addEventListener(Listen.TOUCHEND, () => {
+      //   this.handlAddLink(link, marker)
+      // })
 
       return link
     }

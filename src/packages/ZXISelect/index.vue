@@ -66,7 +66,6 @@ function focus() {
 
 <style scoped lang="less">
 @import url('../assets/styles/theme.less');
-
 .container{
   width: 100%;
   height: 100%;

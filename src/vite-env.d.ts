@@ -26,6 +26,7 @@ interface IElectronAPI {
   readConfig: () => Promise<string>
   controlApp: (status: 'min' | 'max' | 'close') => void
   toggleDevTools: () => void
+  cleanCache:()=>void
 }
 
 declare interface Window {

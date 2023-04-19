@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-08 14:13:59
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-22 16:59:21
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseFrame\BaseFrame.vue
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-18 10:55:13
+ * @FilePath: \zxi-surface\src\components\BaseMonitorFrame\BaseMonitorFrame.vue
  * @Description: 
  -->
 <script lang="ts">
@@ -24,6 +24,7 @@ import { ZAudio, UseTheme } from 'mcharts/index'
 import { IServerAudioData, CustomTheme } from '@/types';
 import * as Helper from '@/helper'
 import { ElMessageBox, ElNotification } from 'element-plus';
+import BaseMask from "@/components/BaseMask/BaseMask.vue";
 
 const route = useRoute()
 
@@ -37,20 +38,25 @@ const startBtnClass = computed(() => {
   return ['iconfont', classes]
 })
 
-function handleStart () {
+function handleStart() {
   frameStore.m_playButton()
 }
 /**.............................表单参数............................. */
 const formShow = ref(false)
 
-function handleForm () {
+function handleForm() {
   formShow.value = !formShow.value
 }
 /**.............................导航............................. */
 const navigationShow = ref(false)
 
-function handleNavigation () {
+function handleNavigation() {
   navigationShow.value = !navigationShow.value
+}
+// handleMask
+const showMask = ref(false)
+function handleMask() {
+  showMask.value = !showMask.value
 }
 
 /**......................................数据接收...................................... */
@@ -138,7 +144,7 @@ onBeforeUnmount(() => {
         <!-- 控制区域 -->
         <div class="control">
           <!-- 按钮区域 -->
-          <div class="button-area">
+          <div class="button-area" v-show="!showMask">
             <!-- 导航 -->
             <ZXIButton @click="handleNavigation">
               <i class="iconfont icon-gongneng"></i>
@@ -152,10 +158,21 @@ onBeforeUnmount(() => {
             <ZXIButton @click="handleForm">
               <i class="iconfont icon-zhongduancanshuguanli" />
             </ZXIButton>
+            <!-- 锁定 -->
+            <ZXIButton @click="handleMask">
+              <i class="iconfont icon-suoding1" />
+            </ZXIButton>
           </div>
           <!-- 插槽 -->
-          <div class="header-center">
+          <div class="header-center" v-show="!showMask">
             <slot name="header-center" />
+          </div>
+          <div class="button-area button-show" v-show="showMask">
+            <!-- 取消锁定 -->
+            <ZXIButton @click="handleMask">
+              <i class="iconfont icon-jiesuo1" />
+            </ZXIButton>
+
           </div>
         </div>
       </template>
@@ -163,8 +180,8 @@ onBeforeUnmount(() => {
         <div class="header-right">
           <!-- 导航 -->
           <!-- <button @click="handleNavigation">
-            <i class="iconfont icon-gongneng" />
-          </button> -->
+              <i class="iconfont icon-gongneng" />
+            </button> -->
           <div class="slot">
             <slot name="header-right" />
           </div>
@@ -173,6 +190,7 @@ onBeforeUnmount(() => {
     </BaseTopFrame>
     <!-- 内容区域 -->
     <div class="center">
+      <BaseMask :lock="showMask" />
       <slot />
     </div>
   </div>
@@ -180,57 +198,75 @@ onBeforeUnmount(() => {
 
 <style scoped lang="less">
 @import url('theme');
-.set-form{
+
+.set-form {
   width: 100%;
 }
-.navigation{
+
+.navigation {
   width: 100%;
   height: 65vh;
 }
-.container{
+
+.container {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
-  .header{
+
+  .header {
     border-bottom: v-bind('CustomTheme.theme.districtBorder');
   }
-  .header-right{
+
+  .header-right {
     height: 100%;
     display: flex;
     flex-direction: column;
     padding: 0 @btnSpace @btnSpace @btnSpace;
-    .slot{
+
+    .slot {
       flex: auto;
     }
   }
-  .control{
+
+  .control {
     height: 100%;
     display: flex;
     -webkit-app-region: none;
-    .button-area{
+
+    .button-area {
       display: flex;
       padding: @btnSpace 0 @btnSpace @btnSpace;
-      :nth-child(2n){
-        margin: 0 @btnSpace;
+
+      :not(:last-child) {
+        margin-right: @btnSpace;
       }
-      .iconfont{
+
+      .iconfont {
         margin: auto;
         font-size: 4.5rem;
       }
-      span{
+
+      span {
         font-size: 2.5rem;
         align-self: center;
       }
     }
-    .header-center{
+
+    .button-show {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .header-center {
       flex: auto;
     }
   }
-  .center{
+
+  .center {
+    position: relative;
     flex: auto;
     z-index: 0;
   }
-}
-</style>
+}</style>

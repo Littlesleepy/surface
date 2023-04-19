@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-09 14:12:39
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-15 13:24:56
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseNavigation\BaseNavigation.vue
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-18 16:15:30
+ * @FilePath: \zxi-surface\src\components\BaseNavigation\BaseNavigation.vue
  * @Description: 
  -->
 <script lang="ts">
@@ -20,6 +20,7 @@ import { IDeviceFunc } from '@/types'
 import { ElMessage, ElNotification } from 'element-plus'
 import { UseTheme } from 'mcharts/index'
 import BaseTheme from 'cp/BaseTheme/BaseTheme.vue'
+import BaseCache from "cp/BaseCache/BaseCache.vue";
 interface IIconList {
   id: number
   imgUrl: string
@@ -84,6 +85,7 @@ dataInit()
       <p class="title">设置</p>
       <div class="setting">
         <BaseTheme class="item" />
+        <BaseCache class="item"/>
       </div>
     </div>
     <div class="group" v-if="naviGationLists.length">

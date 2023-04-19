@@ -1,0 +1,163 @@
+{
+  "id": "3939323",
+  "name": "zxi-surface",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "真信智能surface go软件",
+  "glyphs": [
+    {
+      "icon_id": "14191069",
+      "name": "暂停",
+      "font_class": "zanting1",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "18452295",
+      "name": "太阳2",
+      "font_class": "taiyang",
+      "unicode": "e697",
+      "unicode_decimal": 59031
+    },
+    {
+      "icon_id": "21899158",
+      "name": "icon-月亮",
+      "font_class": "icon-taikong2",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "33940358",
+      "name": "开始",
+      "font_class": "kaishi",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "1130",
+      "name": "锁定",
+      "font_class": "suoding",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "1334",
+      "name": "解锁",
+      "font_class": "jiesuo",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "2325911",
+      "name": "解锁",
+      "font_class": "jiesuo1",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "6798073",
+      "name": "菜单管理",
+      "font_class": "caidanguanli",
+      "unicode": "e66b",
+      "unicode_decimal": 58987
+    },
+    {
+      "icon_id": "10043674",
+      "name": "锁定",
+      "font_class": "suoding1",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "11839497",
+      "name": "导出",
+      "font_class": "daochu",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "12550617",
+      "name": "菜单",
+      "font_class": "caidan",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "15726955",
+      "name": "相机拍照",
+      "font_class": "xiangjipaizhao",
+      "unicode": "e64b",
+      "unicode_decimal": 58955
+    },
+    {
+      "icon_id": "11674274",
+      "name": "夜间",
+      "font_class": "yejian",
+      "unicode": "e712",
+      "unicode_decimal": 59154
+    },
+    {
+      "icon_id": "18441414",
+      "name": "天气，太阳，，白天，起床",
+      "font_class": "tianqitaiyangqichuang",
+      "unicode": "e713",
+      "unicode_decimal": 59155
+    },
+    {
+      "icon_id": "4686545",
+      "name": "刷新",
+      "font_class": "shuaxin",
+      "unicode": "ec08",
+      "unicode_decimal": 60424
+    },
+    {
+      "icon_id": "8288841",
+      "name": "功能",
+      "font_class": "gongneng",
+      "unicode": "e84a",
+      "unicode_decimal": 59466
+    },
+    {
+      "icon_id": "5636861",
+      "name": "关闭",
+      "font_class": "guanbi1",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "4956289",
+      "name": "暂停",
+      "font_class": "zanting",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "2959115",
+      "name": "终端参数管理",
+      "font_class": "zhongduancanshuguanli",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "7435512",
+      "name": "启动",
+      "font_class": "qidong",
+      "unicode": "e67d",
+      "unicode_decimal": 59005
+    },
+    {
+      "icon_id": "4485682",
+      "name": "最大化",
+      "font_class": "zuidahua",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "6160694",
+      "name": "最小化",
+      "font_class": "zuixiaohua",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    }
+  ]
+}

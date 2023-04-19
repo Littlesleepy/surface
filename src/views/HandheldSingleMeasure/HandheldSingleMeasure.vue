@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-11 09:10:40
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-17 14:52:02
+ * @LastEditTime: 2023-04-19 14:30:35
  * @FilePath: \zxi-surface\src\views\HandheldSingleMeasure\HandheldSingleMeasure.vue
  * @Description: 
  -->
@@ -151,10 +151,6 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if ($watchOne) $watchOne()
 })
-onMounted(()=>{
-  console.log(master.value?.elements);
-  
-})
 </script>
 
 <template>
@@ -164,24 +160,21 @@ onMounted(()=>{
         <el-button type="primary" round @click="changeFrequency">切换频率</el-button>
         <el-button type="primary" round @click="() => { markers = [trigger.value as number] }">标注</el-button>
       </div>
-      <hr>
+      <hr style="margin-top: .5rem"/>
     </BaseLink>
     <template #set>
       <BaseParams ref="master" :inited="mockPanleInited" :disableBtnAfterTaskStart="{ all: false }" />
     </template>
     <template #header-center>
-      <BaseParamsBranch class="params-branch-header" :params="[
-        [
-          { name: '辅助音频', paramName: 'playAudio', ratio: 6 },
-          { name: '辅助音频速率', paramName: 'playSpeed', ratio: 6 },
-         
-        ],
-        [
-        { name: '随路音频', paramName: 'tcpaudio', ratio: 6 },
-
-        { name: '解调模式', paramName: 'demodulation', ratio: 6 },
-        ]
-      ]" :master="master" />
+      <div class="header-slot">
+        <BaseParamsBranch class="params-branch-header" noWrap :params="[
+          [
+            { name: '辅助音频', paramName: 'playAudio', ratio: 6 },
+            { name: '辅助音频速率', paramName: 'playSpeed', ratio: 12 ,mR:6},
+          ]
+          
+        ]" :master="master" />
+      </div>
     </template>
     <div class="HandheldSingleMeasure">
       <div class="single-container">
@@ -193,9 +186,10 @@ onMounted(()=>{
             <BaseParamsBranch class="params-branch-Top" :params="[
                 [
                   { name: '频率', paramName: 'frequency', ratio: 12 },
-                  { name: '衰减', paramName: 'attenuation', ratio: 12 },
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 12 }
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 9 },
+                  { name: '解调带宽', paramName: 'debw', ratio: 9 },
+                  { name: '解调模式', paramName: 'demodulation', ratio: 9 },
+                  
                 ]
               ]" :master="master" />
             <!-- <pre class="text">瞬时值：{{ dBuV.toFixed(1) }} dBuV</pre> -->
@@ -233,13 +227,13 @@ onMounted(()=>{
             <template #header>
               <!-- <BaseParamsBranch class="params-branch" :params="[
                 [
-                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 },
-                  { name: '解调带宽', paramName: 'debw', ratio: 12 }
+                  { name: '频率', paramName: 'frequency', ratio: 12 },
+                  { name: '频谱带宽', paramName: 'bandwidth', ratio: 12 }
                 ]
               ]" :master="master" /> -->
             </template>
           </ZXISpectrumAndFall>
-          <CommonMap class="map" ></CommonMap>
+          <CommonMap class="map"/>
         </div>
       </div>
     </div>
@@ -249,6 +243,16 @@ onMounted(()=>{
 <style scoped lang="less">
 @import url('theme');
 
+.header-slot{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  box-sizing: border-box;
+  .params-branch-header {
+    padding: @btnSpace;
+    width: 100%;
+  }
+}
 .base-link {
   display: flex;
   justify-content: center;
@@ -262,9 +266,7 @@ onMounted(()=>{
 //     :deep(.icon-jiantou) {
 //       left: -4px !important;
 //     }
-.params-branch-header {
-  padding: @btnSpace;
-}
+
 
 .HandheldSingleMeasure {
   width: 100%;
@@ -349,7 +351,7 @@ onMounted(()=>{
         padding-left: @btnSpace;
         padding-top: @btnSpace;
         box-sizing: border-box;
-        max-width: 500px;
+        max-width: 400px;
         width: 40%;
       }
     }
