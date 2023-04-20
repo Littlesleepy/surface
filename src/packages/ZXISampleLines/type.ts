@@ -96,7 +96,7 @@ export class SampleLines {
 
     toolTip.afterActive.set('spectrum', (p) => {
       if (magnetGroup.length > 0) {
-        const r = toolTip.magnetByMax(fence, magnetGroup)
+        const r = toolTip.magnetByMax(scene.value!.fence!, magnetGroup)
         if (r) {
           toolTipPosition.value = r.offsetMiddlePCTX
         }

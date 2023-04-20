@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-11 16:56:55
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-20 11:06:03
+ * @LastEditTime: 2023-04-20 11:29:59
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXISpectrumLine\index.vue
  * @Description: 
  -->
@@ -386,6 +386,24 @@ watch(() => btnValues.value.biaozhu, (v) => {
   }
 })
 
+watchEffect(() => {
+  if (caliperPosition.value && scene.value) {
+    const fence = scene.value.fence as LayersFenceType
+    if (props.inputData.length && fence.cutDataIndexArr.length) {
+      const result: Map<string, { info: string, color?: string }> = new Map()
+      const dataIndex = fence.getDataIndexByDistance(caliperPosition.value.offsetMiddlePCTX)
+      // 频率
+      const frequency = defaultValueX.value.min + dataIndex * step.value
+
+      result.set('0', {
+        info: `${props.scaleX.transform(frequency)} ${props.scaleX.unit}`
+      })
+
+      caliper.setContent(result)
+    }
+  }
+})
+
 /** .............................................marker............................................. */
 const {
   marker,
@@ -497,7 +515,7 @@ onMounted(() => {
 
     toolTip.afterActive.set('spectrum', (p) => {
       if (sampleInputData) {
-        const r = toolTip.magnetByMax(fence, [sampleInputData])
+        const r = toolTip.magnetByMax(scene.value!.fence!, [sampleInputData])
         if (r) {
           toolTipPosition.value = r.offsetMiddlePCTX
         }
@@ -587,7 +605,7 @@ onMounted(() => {
 
     // marker标注
     marker.value = new Marker(scene.value)
-    marker.value.closeButton.style.top = '45px'
+    marker.value.closeButton.style.top = '60px'
 
     // 内部数据挂载
     // @ts-ignore

@@ -1,12 +1,12 @@
 /**
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-06 10:25:56
- * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-19 11:18:41
- * @FilePath: \zxi-surface\electron\main\useIpcMain.ts
+ * @LastEditors: 十二少 1484744996@qq.com
+ * @LastEditTime: 2023-04-20 14:09:37
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\electron\main\useIpcMain.ts
  * @Description: 
  */
-import { join } from "node:path";
+import path, { join } from "path";
 import { app, BrowserWindow, ipcMain, IpcMainEvent, session } from "electron";
 import fs from "fs";
 import { PreloadName } from "../preload/useElectronAPI";
@@ -47,10 +47,10 @@ export function useIpcMain() {
  */
 async function useConfig() {
   let filePath = "";
-  if (process.env.NODE_ENV === "production") {
+  if (!app.isPackaged) {
     // 生产环境
-    const appDir = app.getAppPath();
-    filePath = join(appDir, "resources/config.json");
+    const appDir = app.getPath('exe')
+    filePath = join(path.dirname(appDir), 'config.json')
   } else {
     filePath = join(process.env.PUBLIC, "config.json");
   }

@@ -5,8 +5,8 @@ import { UseTheme } from '../../styles'
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-12-02 14:34:52
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-02-03 14:13:32
- * @FilePath: \zxi-device\src\packages\core\Overlay\Anchor.ts
+ * @LastEditTime: 2023-04-20 11:55:54
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\core\Overlay\Anchor.ts
  * @Description: 锚
  */
  export interface IAnchorOptions {
@@ -32,8 +32,6 @@ export class Anchor {
 
   readonly scene: Scene
 
-  readonly fence: FencesType
-
   readonly container: HTMLElement
 
   readonly manager = new Map<number, IAnchor>()
@@ -51,9 +49,7 @@ export class Anchor {
   }
 
   constructor (scene: Scene, options?: IAnchorOptions) {
-    if (scene.fence) {
-      this.fence = scene.fence
-    } else {
+    if (scene.fence === undefined) {
       throw new Error('Anchor初始化要求scene拥有fence成员')
     }
 
@@ -67,9 +63,9 @@ export class Anchor {
 
     scene.disposeManager.add(() => { this.dispose() })
 
-    this.fence.afterZoomOrTrans.add(() => {
+    this.scene.fence!.afterZoomOrTrans.add(() => {
       for (const [, anchor] of this.manager) {
-        anchor.instance.setPositionByDataIndex(this.fence)
+        anchor.instance.setPositionByDataIndex(this.scene.fence!)
       }
     })
   }
@@ -222,7 +218,7 @@ export class Anchor {
     }
 
     const instance = new Tag(this.container, tagOptions)
-    instance.setPositionByDataIndex(this.fence, index)
+    instance.setPositionByDataIndex(this.scene.fence!, index)
 
     instance.append()
     const result = { index, instance, removed: false, points: new Map() }

@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-01 15:48:08
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-19 17:24:29
+ * @LastEditTime: 2023-04-20 13:38:05
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXISpectrumAndFall\spectrum.ts
  * @Description: 
  */
@@ -1524,7 +1524,7 @@ export function spectrum (
       }
 
       toolTip.afterActive.set('spectrum', (p) => {
-        const r = toolTip.magnetByMax(fence, magnetGroup)
+        const r = toolTip.magnetByMax(spectrumScene.value!.fence!, magnetGroup)
         if (r) {
           toolTipPosition.value = r.offsetMiddlePCTX
         }
