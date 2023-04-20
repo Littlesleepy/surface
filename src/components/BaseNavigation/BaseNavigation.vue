@@ -21,7 +21,6 @@ import { ElMessage, ElNotification } from 'element-plus'
 import { UseTheme } from 'mcharts/index'
 import BaseTheme from 'cp/BaseTheme/BaseTheme.vue'
 import BaseCache from "cp/BaseCache/BaseCache.vue";
-import BaseTest from "cp/BaseTest/BaseTest.vue";
 interface IIconList {
   id: number
   imgUrl: string
@@ -87,10 +86,6 @@ dataInit()
       <div class="setting">
         <BaseTheme class="item" />
         <BaseCache class="item"/>
-        <BaseTest class="item"/>
-        <BaseTest class="item"/>
-        <BaseTest class="item"/>
-        <BaseTest class="item"/>
       </div>
     </div>
     <div class="group" v-if="naviGationLists.length">

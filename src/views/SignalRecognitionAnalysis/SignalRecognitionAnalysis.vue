@@ -339,7 +339,7 @@ const master = ref<BaseParamsType>()
             </div>
             <ZXILevel class="level" name="" ref="levleInstance" :deleteTool="['threshold']" :inputData="levelInput"
               :switchLever="startAndStop" />
-         
+            
           </ZXITabs>
 
         </div>
