@@ -1,11 +1,12 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
- * @Date: 2023-03-16 10:58:58
+ * @Date: 2023-04-19 14:24:34
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-22 14:41:09
+ * @LastEditTime: 2023-04-20 15:10:10
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseParamsBranch\BaseParamsBranch.vue
  * @Description: 
  -->
+
 <script lang="ts">
 export default {
   name: 'BaseParamsBranch'
@@ -96,7 +97,7 @@ function backResult () {
         const obj = {
           ...currentEl,
           style: marginBottom + widthStyle + marginRight + 'height: 100%;',
-          name: item.name
+          name: item.name ?? currentEl.title
         }
 
         result.push(obj)

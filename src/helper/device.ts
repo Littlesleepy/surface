@@ -2,19 +2,18 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-09 14:55:45
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-16 14:21:48
+ * @LastEditTime: 2023-04-20 15:04:36
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\helper\device.ts
  * @Description: 
  */
 
 import { localStorageKey } from '@/storage'
-import { ElMessage, ElMessageBox } from 'element-plus'
 /**
  * @description: 设备帮助类
  */
 import { IDeviceParamsPanle, IParam, EParamsType, IParamElement } from 'types/index'
 import * as ZHelper from 'mcharts/index'
-import { ECaculate, IUnitGroup, Keyboard } from 'mcharts/index'
+import { Keyboard } from 'mcharts/index'
 
 export class Device extends ZHelper.Device {
   /**
@@ -36,7 +35,7 @@ export class Device extends ZHelper.Device {
       const unit = result ? result[0] : undefined
 
       // 名称
-      const regName = /.+(?=\()/
+      const regName = /.+(?=\([A-Za-z]+)/
       const nameR = x.paramNameOfSimplifiedChinese.match(regName)
       const title = nameR ? nameR[0] : x.paramNameOfSimplifiedChinese
 
