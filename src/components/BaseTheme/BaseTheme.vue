@@ -7,38 +7,21 @@
  * @Description: 
  -->
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useTheme, EThemeName } from '.'
+import BaseIconButton from "cp/BaseIconButton/BaseIconButton.vue";
 
 const { toggleTheme, themeName } = useTheme()
 
+const icon = computed(() => {
+  return themeName.value === EThemeName.light ? 'icon-icon-taikong2':'icon-taiyang'
+})
+const text = computed(() => {
+  return themeName.value === EThemeName.light ? '深色模式' : '浅色模式'
+})
 
 </script>
 
 <template>
-  <div>
-    <div class="container" @click="toggleTheme">
-      <ZXIButton class="button" v-if="themeName === EThemeName.dark"><i class="iconfont icon-yejian" /></ZXIButton>
-      <ZXIButton class="button" v-if="themeName === EThemeName.light"><i class="iconfont icon-tianqitaiyangqichuang" /></ZXIButton>
-    </div>
-  </div>
+  <BaseIconButton :icon="icon" :text="text" @click="toggleTheme"/>
 </template>
-
-<style scoped lang="less">
-.container{
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  .button{
-    flex: 1;
-    display: flex;
-    i {
-      margin: auto;
-      text-align: center;
-      font-size: 3rem;
-      padding: 0.5rem;
-    }
-  }
-}
-</style>

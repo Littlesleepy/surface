@@ -24,6 +24,7 @@ function cleanCache() {
       h('p',{style:'color:teal;font-size:1.5rem'},' (清除缓存后将重启应用)')
     ]),
     confirmButtonText: '确认',
+    showCancelButton:true,
     cancelButtonText:'取消'
   }).then(window.electronAPI.cleanCache)
   
