@@ -23,7 +23,7 @@
        </ZXIButton>
      </div>
    </div> -->
-   <BaseIconButton :icon="'icon-caidanguanli'" @click="haha"></BaseIconButton>
+   <BaseIconButton :icon="'icon-caidanguanli'" :text="'text'" @click="haha"></BaseIconButton>
  </template>
  
  <style lang="less" scoped>

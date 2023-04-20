@@ -8,44 +8,28 @@
  -->
 
 <script setup lang='ts'>
-// const props = defineProps({
-//   icon:{
+import BaseIconButton from "cp/BaseIconButton/BaseIconButton.vue";
+import { ElMessageBox, ElNotification } from "element-plus";
+import { h } from "vue";
 
-//   },
-// })
-function cleanCache(){
-  window.electronAPI.cleanCache()
+const icon = 'icon-huancun'
+const text = '清除缓存'
+
+function cleanCache() {
+  ElMessageBox({
+    title: '警告',
+    type:'warning',
+    message: h('p', null, [
+      h('span', null, '确认清除缓存?'),
+      h('p',{style:'color:teal;font-size:1.5rem'},' (清除缓存后将重启应用)')
+    ]),
+    confirmButtonText: '确认',
+    cancelButtonText:'取消'
+  }).then(window.electronAPI.cleanCache)
+  
 }
 </script>
 
 <template>
-  <div>
-    <div class="container" @click="cleanCache">
-      <ZXIButton class="button">
-        <i class="iconfont icon--huancunguanli"></i>
-      </ZXIButton>
-    </div>
-  </div>
+  <BaseIconButton :icon="icon" :text="text" @click="cleanCache"/>
 </template>
-
-<style lang="less" scoped>
-.container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  .button {
-    flex: 1;
-    display: flex;
-
-    i {
-      margin: auto;
-      text-align: center;
-      font-size: 3rem;
-      padding: 0.5rem;
-    }
-  }
-}
-</style>

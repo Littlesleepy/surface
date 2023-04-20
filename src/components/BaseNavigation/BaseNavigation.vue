@@ -88,6 +88,9 @@ dataInit()
         <BaseTheme class="item" />
         <BaseCache class="item"/>
         <BaseTest class="item"/>
+        <BaseTest class="item"/>
+        <BaseTest class="item"/>
+        <BaseTest class="item"/>
       </div>
     </div>
     <div class="group" v-if="naviGationLists.length">
@@ -132,8 +135,11 @@ dataInit()
     // 中设置
     .setting{
       display: flex;
+      flex-wrap: wrap;
       .item{
-        margin: 0 1rem;
+        padding: 1rem;
+        box-sizing: border-box;
+        width: 16.66%;
       }
     }
     // 导航

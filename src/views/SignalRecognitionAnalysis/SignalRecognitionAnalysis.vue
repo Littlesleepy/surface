@@ -339,17 +339,7 @@ const master = ref<BaseParamsType>()
             </div>
             <ZXILevel class="level" name="" ref="levleInstance" :deleteTool="['threshold']" :inputData="levelInput"
               :switchLever="startAndStop" />
-            <!-- <div class="IQ-container">
-              <ZXIIQVector 
-                ref="spIQVector" 
-                class="iq-vector-image" 
-                :name="'IQ矢量图'" 
-                :pointRadius="7"
-                :inputData="iqData"
-                :switchLever="startAndStop"
-                 />
-              
-            </div> -->
+         
           </ZXITabs>
 
         </div>
@@ -444,23 +434,14 @@ const master = ref<BaseParamsType>()
           .iq-vector-image{
             height: 100%;
             aspect-ratio:1/1;
+            :deep(span){
+              font-size: 1.8rem;
+            }
           }
 
         }
 
-        // .IQ-container {
-        //   width: 100%;
-        //   height: 100%;
-        //   background-color: v-bind('UseTheme.theme.var.backgroundColor');
-        //   display: flex;
-        //   justify-content: center;
 
-        //   .iq-vector-image {
-        //       height: 100%;
-        //       aspect-ratio:1/1;
-        //     }
-
-        // }
 
       }
 
@@ -468,10 +449,6 @@ const master = ref<BaseParamsType>()
         padding-left: 4.5rem;
       }
 
-      // .spectrum-and-fall-single {
-      //   flex: auto;
-      //   padding-right: 2px;
-      // }
 
     }
   }
