@@ -14,14 +14,14 @@ import BaseIconButton from "cp/BaseIconButton/BaseIconButton.vue";
 const { toggleTheme, themeName } = useTheme()
 
 const icon = computed(() => {
-  return themeName.value === EThemeName.light ? 'icon-icon-taikong2':'icon-taiyang'
+  return themeName.value === EThemeName.dark ? 'icon-icon-taikong2':'icon-taiyang1'
 })
 const text = computed(() => {
-  return themeName.value === EThemeName.light ? '深色模式' : '浅色模式'
+  return themeName.value === EThemeName.dark ? '深色模式' : '浅色模式'
 })
 
 </script>
 
 <template>
-  <BaseIconButton :icon="icon" :text="text" @click="toggleTheme"/>
+  <BaseIconButton :icon="icon" :text="text" :icon-size="'7rem'" @click="toggleTheme"/>
 </template>
