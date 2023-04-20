@@ -309,6 +309,9 @@ export class Threshold {
       }
 
       const instance = new Tag(this.wrapper, tagOption)
+      if (this.scene) this.scene.afterShareFence.add((fence) => {
+        instance.fence = fence
+      })
 
       instance.append()
       

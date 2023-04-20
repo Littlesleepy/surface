@@ -2,8 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-01-31 15:55:11
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-02 09:46:59
- * @FilePath: \zxi-device\src\packages\ZXISpectrumScanAndFall\index.vue
+ * @LastEditTime: 2023-04-20 09:58:50
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXISpectrumScanAndFall\index.vue
  * @Description: 绘制数据拼接频谱图和瀑布图
  -->
 
@@ -17,7 +17,6 @@ import ZXIControlBtn from '../ZXIControlBtn'
 import ZXIIcons from '../ZXIIcons'
 import ZXIHighlight from '../ZXIHighlight'
 import ZXIFrequencyDivision from '../ZXIFrequencyDivision'
-import HeaderInfo from '../ZXISpectrumAndFall/components/HeaderInfo.vue'
 import ScanPointer from './components/ScanPointer.vue'
 import MarkerManager from './components/MarkerManager.vue'
 

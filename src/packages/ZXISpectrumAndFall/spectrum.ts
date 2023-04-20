@@ -2,16 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-01 15:48:08
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-15 16:51:12
+ * @LastEditTime: 2023-04-19 17:24:29
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXISpectrumAndFall\spectrum.ts
- * @Description: 
- */
-/**
- * @Author: 十二少 1484744996@qq.com
- * @Date: 2023-01-31 15:55:11
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-02 09:13:12
- * @FilePath: \zxi-device\src\packages\ZXISpectrumAndFall\spectrum.ts
  * @Description: 
  */
 
