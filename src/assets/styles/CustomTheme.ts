@@ -2,8 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-02-21 16:21:00
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-10 15:19:31
- * @FilePath: \zxi-device\src\assets\styles\CustomTheme.ts
+ * @LastEditTime: 2023-04-20 13:56:31
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\assets\styles\CustomTheme.ts
  * @Description: 主题切换类
  */
 
@@ -32,7 +32,7 @@ export interface ICustomTheme {
 
 export class CustomTheme {
   static default = {
-    lineColorOne: 'rgb(220, 220, 220)',
+    lineColorOne: 'rgb(212, 103, 1)',
     districtBorder: 'var(--device--districtBorder, 2px solid rgba(196, 196, 196, 0.4))',
     logColor: 'rgb(0, 153, 0)',
     lineColorGreen: 'rgb(0, 255, 0)',
@@ -40,7 +40,7 @@ export class CustomTheme {
   } as Required<ICustomTheme>
 
   static theme = {
-    lineColorOne: 'rgb(220, 220, 220)',
+    lineColorOne: 'rgb(212, 103, 1)',
     districtBorder: 'var(--device--districtBorder, 2px solid rgba(196, 196, 196, 0.4))',
     logColor: 'rgb(0, 153, 0)',
     lineColorGreen: 'rgb(0, 255, 0)',

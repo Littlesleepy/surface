@@ -2,8 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-02-07 14:12:48
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-02-07 15:24:00
- * @FilePath: \zxi-device\src\packages\ZXINoSampleLines\type.ts
+ * @LastEditTime: 2023-04-20 13:31:56
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXINoSampleLines\type.ts
  * @Description: 
  */
 import { effectScope, onBeforeUnmount, ref, Ref, watch } from 'vue'
@@ -85,7 +85,7 @@ export class NoSampleLines {
 
     toolTip.afterActive.set('spectrum', (p) => {
       if  (magnetGroup.length > 0) {
-        const r = toolTip.magnetByMax(fence, magnetGroup)
+        const r = toolTip.magnetByMax(scene.value!.fence!, magnetGroup)
         if (r) {
           toolTipPosition.value = r.offsetMiddlePCTX
         }

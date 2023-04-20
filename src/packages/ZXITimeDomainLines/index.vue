@@ -2,8 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-01-31 15:55:11
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-02-09 09:05:08
- * @FilePath: \packagesd:\Zzy\project\zcharts\packages\ZXITimeDomainLines\index.vue
+ * @LastEditTime: 2023-04-20 14:02:33
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXITimeDomainLines\index.vue
  * @Description: 时域物抽取多线图
  -->
 
@@ -72,7 +72,7 @@ const props = defineProps({
    */    
   capacity: { default: 0.1 },
   scaleNumWidthY: {
-    default: 50
+    default: 70
   },
   toolTip: {
     default: () => {

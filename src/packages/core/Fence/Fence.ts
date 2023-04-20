@@ -2,8 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-11 16:56:55
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2022-12-05 11:51:53
- * @FilePath: \zxi-deviced:\Zzy\project\zcharts\packages\core\Fence\Fence.ts
+ * @LastEditTime: 2023-04-20 11:47:25
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\core\Fence\Fence.ts
  * @Description: 
  */
 import { Matrix4 } from '../Math'
