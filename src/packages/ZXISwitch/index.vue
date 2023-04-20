@@ -70,6 +70,7 @@ function handleClick () {
   align-items: center;
   box-sizing: border-box;
   position: relative;
+  transition: background-color .3s;
   .marker{
     .marker-disabled();
   }
