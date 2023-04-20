@@ -154,8 +154,8 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
             [
               { name: '每跳频谱带宽', paramName: 'bandwidth', ratio: 12 },
               { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
-              { name: '每跳测量时间', paramName: 'smtime', ratio: 12 },
-              { name: '返回数据间隔时间', paramName: 'holdtime', ratio: 12 },
+              { name: '每跳测量时间(ms)', paramName: 'smtime', ratio: 12 },
+              { name: '返回数据间隔时间(ms)', paramName: 'holdtime', ratio: 12 },
             ]
           ]" :master="master" />
         </template>
