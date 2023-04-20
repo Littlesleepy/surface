@@ -34,7 +34,6 @@ defineProps({
   justify-content: space-between;
   flex-direction: column;
   box-sizing: border-box;
-  margin: 0 5px;
   .iconBox{
     flex: auto;
     display: flex;

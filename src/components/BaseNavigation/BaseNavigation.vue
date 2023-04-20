@@ -132,7 +132,6 @@ dataInit()
       display: flex;
       flex-wrap: wrap;
       .item{
-        padding: 1rem;
         box-sizing: border-box;
         width: 16.66%;
       }
