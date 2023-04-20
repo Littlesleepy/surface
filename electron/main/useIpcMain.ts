@@ -24,11 +24,8 @@ export function useIpcMain() {
   // 监听浏览器打开调试窗口命令
   ipcMain.on(PreloadName.toggleDevTools, toggleDevTools);
   ipcMain.on(PreloadName.cleanCache, () => {
-    // session.defaultSession.clearCache().then(()=>{
-    //   console.log('Cache cleared.')
-    // })
     ipcMainWin.webContents.session.clearCache().then(() => {
-      // app.relaunch()
+      app.relaunch()
       app.exit()
     });
   });

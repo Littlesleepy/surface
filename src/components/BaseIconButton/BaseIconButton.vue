@@ -5,6 +5,9 @@ defineProps({
   },
   text: {
     type: String
+  },
+  iconSize: {
+    type: String
   }
 })
 </script>
@@ -12,7 +15,9 @@ defineProps({
 <template>
   <div>
     <div class="container">
-      <i class="iconfont" :class="icon" />
+      <div class="iconBox">
+        <i class="iconfont" :class="icon" :style="{ fontSize: iconSize || '6rem' }" />
+      </div>
       <p class="text">{{ text }}</p>
     </div>
   </div>
@@ -29,7 +34,12 @@ defineProps({
   justify-content: space-between;
   flex-direction: column;
   box-sizing: border-box;
-  margin: 0 5px;
+  .iconBox{
+    flex: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .iconfont{
     font-size: 6rem;
   }

@@ -12,7 +12,7 @@ import BaseIconButton from "cp/BaseIconButton/BaseIconButton.vue";
 import { ElMessageBox, ElNotification } from "element-plus";
 import { h } from "vue";
 
-const icon = 'icon-huancun'
+const icon = 'icon--huancunguanli'
 const text = '清除缓存'
 
 function cleanCache() {
@@ -32,5 +32,5 @@ function cleanCache() {
 </script>
 
 <template>
-  <BaseIconButton :icon="icon" :text="text" @click="cleanCache"/>
+  <BaseIconButton :icon="icon" :text="text" :icon-size="'5rem'" @click="cleanCache"/>
 </template>
