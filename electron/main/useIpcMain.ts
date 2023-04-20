@@ -24,7 +24,7 @@ export function useIpcMain() {
   // 监听浏览器打开调试窗口命令
   ipcMain.on(PreloadName.toggleDevTools, toggleDevTools);
   ipcMain.on(PreloadName.cleanCache, () => {
-    ipcMainWin.webContents.session.clearCache().then(() => {
+    ipcMainWin.webContents.session.clearStorageData().then(() => {
       app.relaunch()
       app.exit()
     });
@@ -44,7 +44,7 @@ export function useIpcMain() {
  */
 async function useConfig() {
   let filePath = "";
-  if (!app.isPackaged) {
+  if (app.isPackaged) {
     // 生产环境
     const appDir = app.getPath('exe')
     filePath = join(path.dirname(appDir), 'config.json')
