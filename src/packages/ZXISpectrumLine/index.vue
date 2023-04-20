@@ -2,22 +2,23 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-11 16:56:55
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-02-21 16:05:37
- * @FilePath: \zxi-deviced:\Zzy\project\zcharts\packages\ZXISpectrumLine\index.vue
+ * @LastEditTime: 2023-04-20 11:06:03
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXISpectrumLine\index.vue
  * @Description: 
  -->
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, PropType, reactive, ref, watch, watchEffect, WatchStopHandle } from 'vue'
 import * as Helper from '../helper/index'
-import { IBtncontrols, EBtncontrolType, ISpectrumParams, EAxisXType, IAxisXValue, ESwitchState, IAxisYValue, SpectrumData, ILineData, IUnit, Controls } from '../types'
+import { IBtncontrols, EBtncontrolType, ISpectrumParams, EAxisXType, IAxisXValue, ESwitchState, IAxisYValue, SpectrumData, ILineData, IUnit, Controls, createMarker } from '../types'
 import ZXIAxisY from '../ZXIAxisY'
 import ZXIAxisX from '../ZXIAxisX'
 import ZXIFrequencyDivision from '../ZXIFrequencyDivision'
-import { Canvas, Engine, IPositionResult, LayersFence, LayersFenceType, Scene, ToolTip, ZoomTrans } from '../core'
+import { Caliper, Canvas, Engine, IPositionResult, LayersFence, LayersFenceType, Marker, Scene, ToolTip, ZoomTrans } from '../core'
 import { ISpectrumLinePool } from './type'
 import { Sundry } from '../helper/index'
 import { UseTheme } from '../styles'
+import MarkerChain from '../ZXISpectrumScanAndFall/components/MarkerChain.vue'
 
 const props = defineProps({
   inputData: {
@@ -124,18 +125,22 @@ const controls = ref<Array<IBtncontrols>>([{
     title: '谷值',
     paramName: Controls.guzhi,
     activeColor: UseTheme.transColor(UseTheme.theme.SpectrumAndFall.guzhiColor, true)
-  },
-{
-  type: EBtncontrolType.switch,
-  title: '频率划分',
-  paramName: 'pinlvhuafen'
-}])
+  }, {
+    type: EBtncontrolType.switch,
+    title: '频率划分',
+    paramName: 'pinlvhuafen'
+  }, {
+    type: EBtncontrolType.switch,
+    title: '标注',
+    paramName: 'biaozhu'
+  }])
 
 const btnValues = ref({
   fengzhi: false,
   junzhi: false,
   guzhi: false,
-  pinlvhuafen: true
+  pinlvhuafen: true,
+  biaozhu: false
 })
 
 // 设置默认工具值
@@ -165,6 +170,8 @@ const sceneDom = ref<HTMLDivElement>()
 const scene = ref<Scene<ISpectrumLinePool>>()
 
 let toolTip: ToolTip
+
+let sampleInputData: Float32Array | undefined = undefined
 
 let zoomTrans: ZoomTrans
 
@@ -324,6 +331,8 @@ function render () {
     for (const [key, item] of renderData.value) {
       if (key === '输入') {
         SpectrumData.getSamplingData(item.data, lineYvalues, fence)
+        // 拷贝一份输入数据的抽取，用于toolTip最大值磁吸
+        sampleInputData = new Float32Array(lineYvalues)
       } else {
         SpectrumData.getSamplingDataLine(item.data, lineYvalues, fence)
       }
@@ -361,6 +370,30 @@ function resetSpectrum () {
     render()
   }
 }
+
+/**....................................卡尺工具................................ */
+let caliper: Caliper
+
+const caliperPosition = ref<IPositionResult>()
+
+watch(() => btnValues.value.biaozhu, (v) => {
+  if (caliper) {
+    if (v) {
+      caliper.open()
+    } else {
+      caliper.close()
+    }
+  }
+})
+
+/** .............................................marker............................................. */
+const {
+  marker,
+  addMarker,
+  setMarkerPoints
+} = createMarker(computed(() => props.scaleX), computed(() => props.params), step)
+
+watch([spectrumYvalue, () => props.inputData], () => setMarkerPoints(spectrumYvalue.value, new Map([['0', { data: props.inputData }]])))
 
 watch(() => props.inputData, (data) => {
   watchInputData(data)
@@ -462,6 +495,15 @@ onMounted(() => {
       infoTag: props.toolTip
     })
 
+    toolTip.afterActive.set('spectrum', (p) => {
+      if (sampleInputData) {
+        const r = toolTip.magnetByMax(fence, [sampleInputData])
+        if (r) {
+          toolTipPosition.value = r.offsetMiddlePCTX
+        }
+      }
+    })
+
     toolTip.afterTrigger.set('spectrum', (p: IPositionResult) => {
       toolTipPosition.value = p.offsetMiddlePCTX
     })
@@ -502,6 +544,51 @@ onMounted(() => {
       render()
     })
 
+    // 卡尺
+    caliper = new Caliper(scene.value.container, {
+      scene: scene.value
+    })
+
+    caliper.infoTag!.remove()
+
+    caliper.afterClose.set('caliper', () => {
+      btnValues.value.biaozhu = false
+      caliperPosition.value = undefined
+
+      if (marker.value) {
+        marker.value.clear()
+      }
+    })
+
+    caliper.afterTrigger.set('caliper', (p) => {
+      caliperPosition.value = { ...p }
+
+      caliper.infoTag!.append()
+    })
+
+    caliper.afterEnd.set('caliper', (p) => {
+      caliperPosition.value = { ...p }
+      
+      caliper.infoTag!.remove()
+
+      if ( props.inputData.length > 0) {
+
+        const fence = scene.value!.fence as LayersFenceType
+        const dataIndex = fence.getDataIndexByDistance(p.offsetMiddlePCTX)
+        // 频率
+        const frequency = defaultValueX.value.min + dataIndex * step.value
+
+        addMarker([props.scaleX.transform(frequency)])
+        setMarkerPoints(spectrumYvalue.value, new Map([['0', { data: props.inputData }]]))
+      }
+    })
+
+    if (btnValues.value.biaozhu) caliper.open()
+
+    // marker标注
+    marker.value = new Marker(scene.value)
+    marker.value.closeButton.style.top = '45px'
+
     // 内部数据挂载
     // @ts-ignore
     scene.value.pool = reactive({
@@ -531,6 +618,12 @@ defineExpose({
 
 <template>
   <div ref="root">
+    <MarkerChain
+      :usingData="inputData"
+      :marker="marker"
+      :scaleX="scaleX"
+      :scaleY="scaleY"
+      :step="step" />
     <div class="spectrum-lines-container">
       <div class="header">
         <!-- 工具部分 -->

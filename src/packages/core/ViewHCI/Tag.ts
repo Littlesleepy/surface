@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-11 16:56:55
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-15 14:04:01
+ * @LastEditTime: 2023-04-19 17:16:01
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\core\ViewHCI\Tag.ts
  * @Description: 
  */
@@ -228,6 +228,64 @@ export class Tag {
     if (this.fence !== undefined && this.fence.practicalCount !== 0) {
       const position: IOffsetPosition = { offsetX: this.positionResult.offsetX, offsetY: this.positionResult.offsetY }
       this.setPosition(position, this.fence, false, useAfterMove)
+    }
+  }
+  /**
+   * @description: 磁吸功能
+   */
+  magnetByMax(fence: FencesType, group: Array<Float32Array> | Array<Array<number>>) {
+    if (group.length > 0) {
+      const range = fence.options.eachPieceMaxWidth / 2 / fence.expectCount
+      // 以当前tag位置为中心，range为半径计算计算落入范围的刻度索引，并计算出他们的最大值所处刻度
+      const center = fence.direction === Fence.TRANSVERSE ? this.positionResult.offsetMiddlePCTX : this.positionResult.offsetMiddlePCTY
+
+      let min = (center - range) * 2 - 1, max = (center + range) * 2 - 1
+      if (min < -1) min = -1
+      if (max > 1) max = 1
+
+      if (this.fenceIndex) {
+        // 小边界
+        let left = this.fenceIndex
+        for (; left >= 0; left--) {
+          if (fence.baseFence.pieces[left] < min) {
+            left++
+            break
+          }
+        }
+        
+        // 大边界
+        let right = this.fenceIndex, len = fence.baseFence.pieces.length
+        for (; right < len; right++) {
+          if (fence.baseFence.pieces[right] > max) {
+            right--
+            break
+          }
+        }
+
+        if (left < 0) left = 0
+        if (left >= len) left = len - 1
+        if (right < 0) right = 0
+        if (right >= len) right = len - 1
+
+        // 边界内所有组的最大值
+        let maxValue: number | undefined, maxIndex = left
+        for (let j = 0; j < group.length; j++) {
+          const groupItem = group[j]
+          if (maxValue === undefined) maxValue = groupItem[left]
+          // 当前组最大值
+          for (let i = left; i <= right; i++) {
+            const item = groupItem[i]
+            if (maxValue! < item) {
+              maxValue = item
+              maxIndex = i
+            }
+          }
+        }
+
+        // 移动tip位置
+        const result = this.setPositionByFenceIndex(fence, maxIndex)
+        return result
+      }
     }
   }
   /**

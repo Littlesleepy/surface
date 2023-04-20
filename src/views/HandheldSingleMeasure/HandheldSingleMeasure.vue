@@ -310,6 +310,7 @@ onBeforeUnmount(() => {
         }
         .params-branch-Top{
           width: 100%;
+          margin-right: 90px;
         }
       }
 

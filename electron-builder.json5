@@ -15,7 +15,7 @@
   ],
   "extraFiles": [
     {
-      "from": "public/config.json"
+      "from": "dist/config.json"
     }
   ],
   "mac": {

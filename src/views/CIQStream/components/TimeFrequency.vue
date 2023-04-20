@@ -179,7 +179,9 @@ const options: ReceiveDataOptions = new Map()
 const optionsChild: ReceiveDataOptions = new Map()
 // 频谱数据
 optionsChild.set(ReceiveData.key.DATA.SPECTRUMDATA, {
-  control: (data) => { spectrum.value = [makeSpectrumData(data)] }
+  control: (data) => {
+    spectrum.value = [makeSpectrumData(data)]
+  }
 })
 // IQ数据
 optionsChild.set(ReceiveData.key.DATA.IQDATA, {

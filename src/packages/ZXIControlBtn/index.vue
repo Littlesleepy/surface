@@ -1,7 +1,7 @@
 <!--
  * @Author: shiershao
  * @Date: 2022-04-26 16:02:21
- * @LastEditTime: 2023-04-18 13:36:13
+ * @LastEditTime: 2023-04-20 09:42:59
  * @Description: 图像控制按钮
  * 
 -->
@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, CSSProperties, WatchStopHandle, watch } from 'vue'
 import { IBtncontrols, EBtncontrolType } from './type'
-import { ElForm, ElFormItem, ElSwitch, ElRadio, ElTooltip, ElInputNumber, Effect } from 'element-plus'
+import { ElForm, ElFormItem, ElRadio } from 'element-plus'
 import { Listen } from '../core'
 import { UseTheme } from '../styles'
 

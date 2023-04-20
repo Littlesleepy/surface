@@ -180,17 +180,6 @@ const legends = computed(() => {
   return arr
 })
 
-// 是否启用控制器
-const enableControl = computed(() => {
-  if (legends.value.length <= 1) return false
-  return true
-})
-
-const headerStyle = computed(() => {
-  if (legends.value.length > 1) return {}
-  if (props.name !== '') return { height: '25px' }
-  return { height: '5px' }
-})
 
 function axisYChange (obj: IAxisYValue) {
   spectrumYvalue.value = obj

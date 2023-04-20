@@ -1,8 +1,14 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3939323 */
+<<<<<<< HEAD:public/static/font_3939323_0grd6rtrfsij/iconfont.css
+  src: url('iconfont.woff2?t=1681694001448') format('woff2'),
+       url('iconfont.woff?t=1681694001448') format('woff'),
+       url('iconfont.ttf?t=1681694001448') format('truetype');
+=======
   src: url('iconfont.woff2?t=1681784252571') format('woff2'),
        url('iconfont.woff?t=1681784252571') format('woff'),
        url('iconfont.ttf?t=1681784252571') format('truetype');
+>>>>>>> remotes/origin/yyj:public/static/font_3939323_ucqnv7fac2k/iconfont.css
 }
 
 .iconfont {
@@ -13,6 +19,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+<<<<<<< HEAD:public/static/font_3939323_0grd6rtrfsij/iconfont.css
+=======
 .icon-zanting1:before {
   content: "\e611";
 }
@@ -61,6 +69,7 @@
   content: "\e64b";
 }
 
+>>>>>>> remotes/origin/yyj:public/static/font_3939323_ucqnv7fac2k/iconfont.css
 .icon-yejian:before {
   content: "\e712";
 }

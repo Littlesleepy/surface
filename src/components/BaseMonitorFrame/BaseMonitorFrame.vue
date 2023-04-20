@@ -239,8 +239,8 @@ onBeforeUnmount(() => {
       display: flex;
       padding: @btnSpace 0 @btnSpace @btnSpace;
 
-      :nth-child(2n) {
-        margin: 0 @btnSpace;
+      :not(:last-child) {
+        margin-right: @btnSpace;
       }
 
       .iconfont {

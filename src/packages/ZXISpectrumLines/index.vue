@@ -80,7 +80,7 @@ const props = defineProps({
   toolTip: {
     default: () => {
       return {
-        width: 300,
+        width: 420,
         height: 56
       }
     }

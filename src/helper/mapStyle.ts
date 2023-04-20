@@ -54,7 +54,7 @@ function mapStyle(
   if (mapConfig.sourceUrl) {
     openmaptiles.url = mapConfig.sourceUrl;
   } else {
-    openmaptiles.url = location.origin + "/api/Map/json";
+    openmaptiles.url = Config.baseUrl + "/api/Map/json";
   }
   
   return changeStyle;

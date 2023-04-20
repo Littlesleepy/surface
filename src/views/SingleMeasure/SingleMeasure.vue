@@ -97,9 +97,8 @@ onMounted(() => {
             class="params-branch0"
             :params="[
               [
-                { name: '中心频率', paramName: 'frequency', ratio: 18 },
-                { name: '禁噪门限', paramName: 'squelch', ratio: 9 },
-                { name: 'ITU', paramName: 'itumeasure', ratio: 5.5 },
+                { name: '解调模式', paramName: 'demodulation', ratio: 11 },
+                { name: '解调带宽', paramName: 'debw', ratio: 11 },
                 { name: '音频', paramName: 'tcpaudio', ratio: 5.5 }
               ]
             ]"
@@ -111,8 +110,7 @@ onMounted(() => {
             :params="[
               [
                 { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
-                { name: '解调模式', paramName: 'demodulation', ratio: 11 },
-                { name: '解调带宽', paramName: 'debw', ratio: 11 }
+                { name: '中心频率', paramName: 'frequency', ratio: 16.5 }
               ]
             ]"
             :master="master" />
