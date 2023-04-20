@@ -51,7 +51,7 @@ function login (): void {
     }
   }).catch(() => {
     progress.value = '授权失败'
-    ElNotification({ type: 'error', message: '账号或密码输入错误', title: '登陆失败' })
+    ElNotification({ type: 'error', message: '授权失败', title: '登陆失败' })
   })
 }
 

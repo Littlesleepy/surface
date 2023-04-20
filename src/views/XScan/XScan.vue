@@ -147,8 +147,14 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
     <template #header-center>
     </template>
     <div class="content-XScan">
-      <ZXISpectrumScanAndFall class="spectrum-scan-and-fall" :inputData="spectrum" :params="params"
-        :switchLever="startAndStop" useSelectFrequency @selectFrequency="selectFrequency">
+      <ZXISpectrumScanAndFall 
+      class="spectrum-scan-and-fall" 
+      name=""
+      :inputData="spectrum" 
+      :params="params"
+      :switchLever="startAndStop" 
+      useSelectFrequency 
+      @selectFrequency="selectFrequency">
         <template  #header>
           <BaseParamsBranch class="params-branch0" :params="[
             [
@@ -209,7 +215,7 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
   // padding: @btnSpace;
   height: 100%;
   display: flex;
-  padding-left: @btnSpace;
+  padding-left: 4.5rem;
 }
 
 .params-branch1 {

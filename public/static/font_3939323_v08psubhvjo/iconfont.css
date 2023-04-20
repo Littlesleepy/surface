@@ -1,8 +1,14 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3939323 */
+<<<<<<< HEAD:public/static/font_3939323_0grd6rtrfsij/iconfont.css
   src: url('iconfont.woff2?t=1681972150223') format('woff2'),
        url('iconfont.woff?t=1681972150223') format('woff'),
        url('iconfont.ttf?t=1681972150223') format('truetype');
+=======
+  src: url('iconfont.woff2?t=1681971844132') format('woff2'),
+       url('iconfont.woff?t=1681971844132') format('woff'),
+       url('iconfont.ttf?t=1681971844132') format('truetype');
+>>>>>>> origin/master:public/static/font_3939323_v08psubhvjo/iconfont.css
 }
 
 .iconfont {
@@ -15,6 +21,45 @@
 
 .icon-taiyang1:before {
   content: "\e67b";
+<<<<<<< HEAD:public/static/font_3939323_0grd6rtrfsij/iconfont.css
+=======
+}
+
+.icon-moonyueliang:before {
+  content: "\e6dd";
+}
+
+.icon-suntaiyang:before {
+  content: "\e6e7";
+}
+
+.icon-yejianmoshi:before {
+  content: "\e872";
+}
+
+.icon-danpinshuju:before {
+  content: "\e631";
+}
+
+.icon-quanjingsaomiao:before {
+  content: "\e637";
+}
+
+.icon-yejianmoshi1:before {
+  content: "\e608";
+}
+
+.icon-huancun:before {
+  content: "\ef93";
+}
+
+.icon--huancunguanli:before {
+  content: "\e64e";
+}
+
+.icon-zanting1:before {
+  content: "\e611";
+>>>>>>> origin/master:public/static/font_3939323_v08psubhvjo/iconfont.css
 }
 
 .icon-danpinshuju:before {
@@ -57,6 +102,17 @@
   content: "\e64b";
 }
 
+<<<<<<< HEAD:public/static/font_3939323_0grd6rtrfsij/iconfont.css
+=======
+.icon-yejian:before {
+  content: "\e712";
+}
+
+.icon-tianqitaiyangqichuang:before {
+  content: "\e713";
+}
+
+>>>>>>> origin/master:public/static/font_3939323_v08psubhvjo/iconfont.css
 .icon-shuaxin:before {
   content: "\ec08";
 }
