@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-const props = defineProps({
+defineProps({
   icon: {
     type: String
   },
@@ -12,44 +12,33 @@ const props = defineProps({
 <template>
   <div>
     <div class="container">
-      <!-- <ZXIButton class="button">
-        <i class="iconfont" :class="icon" />
-      </ZXIButton> -->
       <i class="iconfont" :class="icon" />
-      <p class="text">一行文本</p>
+      <p class="text">{{ text }}</p>
     </div>
   </div>
 </template>
  
 <style lang="less" scoped>
+@import url('theme');
 .container {
   width: 100%;
   height: 100%;
-  font-size: 2rem;
+  font-size: 1.8rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-direction: column;
   box-sizing: border-box;
+  margin: 0 5px;
   .iconfont{
-    font-size: 8rem;
+    font-size: 6rem;
   }
 
-  .button {
-    // flex: 1;
-    // width: 100%;
-    flex: auto;
-    display: flex;
 
-    i {
-      margin: auto;
-      text-align: center;
-      font-size: 3rem;
-      padding: 0.5rem;
-    }
-  }
   .text{
+    min-height:1.8rem ;
     // margin: 5px 0;
+    margin-top: @btnSpace;
   }
 }
 </style>
