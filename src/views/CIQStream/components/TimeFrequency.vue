@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-11-23 10:26:24
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 15:09:15
+ * @LastEditTime: 2023-04-21 11:41:27
  * @FilePath: \zxi-surface\src\views\CIQStream\components\TimeFrequency.vue
  * @Description: 时频特征
  -->
@@ -204,6 +204,7 @@ ToExport.beforExport.set('1', () => {
     ToExport.addText('', '----时频特征----', 2, {
       PDF: { contentSize: 24 },
       Excel: { options: { size: 24 } }
+      // Excel: { size:24 }
     })
     // 频谱
     ToExport.addDom('频谱', spSpectrum.value!.root!, 3)

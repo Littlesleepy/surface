@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-11-23 11:19:28
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-02-22 11:41:17
- * @FilePath: \zxi-device\src\views\CIQStream\components\Frequency.vue
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-21 11:45:07
+ * @FilePath: \zxi-surface\src\views\CIQStream\components\Frequency.vue
  * @Description: 频域特征
  -->
 
@@ -189,6 +189,7 @@ ToExport.beforExport.set('2', () => {
     ToExport.addText('', '----频域特征----', 7, {
       PDF: { contentSize: 24 },
       Excel: { options: { size: 24 } }
+      // Excel: {  size: 24  }
     })
     // 频谱
     ToExport.addDom('频谱', spSpectrum.value!.root!, 8)

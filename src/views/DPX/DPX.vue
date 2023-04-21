@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-10 17:20:59
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-19 15:56:52
+ * @LastEditTime: 2023-04-21 11:36:50
  * @FilePath: \zxi-surface\src\views\DPX\DPX.vue
  * @Description: 
  -->
@@ -112,6 +112,7 @@ const spInstance = ref<InstanceType<typeof ZXIDpx>>()
 ToExport.beforExport.set('0', () => {
   ToExport.DATA.clear()
   ToExport.DOM.clear()
+  // ToExport.reset()
   // 参数
   const r = Sundry.formatParams(route.meta.functionKey!)
   ToExport.addTable(r.title, r.headers, r.formatData, 0)
@@ -119,10 +120,7 @@ ToExport.beforExport.set('0', () => {
   if (spectrum.value.data.length > 0) ToExport.addDom('荧光谱', spInstance.value!.root!, 1)
 })
 const master = ref<BaseParamsType>()
-onMounted(()=>{
-  console.log(master.value?.elements);
-  
-})
+
 </script>
 
 <template>
