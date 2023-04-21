@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-08 09:23:47
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-20 15:11:55
+ * @LastEditTime: 2023-04-20 16:51:33
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\views\SingleMeasure\SingleMeasure.vue
  * @Description: 
  -->
@@ -155,6 +155,7 @@ onMounted(() => {
   }
   .item{
     padding: @btnSpace;
+    background: v-bind('UseTheme.theme.var.backgroundColor');
     box-sizing: border-box;
   }
 }

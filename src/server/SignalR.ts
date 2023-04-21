@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-06 17:04:25
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-08 09:53:48
+ * @LastEditTime: 2023-04-21 11:27:35
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\server\SignalR.ts
  * @Description: 
  */
@@ -67,7 +67,7 @@ interface IManager {
 type ReceiveDataManager = Map<string, IManager>
 
 export class ReceiveData {
-  private static manager: ReceiveDataManager = new Map()
+  static manager: ReceiveDataManager = new Map()
 
   private static watchStop: WatchStopHandle | null = null
 

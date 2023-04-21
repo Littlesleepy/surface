@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-08 14:13:59
- * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-18 10:55:13
- * @FilePath: \zxi-surface\src\components\BaseMonitorFrame\BaseMonitorFrame.vue
+ * @LastEditors: 十二少 1484744996@qq.com
+ * @LastEditTime: 2023-04-21 11:31:31
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseMonitorFrame\BaseMonitorFrame.vue
  * @Description: 
  -->
 <script lang="ts">
@@ -72,37 +72,40 @@ function audioControl(data: IServerAudioData) {
     audio.play(toRaw(data.audioData), data.sampleRate, data.channel, data.bits)
   }
 }
-// 添加公共数据监听
-const options: ReceiveDataOptions = new Map([
-  [ReceiveData.key.AUDIO, {
+
+if (!ReceiveData.manager.has(ReceiveData.key.AUDIO)) {
+  // 添加公共数据监听，只能添加一次
+  const options: ReceiveDataOptions = new Map([
+    [ReceiveData.key.AUDIO, {
+      canDelete: false,
+      control: audioControl
+    }],
+    [ReceiveData.key.ERROR, {
+      canDelete: false,
+      control: (data: any) => {
+        ElNotification({ type: 'error', title: '错误', message: data }) // 出错
+        frameStore.m_playButton(ESwitchState.off)
+      }
+    }],
+    [ReceiveData.key.WARNING, {
+      canDelete: false,
+      control: (data: any) => {
+        ElNotification({ type: 'warning', title: '警告', message: data })
+      }
+    }]
+  ])
+
+  const optionsChild: ReceiveDataOptions = new Map()
+  // 音频数据二层接收
+  optionsChild.set(ReceiveData.key.AUDIO, {
     canDelete: false,
     control: audioControl
-  }],
-  [ReceiveData.key.ERROR, {
-    canDelete: false,
-    control: (data: any) => {
-      ElNotification({ type: 'error', title: '错误', message: data }) // 出错
-      frameStore.m_playButton(ESwitchState.off)
-    }
-  }],
-  [ReceiveData.key.WARNING, {
-    canDelete: false,
-    control: (data: any) => {
-      ElNotification({ type: 'warning', title: '警告', message: data })
-    }
-  }]
-])
+  })
 
-const optionsChild: ReceiveDataOptions = new Map()
-// 音频数据二层接收
-optionsChild.set(ReceiveData.key.AUDIO, {
-  canDelete: false,
-  control: audioControl
-})
+  options.set('DATA', { children: optionsChild })
 
-options.set('DATA', { children: optionsChild })
-
-ReceiveData.add(options)
+  ReceiveData.add(options)
+}
 
 watch(() => frameStore.s_playButton, (btn) => {
   if (audio) {
@@ -115,6 +118,7 @@ watch(() => frameStore.s_playButton, (btn) => {
 })
 // 监测功能开启数据监听，子组件不再需要run
 ReceiveData.run()
+
 
 const mainStore = useMainStore()
 
