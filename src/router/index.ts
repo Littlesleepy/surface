@@ -63,6 +63,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("views/DPX/DPX.vue"),
   },
   {
+    path: '/SA',
+    name: 'SA',
+    meta: { title:'数字信号解调', functionKey: 'SA' },
+    component: () => import('views/SA/SA.vue')
+  },
+  {
     path: "/HandheldSingleMeasure",
     name: "HandheldSingleMeasure",
     meta: { title: "手持式天线测量" ,functionKey:'HandheldSingleMeasure'},
