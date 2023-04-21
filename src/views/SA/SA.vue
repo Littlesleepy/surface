@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-21 11:53:32
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 15:12:36
+ * @LastEditTime: 2023-04-21 15:25:22
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
  * @Description: 
  -->
@@ -296,7 +296,6 @@
           :switchLever="store.s_playButton" />
       </div>
     
-    
      </div>
   
    </BaseMonitorFrame>
@@ -363,7 +362,8 @@
         .symaftStr{
           box-sizing: border-box;
           padding: 5px;
-          font-size: 1.8rem;
+          font-size: 1.5rem;
+          color: v-bind('UseTheme.theme.var.color');
         }
       }
     }
