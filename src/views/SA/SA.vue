@@ -362,7 +362,7 @@
         .symaftStr{
           box-sizing: border-box;
           padding: 5px;
-          font-size: 1.5rem;
+          font-size: 1.475rem;
           color: v-bind('UseTheme.theme.var.color');
         }
       }
