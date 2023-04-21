@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-21 11:53:32
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 14:16:41
+ * @LastEditTime: 2023-04-21 15:12:36
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
  * @Description: 
  -->
@@ -220,9 +220,11 @@
       <BaseParams ref="master" />
     </template>
      <div class="SA">
-      <ZXISpectrumAndFall
+      <div class="center-left">
+        <ZXISpectrumAndFall
       class="spectrum-and-fall"
       ref="spInstnce"
+      name=""
       :params="params"
       :inputData="spectrum"
       :setTool="[{ name: 'pubutu', value: false }]"
@@ -234,17 +236,15 @@
             class="params-branch0"
             :params="[
               [
-                { name: '中心频率', paramName: 'frequency', ratio: 11 },
-                { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
+                { name: '频率', paramName: 'frequency', ratio: 11 },
+                { name: '带宽', paramName: 'bandwidth', ratio: 11 },
                 { name: '解调模式', paramName: 'digitaldemod', ratio: 11 },
-                { name: '码元速率', paramName: 'baudrate', ratio: 11 },
               ]
             ]"
             :master="master" />
         </template>
     </ZXISpectrumAndFall>
-      
-      <div class="base-tabs">
+    <div class="base-tabs">
         <BaseTabHeader class="tab-nav" :headers="[
             [{ name: '最终流码图', ratio: 1 }],
             [{ name: '码元列表', ratio: 1 }],
@@ -271,9 +271,33 @@
             :switchLever="store.s_playButton"/>
         </ZXITabs>
       </div>
-        
+      </div>
+      <div class="center-right">
+        <div class="parm">
+          <BaseParamsBranch
+            class="params-branch0"
+            :params="[
+              [
+                { name: '码元速率', paramName: 'baudrate', ratio: 11 },
+              ]
+            ]"
+            :master="master" />
+        </div>
+        <ZXIIQVector
+          class="iq-vector-image"
+          ref="spIQVector"
+          :inputData="iqData"
+          :name="'星座图'"
+          :switchLever="store.s_playButton" />
+          <ZXIEye
+          :inputData="eyeData"
+          ref="spEye"
+          class="eye-image"
+          :switchLever="store.s_playButton" />
+      </div>
+    
+    
      </div>
-     <div class="SA2"></div>
   
    </BaseMonitorFrame>
  </template>
@@ -285,15 +309,43 @@
    justify-content: center;
  }
  .SA{
-  width: 75%;
+  width: 100%;
   height: 100%;
   box-sizing: border-box;
   padding: @btnSpace;
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+  .center-left{
+    flex: auto;
+    // width: 70%;
+    display: flex;
+    flex-direction: column;
+  }
+  .center-right{
+    margin-left: 5px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    aspect-ratio: 1/2;
+    .parm{
+      height: 40px;
+      margin-bottom: 5px;
+    }
+
+    .iq-vector-image,.eye-image{
+      // height: 50%;
+      flex: auto;
+      aspect-ratio: 1/1;
+      // aspect-ratio: 1/2;
+      :deep(.iq-vector-image-container){
+        flex-direction: column-reverse;
+      }
+    }
+  }
 
   .spectrum-and-fall{
     height: 50%;
+    
   }
   .base-tabs{
     flex: auto;
@@ -303,6 +355,11 @@
     }
     .tab-panes{
       .lable-content{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
         .symaftStr{
           box-sizing: border-box;
           padding: 5px;
@@ -312,8 +369,6 @@
     }
   }
  }
- .SA2{
-  width: 25%;
- }
+
  
  </style>

@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 10:17:25
+ * @LastEditTime: 2023-04-21 14:36:20
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\components\Modulate.vue
  * @Description: 
  -->
@@ -256,7 +256,7 @@ const currentTabId = ref(0)
       <BaseTabHeader class="tab-header" :headers="[
         [{ name: '时域特征', ratio: 1 }],
         [{ name: '功率谱\n二次方谱\n四次方谱\n八次方谱', ratio: 1 }],
-        [{ name: 'FM解调谱\n瞬时频率包络\n瞬时幅度包络', ratio: 1 }],
+        [{ name: '瞬时频率包络\n瞬时幅度包络\nFM解调谱', ratio: 1 }],
 
       ]" v-model="currentTabId" />
       <ZXITabs class="tabItem" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="currentTabId">
@@ -317,13 +317,14 @@ const currentTabId = ref(0)
             :scaleY="scaleY" />
         </div>
         <div class="shunshibaoluo">
-          <ZXISpectrumLine class="spectrum" :name="'FM解调谱'" ref="instance6" :inputData="inputData6" :params="param5"
-            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-            :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
+          
           <ZXISpectrumLine class="spectrum" ref="instance4" :name="'瞬时频率包络'" :inputData="inputData4" :params="param5"
             :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
             :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
           <ZXISpectrumLine class="spectrum" ref="instance5" :name="'瞬时幅度包络'" :inputData="inputData5" :params="param5"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
+            <ZXISpectrumLine class="spectrum" :name="'FM解调谱'" ref="instance6" :inputData="inputData6" :params="param5"
             :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
             :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
             
