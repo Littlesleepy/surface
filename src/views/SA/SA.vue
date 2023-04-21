@@ -2,18 +2,19 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-21 11:53:32
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 11:57:07
+ * @LastEditTime: 2023-04-21 14:16:41
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
  * @Description: 
  -->
  <script setup lang="ts">
- import { computed, onBeforeUnmount, ref, watch } from 'vue'
+ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
  import { useFrameStore } from 'store/index'
  import { ISpectrumInputData, IPointAndLineData, IIQData, IEyeData, ESwitchState, ZXISpectrumAndFall, ZXIPointAndLines, ZXIIQVector, ZXIEye, UseTheme } from 'mcharts/index'
  import { ReceiveDataOptions, makeSpectrumData, ReceiveData } from '@/server'
  import { ElMessage } from 'element-plus'
  import BaseLink from '@/components/BaseLink/BaseLink.vue'
- import { setLinkTrigger, CustomTheme } from '@/types'
+ import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
+ import { setLinkTrigger, CustomTheme, BaseParamsType } from '@/types'
  import { Sundry, ToExport } from 'helper/index'
  import { useRoute } from 'vue-router'
  
@@ -192,10 +193,18 @@
  
    symaftStrColor.value = `var(${CustomTheme.prefix}SAsymaftStr, ${CustomTheme.theme.logColor})`
  })
+
+ const master = ref<BaseParamsType>()
+
+ onMounted(()=>{
+  console.log(master.value?.elements);
+  
+ })
  
  onBeforeUnmount(() => {
    CustomTheme.off(themeKey)
  })
+ const tabId = ref(0)
  </script>
  
  <template>
@@ -205,57 +214,67 @@
          <el-button type="primary" round @click="changeFrequency" :disabled="store.s_playButton === ESwitchState.open">切换频率</el-button>
          <el-button type="primary" round @click="() => { markers = [trigger.value as number] }">标注</el-button>
        </div>
-       <hr />
+       <hr style="margin-top: .5rem"/>
      </BaseLink>
-     <div class="content-right">
-       <div class="board-first-clo">
-         <div class="drawing-board-first-row">
-         <!-- 图像 -->
-           <ZXISpectrumAndFall
-             class="spectrum-and-fall"
-             ref="spInstnce"
-             :params="params"
-             :inputData="spectrum"
-             :setTool="[{ name: 'pubutu', value: false }]"
-             :switchLever="store.s_playButton"
-             :markers="markers"
-             @selectFrequency="selectFrequency" />
-         </div>
-         <ZXITabs
-           class="base-tabs"
-           :wrapperStyle="{ border: 'none', boxShadow: 'none' }"
-           :contentStyle="{ padding: '0px' }">
-           <ZXIPointAndLines
-             tabName="最终码流图"
-             class="lable-content"
-             ref="plInstance0"
-             :inputData="symaftData"
-             :switchLever="store.s_playButton" />
-           <ZXIScroll tabName="码元列表" class="lable-content" :wrapperStyle="{ backgroundColor: UseTheme.theme.var.backgroundColor }">
-             <pre class="symaftStr">{{symaftStr}}</pre>
-           </ZXIScroll>
-           <ZXIPointAndLines
-             tabName="判决前码流图"
-             class="lable-content"
-             ref="plInstance1"
-             :inputData="symbefData"
-             :switchLever="store.s_playButton"/>
-         </ZXITabs>
-       </div>
-       <div class="board-secend-clo">
-         <ZXIIQVector
-           class="iq-vector-image"
-           ref="spIQVector"
-           :inputData="iqData"
-           :name="'星座图'"
-           :switchLever="store.s_playButton" />
-         <ZXIEye
-           :inputData="eyeData"
-           ref="spEye"
-           class="eye-image"
-           :switchLever="store.s_playButton" />
-       </div>
+     <template #set>
+      <BaseParams ref="master" />
+    </template>
+     <div class="SA">
+      <ZXISpectrumAndFall
+      class="spectrum-and-fall"
+      ref="spInstnce"
+      :params="params"
+      :inputData="spectrum"
+      :setTool="[{ name: 'pubutu', value: false }]"
+      :switchLever="store.s_playButton"
+      :markers="markers"
+      @selectFrequency="selectFrequency" >
+      <template #header>
+          <BaseParamsBranch
+            class="params-branch0"
+            :params="[
+              [
+                { name: '中心频率', paramName: 'frequency', ratio: 11 },
+                { name: '频谱带宽', paramName: 'bandwidth', ratio: 11 },
+                { name: '解调模式', paramName: 'digitaldemod', ratio: 11 },
+                { name: '码元速率', paramName: 'baudrate', ratio: 11 },
+              ]
+            ]"
+            :master="master" />
+        </template>
+    </ZXISpectrumAndFall>
+      
+      <div class="base-tabs">
+        <BaseTabHeader class="tab-nav" :headers="[
+            [{ name: '最终流码图', ratio: 1 }],
+            [{ name: '码元列表', ratio: 1 }],
+            [{ name: '判决前码流图', ratio: 1 }],
+          ]" v-model="tabId" />
+        <ZXITabs
+          class="tab-panes"
+          :style="{flex:'auto'}"
+          :wrapperStyle="{ border: 'none' }"
+          :hidHeader="true"
+          v-model="tabId">
+          <ZXIPointAndLines
+            class="lable-content"
+            ref="plInstance0"
+            :inputData="symaftData"
+            :switchLever="store.s_playButton" />
+          <ZXIScroll class="lable-content" :wrapperStyle="{ backgroundColor: UseTheme.theme.var.backgroundColor }">
+            <pre class="symaftStr">{{symaftStr}}</pre>
+          </ZXIScroll>
+          <ZXIPointAndLines
+            class="lable-content"
+            ref="plInstance1"
+            :inputData="symbefData"
+            :switchLever="store.s_playButton"/>
+        </ZXITabs>
+      </div>
+        
      </div>
+     <div class="SA2"></div>
+  
    </BaseMonitorFrame>
  </template>
  
@@ -265,50 +284,36 @@
    display: flex;
    justify-content: center;
  }
- .content-right{
-   width: 100%;
-   height: 100%;
-   background: rgb(40, 40, 40);
-   display: flex;
-   .board-first-clo{
-     flex: 70;
-     display: flex;
-     flex-direction: column;
-     /* 画板第一行 */
-     .drawing-board-first-row{
-       flex: 50;
-       display: flex;
-       .spectrum-and-fall{
-         flex: auto;
-         display: flex;
-       }
-     }
-     .base-tabs{
-       flex: 50;
-       .lable-content{
-         position: absolute;
-         width: 100%;
-         height: 100%;
-         top: 0;
-         left: 0;
-         .symaftStr{
-           color: v-bind('symaftStrColor');
-           padding: 10px;
-         }
-       }
-     }
-   }
-   .board-secend-clo{
-     flex: 30;
-     display: flex;
-     flex-direction: column;
-     .iq-vector-image{
-       flex: 50;
-     }
-     /* 画板第二行 */
-     .eye-image{
-       flex: 50;
-     }
-   }
+ .SA{
+  width: 75%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: @btnSpace;
+  display: flex;
+  flex-direction: column;
+
+  .spectrum-and-fall{
+    height: 50%;
+  }
+  .base-tabs{
+    flex: auto;
+    display: flex;
+    .tab-nav{
+      max-width: 150px;
+    }
+    .tab-panes{
+      .lable-content{
+        .symaftStr{
+          box-sizing: border-box;
+          padding: 5px;
+          font-size: 1.8rem;
+        }
+      }
+    }
+  }
  }
+ .SA2{
+  width: 25%;
+ }
+ 
  </style>
