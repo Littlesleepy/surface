@@ -1,7 +1,7 @@
 <!--
  * @Author: shiershao
  * @Date: 2022-04-26 16:02:21
- * @LastEditTime: 2023-04-23 16:46:32
+ * @LastEditTime: 2023-04-23 17:31:46
  * @Description: 眼图
  * 
 -->
@@ -371,7 +371,6 @@ defineExpose({
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 5px;
   box-sizing: border-box;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
