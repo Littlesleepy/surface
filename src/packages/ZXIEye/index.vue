@@ -326,7 +326,7 @@ defineExpose({
   <div ref="root">
     <div class="eye-image-container">
       <div class="header">
-        <span>{{name}}</span>
+        <span v-if="name">{{name}}</span>
         <ZXISelect style="width: 200px;" name="数据类型" v-model="eyeType">
           <el-option v-for="item in eyetypes" :key="item.label" :label="item.label" :value="item.value" />
         </ZXISelect>
