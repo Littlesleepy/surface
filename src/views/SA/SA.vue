@@ -1,9 +1,15 @@
 <!--
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-21 11:53:32
+<<<<<<< HEAD
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-23 17:30:11
+ * @FilePath: \zxi-surface\src\views\SA\SA.vue
+=======
  * @LastEditors: 十二少 1484744996@qq.com
  * @LastEditTime: 2023-04-23 16:24:58
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\views\SA\SA.vue
+>>>>>>> origin/master
  * @Description: 
  -->
  <script setup lang="ts">
@@ -198,10 +204,10 @@
 
  const master = ref<BaseParamsType>()
 
- onMounted(()=>{
-  console.log(master.value?.elements);
+//  onMounted(()=>{
+//   console.log(master.value?.elements);
   
- })
+//  })
  
  onBeforeUnmount(() => {
    CustomTheme.off(themeKey)
@@ -221,6 +227,18 @@
      <template #set>
       <BaseParams ref="master" :dynamicParam="false" />
     </template>
+    <template #header-center>
+      <BaseParamsBranch
+            class="params-branch-header"
+            noWrap
+            :params="[
+              [
+                { name: '解调模式', paramName: 'digitaldemod', ratio: 11 },
+                { name: '码元速率', paramName: 'baudrate', ratio: 11 }
+              ]
+            ]"
+            :master="master" />
+    </template>
      <div class="SA">
       <div class="center-left">
         <ZXISpectrumAndFall
@@ -233,21 +251,30 @@
       :switchLever="store.s_playButton"
       :markers="markers"
       @selectFrequency="selectFrequency" >
-      <template #header>
+        <template #header>
           <BaseParamsBranch
             class="params-branch0"
             :params="[
               [
                 { name: '频率', paramName: 'frequency', ratio: 11 },
                 { name: '带宽', paramName: 'bandwidth', ratio: 11 },
-                { name: '解调模式', paramName: 'digitaldemod', ratio: 11 },
               ]
             ]"
             :master="master" />
         </template>
     </ZXISpectrumAndFall>
-    <div class="base-tabs">
+    <ZXIIQVector
+          class="iq-vector-image"
+          ref="spIQVector"
+          :inputData="iqData"
+          :name="'星座图'"
+          :switchLever="store.s_playButton" />
+   
+      </div>
+      <div class="center-right">
+        <div class="base-tabs">
         <BaseTabHeader class="tab-nav" :headers="[
+            [{ name: '眼图', ratio: 1 }],
             [{ name: '最终流码图', ratio: 1 }],
             [{ name: '码元列表', ratio: 1 }],
             [{ name: '判决前码流图', ratio: 1 }],
@@ -258,6 +285,11 @@
           :wrapperStyle="{ border: 'none' }"
           :hidHeader="true"
           v-model="tabId">
+          <ZXIEye
+            :inputData="eyeData"
+            ref="spEye"
+            class="eye-image"
+            :switchLever="store.s_playButton" />
           <ZXIPointAndLines
             class="lable-content"
             ref="plInstance0"
@@ -271,11 +303,10 @@
             ref="plInstance1"
             :inputData="symbefData"
             :switchLever="store.s_playButton"/>
+      
         </ZXITabs>
       </div>
-      </div>
-      <div class="center-right">
-        <div class="parm">
+        <!-- <div class="parm">
           <BaseParamsBranch
             class="params-branch0"
             :params="[
@@ -284,18 +315,14 @@
               ]
             ]"
             :master="master" />
-        </div>
-        <ZXIIQVector
+        </div> -->
+        <!-- <ZXIIQVector
           class="iq-vector-image"
           ref="spIQVector"
           :inputData="iqData"
           :name="'星座图'"
-          :switchLever="store.s_playButton" />
-          <ZXIEye
-          :inputData="eyeData"
-          ref="spEye"
-          class="eye-image"
-          :switchLever="store.s_playButton" />
+          :switchLever="store.s_playButton" /> -->
+          
       </div>
     
      </div>
@@ -309,44 +336,54 @@
    display: flex;
    justify-content: center;
  }
+ .params-branch-header{
+  height: 100%;
+  padding: @btnSpace;
+  box-sizing: border-box;
+ }
+ 
  .SA{
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: @btnSpace;
+  // padding: @btnSpace;
   display: flex;
-  // flex-direction: column;
+  flex-direction: column;
   .center-left{
+    padding: @btnSpace;
     flex: auto;
-    // width: 70%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    border-bottom: v-bind('CustomTheme.theme.districtBorder');
+    // height: 50%;
+    .iq-vector-image{
+      aspect-ratio: 1/1;
+    }
+    
   }
   .center-right{
+    padding: @btnSpace;
+    padding-left: 0;
+    box-sizing: border-box;
     margin-left: 5px;
+    // border-left: v-bind('CustomTheme.theme.districtBorder');
+
     display: flex;
     flex-direction: column;
-    height: 100%;
-    aspect-ratio: 1/2;
-    .parm{
-      height: 40px;
-      margin-bottom: 5px;
+    // height: 100%;
+    flex: auto;
+    // aspect-ratio: 1/2;
+    
+    .iq-vector-image,.eye-image{
+      height: 50%;
+      flex: 1;
+      // aspect-ratio: 1/1;
     }
 
-    .iq-vector-image,.eye-image{
-      // height: 50%;
-      flex: auto;
-      aspect-ratio: 1/1;
-      // aspect-ratio: 1/2;
-      :deep(.iq-vector-image-container){
-        flex-direction: column-reverse;
-      }
-    }
   }
 
   .spectrum-and-fall{
-    height: 50%;
-    
+    flex: auto;
   }
   .base-tabs{
     flex: auto;
