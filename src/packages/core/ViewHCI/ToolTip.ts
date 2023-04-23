@@ -2,8 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-01-31 15:55:11
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-02-10 10:14:02
- * @FilePath: \packagesd:\Zzy\project\zcharts\packages\core\ViewHCI\ToolTip.ts
+ * @LastEditTime: 2023-04-23 14:53:45
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\core\ViewHCI\ToolTip.ts
  * @Description: 
  */
 import { Scene } from '../Scene'
@@ -162,6 +162,10 @@ export class ToolTip implements IViewHCI {
    * @description: 隐藏toolTip后的回调函数集合
    */
   afterHidden: Map<string, () => void> = new Map()
+  /** 
+   * @description: 磁吸组
+   */  
+  magnetGroup: Array<Float32Array | Array<number>> | undefined
 
   private valueTags: Map<string, { el: HTMLSpanElement, mountEl: HTMLElement }> = new Map()
 
@@ -409,7 +413,7 @@ export class ToolTip implements IViewHCI {
   /**
    * @description: 磁吸功能
    */
-  magnetByMax(fence: FencesType, group: Array<Float32Array> | Array<Array<number>>) {
+  magnetByMax(fence: FencesType, group: Array<Float32Array | Array<number>>) {
     if (group.length > 0) {
       const tag = this.options.type === ToolTip.TRANSVERSE ? this.transverseTag!.instance : this.verticalTag!.instance
       const result = tag.magnetByMax(fence, group)
@@ -577,7 +581,7 @@ export class ToolTip implements IViewHCI {
   }
 
   private active (e: IOffsetPosition) {
-    const result = this.calculatePositionByFence(e)
+    let result = this.calculatePositionByFence(e)
 
     if (this.verticalTag !== undefined) {
       this.addOrRemoveTag(this.verticalTag, true)
@@ -589,13 +593,19 @@ export class ToolTip implements IViewHCI {
 
     this.touchMoved = false
 
-    this.setInfoStyle(result)
+    if (this.magnetGroup && this.scene.fence) { // 磁吸
+      const r = this.magnetByMax(this.scene.fence, this.magnetGroup)
 
-    this.setAfterTrigger(result)
+      if (r) result = r
+    } else {
+      this.setInfoStyle(result)
+    }
 
     for (const [, callBack] of this.afterActive) {
       callBack(result)
     }
+
+    this.activeLinks(result)
 
     return result
   }
@@ -678,10 +688,14 @@ export class ToolTip implements IViewHCI {
     }
   }
 
-  private activeLinks (p: IOffsetPosition) {
+  private activeLinks (p: IPositionResult) {
     for (const [, source] of this.linkManager) {
       const target = source.target
-      const position = source.position(p)
+      // 注意offsetX = offsetMiddlePCTX * this.container.clientWidth
+      const position = source.position({
+        offsetX: p.offsetMiddlePCTX * this.container.clientWidth,
+        offsetY: p.offsetMiddlePCTY * this.container.clientHeight
+      })
       
       const result = target.calculatePositionByFence(position)
 
@@ -695,8 +709,6 @@ export class ToolTip implements IViewHCI {
 
       target.setInfoStyle(result)
 
-      target.setAfterTrigger(result)
-
       for (const [, callBack] of target.afterActive) {
         callBack(result)
       }
@@ -704,10 +716,14 @@ export class ToolTip implements IViewHCI {
     }
   }
 
-  private moveByLink (p: IOffsetPosition) {
+  private moveByLink (p: IPositionResult) {
     for (const [, source] of this.linkManager) {
       const target = source.target
-      const position = source.position(p)
+      // 注意offsetX = offsetMiddlePCTX * this.container.clientWidth
+      const position = source.position({
+        offsetX: p.offsetMiddlePCTX * this.container.clientWidth,
+        offsetY: p.offsetMiddlePCTY * this.container.clientHeight
+      })
       
       const result = target.calculatePositionByFence(position)
 

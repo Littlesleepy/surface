@@ -89,18 +89,9 @@ export class SampleLines {
         height: 36
       }
     })
-    /**
-     * @description: 磁吸组
-     */    
-    let magnetGroup: Array<Float32Array> = []
 
     toolTip.afterActive.set('spectrum', (p) => {
-      if (magnetGroup.length > 0) {
-        const r = toolTip.magnetByMax(scene.value!.fence!, magnetGroup)
-        if (r) {
-          toolTipPosition.value = r.offsetMiddlePCTX
-        }
-      }
+      toolTipPosition.value = p.offsetMiddlePCTX
     })
 
     toolTip.afterTrigger.set('spectrum', (p) => {
@@ -203,11 +194,11 @@ export class SampleLines {
 
         renderCtx.clearScreen()
         // 数据抽取，确保最长数据项最后抽取，保证cutDataIndexArr正确
-        magnetGroup = []
+        toolTip.magnetGroup = []
         for (const [key, item] of inputData.value) {
           SpectrumData.getSamplingData(item.data, lineYvalues, fence)
           // 是否加入磁吸组
-          if (item.magnet) magnetGroup.push(new Float32Array(lineYvalues))
+          if (item.magnet) toolTip.magnetGroup.push(new Float32Array(lineYvalues))
 
           cutDataIndexArrMap.value.set(key, new Float32Array(fence.cutDataIndexArr))
 
@@ -234,8 +225,8 @@ export class SampleLines {
           }
         }
 
-        if (magnetGroup.length === 0) {
-          magnetGroup.push(lineYvalues)
+        if (toolTip.magnetGroup.length === 0) {
+          toolTip.magnetGroup.push(lineYvalues)
         }
         scene.value.render2D()
       }

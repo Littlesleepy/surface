@@ -233,7 +233,7 @@ export class Tag {
   /**
    * @description: 磁吸功能
    */
-  magnetByMax(fence: FencesType, group: Array<Float32Array> | Array<Array<number>>) {
+  magnetByMax(fence: FencesType, group: Array<Float32Array | Array<number>>) {
     if (group.length > 0) {
       const range = fence.options.eachPieceMaxWidth / 2 / fence.expectCount
       // 以当前tag位置为中心，range为半径计算计算落入范围的刻度索引，并计算出他们的最大值所处刻度
