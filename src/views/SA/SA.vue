@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-21 11:53:32
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 17:02:55
+ * @LastEditTime: 2023-04-23 17:00:34
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
  * @Description: 
  -->
@@ -198,10 +198,10 @@
 
  const master = ref<BaseParamsType>()
 
- onMounted(()=>{
-  console.log(master.value?.elements);
+//  onMounted(()=>{
+//   console.log(master.value?.elements);
   
- })
+//  })
  
  onBeforeUnmount(() => {
    CustomTheme.off(themeKey)
@@ -221,6 +221,18 @@
      <template #set>
       <BaseParams ref="master" :dynamicParam="false" />
     </template>
+    <template #header-center>
+      <BaseParamsBranch
+            class="params-branch-header"
+            noWrap
+            :params="[
+              [
+                { name: '解调模式', paramName: 'digitaldemod', ratio: 11 },
+                { name: '码元速率', paramName: 'baudrate', ratio: 11 }
+              ]
+            ]"
+            :master="master" />
+    </template>
      <div class="SA">
       <div class="center-left">
         <ZXISpectrumAndFall
@@ -233,14 +245,13 @@
       :switchLever="store.s_playButton"
       :markers="markers"
       @selectFrequency="selectFrequency" >
-      <template #header>
+        <template #header>
           <BaseParamsBranch
             class="params-branch0"
             :params="[
               [
                 { name: '频率', paramName: 'frequency', ratio: 11 },
                 { name: '带宽', paramName: 'bandwidth', ratio: 11 },
-                { name: '解调模式', paramName: 'digitaldemod', ratio: 11 },
               ]
             ]"
             :master="master" />
@@ -275,7 +286,7 @@
       </div>
       </div>
       <div class="center-right">
-        <div class="parm">
+        <!-- <div class="parm">
           <BaseParamsBranch
             class="params-branch0"
             :params="[
@@ -284,7 +295,7 @@
               ]
             ]"
             :master="master" />
-        </div>
+        </div> -->
         <ZXIIQVector
           class="iq-vector-image"
           ref="spIQVector"
@@ -309,38 +320,51 @@
    display: flex;
    justify-content: center;
  }
+ .params-branch-header{
+  height: 100%;
+  padding: @btnSpace;
+  box-sizing: border-box;
+ }
+ 
  .SA{
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  padding: @btnSpace;
+  // padding: @btnSpace;
   display: flex;
-  // flex-direction: column;
   .center-left{
+    padding: @btnSpace;
     flex: auto;
     // width: 70%;
     display: flex;
     flex-direction: column;
+    
   }
   .center-right{
+    padding: @btnSpace;
+    padding-left: 0;
+    box-sizing: border-box;
     margin-left: 5px;
+    // border-left: v-bind('CustomTheme.theme.districtBorder');
+
     display: flex;
     flex-direction: column;
     height: 100%;
     aspect-ratio: 1/2;
-    .parm{
-      height: 40px;
-      margin-bottom: 5px;
-    }
-
+    
+    // .parm{
+    //   height: 40px;
+    //   margin-bottom: 5px;
+    // }
+      
     .iq-vector-image,.eye-image{
-      // height: 50%;
-      flex: auto;
-      aspect-ratio: 1/1;
-      // aspect-ratio: 1/2;
-      :deep(.iq-vector-image-container){
-        flex-direction: column-reverse;
-      }
+      height: 50%;
+      flex: 1;
+      // aspect-ratio: 1/1;
+    }
+    :deep(.eye-image-container){
+      padding: 0;
+      
     }
   }
 
