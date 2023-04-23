@@ -17,7 +17,8 @@ import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
 import { ISpectrumInputData, ESwitchState, IITUData, IModulateData, IHighlightItem, ZXISpectrumScanAndFallType, ZXILevel, UseTheme, ILevelData, IIQData, ZXIIQVector } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
-import { Sundry, ToExport } from 'helper/index'
+import { Sundry } from 'helper/index'
+import { ToExport } from "helper/dataExports/index";
 import { useRoute } from 'vue-router'
 
 const store = useFrameStore()
@@ -221,9 +222,9 @@ const spInstance0 = ref<ZXISpectrumScanAndFallType>()
 const spInstance1 = ref<ZXISpectrumScanAndFallType>()
 
 ToExport.beforExport.set('0', () => {
-  ToExport.DATA.clear()
-  ToExport.DOM.clear()
-  // ToExport.reset()
+  // ToExport.DATA.clear()
+  // ToExport.DOM.clear()
+  ToExport.reset()
   if (levelInput.value.size > 0) ToExport.addDom('电平图', levleInstance.value!.root!, 3)
   // 参数
   const r = Sundry.formatParams(route.meta.functionKey!)

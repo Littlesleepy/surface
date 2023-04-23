@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-21 11:53:32
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 15:25:22
+ * @LastEditTime: 2023-04-21 17:02:55
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
  * @Description: 
  -->
@@ -15,7 +15,8 @@
  import BaseLink from '@/components/BaseLink/BaseLink.vue'
  import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
  import { setLinkTrigger, CustomTheme, BaseParamsType } from '@/types'
- import { Sundry, ToExport } from 'helper/index'
+ import { Sundry } from 'helper/index'
+ import { ToExport } from "helper/dataExports/index";
  import { useRoute } from 'vue-router'
  
  const store = useFrameStore()
@@ -155,8 +156,9 @@
  const spEye = ref<InstanceType<typeof ZXIEye>>()
  
  ToExport.beforExport.set('0', () => {
-   ToExport.DATA.clear()
-   ToExport.DOM.clear()
+  //  ToExport.DATA.clear()
+  //  ToExport.DOM.clear()
+  ToExport.reset()
  
    // 参数
    const r = Sundry.formatParams(route.meta.functionKey!)
@@ -217,7 +219,7 @@
        <hr style="margin-top: .5rem"/>
      </BaseLink>
      <template #set>
-      <BaseParams ref="master" />
+      <BaseParams ref="master" :dynamicParam="false" />
     </template>
      <div class="SA">
       <div class="center-left">

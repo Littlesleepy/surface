@@ -20,7 +20,8 @@ import TimeFrequency from './components/TimeFrequency.vue'
 import LoRa from './components/LoRa.vue'
 import Frequency from './components/Frequency.vue'
 import Bluetooth from './components/Bluetooth.vue'
-import { Device, Sundry, ToExport } from '@/helper'
+import { Device, Sundry  } from '@/helper'
+import { ToExport } from "helper/dataExports/index";
 import { IIQAnalysis } from '.'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 

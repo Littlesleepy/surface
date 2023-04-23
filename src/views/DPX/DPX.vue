@@ -14,7 +14,8 @@ import { ReceiveData, ReceiveDataOptions } from '@/server'
 import { IDPXParams, ZXIDpx, UseTheme } from 'mcharts/index'
 import { ElMessage } from 'element-plus'
 import { BaseParamsType, fftToResolutionRatio, IMockPanleState } from '@/types'
-import { Device, Sundry, ToExport } from 'helper/index'
+import { Device, Sundry } from 'helper/index'
+import { ToExport } from "helper/dataExports/index";
 import { useRoute } from 'vue-router'
 
 /**
@@ -110,9 +111,9 @@ const route = useRoute()
 const spInstance = ref<InstanceType<typeof ZXIDpx>>()
 
 ToExport.beforExport.set('0', () => {
-  ToExport.DATA.clear()
-  ToExport.DOM.clear()
-  // ToExport.reset()
+  // ToExport.DATA.clear()
+  // ToExport.DOM.clear()
+  ToExport.reset()
   // 参数
   const r = Sundry.formatParams(route.meta.functionKey!)
   ToExport.addTable(r.title, r.headers, r.formatData, 0)

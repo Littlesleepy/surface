@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-09 14:12:39
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 09:43:12
+ * @LastEditTime: 2023-04-23 09:08:40
  * @FilePath: \zxi-surface\src\components\BaseNavigation\BaseNavigation.vue
  * @Description: 
  -->
@@ -31,6 +31,13 @@ interface IIconList {
   nameEn: string
   index: number
 }
+
+defineProps({
+  /** 
+   * @description: 默认使用导出功能
+   */    
+  useExport: { default: true }
+})
 
 const router = useRouter()
 
@@ -87,7 +94,7 @@ dataInit()
       <div class="setting">
         <BaseTheme class="item" />
         <BaseCache class="item"/>
-        <BaseExport class="item"/>
+        <BaseExport v-if="useExport" class="item"/>
       </div>
     </div>
     <div class="group" v-if="naviGationLists.length">

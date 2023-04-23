@@ -6,6 +6,7 @@ import { FormInstance } from 'element-plus';
 import { computed, reactive, ref } from 'vue';
 import { getFormType, ExportForm } from "./form";
 import BaseIconButton from "cp/BaseIconButton/BaseIconButton.vue";
+import { useRoute } from "vue-router";
 
 // const props = defineProps({
 //   modelValue: {
@@ -31,7 +32,7 @@ const handleClose = (done: () => void) => {
   done()
   dialogVisible.value = false
 }
-
+const route = useRoute()
 const list = reactive([
   {
     id: 0,
@@ -66,7 +67,8 @@ function spanToWidth(span: number | undefined) {
 function Export() {
   ToExport.setOptions({
     ...ExportForm,
-    isCustomHome: isHome.value
+    isCustomHome: isHome.value,
+    exportName : route.meta.title
   })
   dialogVisible.value = false
   ToExport.download(type.value)
@@ -80,9 +82,9 @@ function Export() {
 
 <template>
   <div class="baseExport">
-    <BaseIconButton class="iconBtn" v-bind=" $attrs " :icon="'icon-daochu'" :text="'导出'" @click="dialogVisible=!dialogVisible"/>
+    <BaseIconButton class="iconBtn" v-bind=" $attrs " :icon="'icon-daochu1'" :icon-size="'4.5rem'" :text="'导出'" @click="dialogVisible=!dialogVisible"/>
     <Teleport to="body">
-      <el-dialog v-model="dialogVisible" width="800px" :before-close="handleClose">
+      <el-dialog top="0vh" class="export-dialog" v-model="dialogVisible" width="800px" :before-close="handleClose">
         <div class="layout">
           <div class="header">
             <el-form class="header-form">
@@ -137,7 +139,12 @@ function Export() {
   </div>
 </template>
 
-
+<style>
+.export-dialog{
+  height: 100%;
+  margin-bottom: 0;
+}
+</style>
 <style scoped lang="less">
 .baseExport{
   display: flex;
@@ -148,6 +155,7 @@ function Export() {
     flex: 1;
   }
 }
+
 .el-form-item{
   padding: 1px;
   box-sizing: border-box;
@@ -175,7 +183,10 @@ function Export() {
 .layout {
   display: flex;
   flex-direction: column;
-
+  height: 80vh;
+  .el-form{
+    align-content: flex-start;
+  }
   .header {
     width: 100%;
     display: flex;

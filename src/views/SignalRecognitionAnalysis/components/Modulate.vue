@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 14:36:20
+ * @LastEditTime: 2023-04-21 16:31:38
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\components\Modulate.vue
  * @Description: 
  -->
@@ -13,7 +13,8 @@ import * as Helper from 'helper/index'
 import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import { ReceiveData, ReceiveDataOptions } from '@/server'
-import { ToExport } from 'helper/index'
+// import { ToExport } from 'helper/index'
+import { ToExport } from "helper/dataExports/index";
 import { CustomTheme } from '@/types'
 
 const props = defineProps({
@@ -109,6 +110,8 @@ function receiveSpectrum1(
         receive1.value = map
         // 统计
         receive2.value = result
+        console.log(data);
+        
       }
     }
   })
@@ -232,7 +235,8 @@ ToExport.beforExport.set('1', () => {
     // 标题
     ToExport.addText('', '----信号分析----', 7, {
       PDF: { contentSize: 24 },
-      Excel: { options: { size: 24 } }
+      // Excel: { options: { size: 24 } }
+      Excel: { size: 24 }
     })
       .addDom('瞬时频率', instance1.value!, 8)
       .addDom('瞬时幅度', instance2.value!, 9)

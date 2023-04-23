@@ -14,7 +14,8 @@ import { computed, PropType, Ref, ref, watch } from 'vue'
 import { ISpectrumAndFallFallPool, ISpectrumInputData, ISpectrumParams, Scene, EAxisXType, ZXISpectrumAndFall, ZXISpectrumLine, UseTheme } from 'mcharts/index'
 import { IIQAnalysis, ISpectrumData } from '..'
 import { Axios } from '@/server'
-import { Device, Sundry, ToExport } from '@/helper'
+import { Device, Sundry } from '@/helper'
+import { ToExport } from "helper/dataExports/index";
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import { BaseParamsType } from '@/types'
 
@@ -188,8 +189,8 @@ ToExport.beforExport.set('2', () => {
     // 标题
     ToExport.addText('', '----频域特征----', 7, {
       PDF: { contentSize: 24 },
-      Excel: { options: { size: 24 } }
-      // Excel: {  size: 24  }
+      // Excel: { options: { size: 24 } }
+      Excel: {  size: 24  }
     })
     // 频谱
     ToExport.addDom('频谱', spSpectrum.value!.root!, 8)
