@@ -154,7 +154,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <BaseMonitorFrame>
+  <BaseMonitorFrame :useExport="false">
     <BaseLink :trigger="trigger">
       <div class="base-link">
         <el-button type="primary" round @click="changeFrequency">切换频率</el-button>

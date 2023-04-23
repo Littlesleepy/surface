@@ -8,7 +8,8 @@
  -->
 
 <script setup lang="ts">
-import { ToExport } from '@/helper'
+// import { ToExport } from '@/helper'
+import { ToExport } from "helper/dataExports/index";
 import { ReceiveData, ReceiveDataOptions, makeSpectrumData } from '@/server'
 import { useFrameStore } from '@/store'
 import { computed, onBeforeUnmount, PropType, Ref, ref, watch, watchEffect } from 'vue'
@@ -234,7 +235,8 @@ ToExport.beforExport.set('1', () => {
     // 标题
     ToExport.addText('', '----时频特征----', 2, {
       PDF: { contentSize: 24 },
-      Excel: { options: { size: 24 } }
+      // Excel: { options: { size: 24 } }
+      Excel: { size:24 }
     })
     // 频谱
     ToExport.addDom('频谱', spSpectrum.value!.root!, 3)

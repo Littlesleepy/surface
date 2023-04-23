@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-01-31 15:55:11
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-23 14:53:45
+ * @LastEditTime: 2023-04-23 15:39:30
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\core\ViewHCI\ToolTip.ts
  * @Description: 
  */
@@ -440,9 +440,7 @@ export class ToolTip implements IViewHCI {
     this.mouseActivation = true
 
     const _position = this.event.positionTrans(e)
-    const position = this.active(_position)
-
-    this.activeLinks(position)
+    this.active(_position)
   }
 
   private mousemove =  Public.throttle((e: MouseEvent) => {
@@ -497,9 +495,7 @@ export class ToolTip implements IViewHCI {
         position.offsetX = Math.round(position.offsetX)
         position.offsetY = Math.round(position.offsetY)
 
-        const p = this.active(position)
-
-        this.activeLinks(p)
+        this.active(position)
       }, 300)
     } else {
       clearTimeout(this.touchStartSetTime)

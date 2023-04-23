@@ -4,12 +4,15 @@
     "userName": "admin",
     "password": "zxi123456789!"
   },
-  "enableFunction": ["SingleMeasure", "PScan", "XScan", "DPX", "CIQStream", "SignalRecognitionAnalysis", "HandheldSingleMeasure"],
+  "enableFunction": ["SingleMeasure", "PScan", "XScan", "DPX", "CIQStream", "SignalRecognitionAnalysis", "HandheldSingleMeasure","SA"],
   "paramTlMaxCount": 20,
   "initialParams": {
     "XScan": {
       "smtime": 30,
       "holdtime": 30
+    },
+    "SignalRecognitionAnalysis":{
+      "chiqdata":true
     }
   },
   "map": {

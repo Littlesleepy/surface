@@ -126,6 +126,7 @@ function inputClick(e: PointerEvent | MouseEvent) {
   box-sizing: border-box;
   align-items: center;
   position: relative;
+  transition: background-color .3s;
   .marker{
     .marker-disabled();
   }

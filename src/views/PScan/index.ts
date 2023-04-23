@@ -1,9 +1,9 @@
 /**
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-09 14:55:45
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-02-24 14:09:16
- * @FilePath: \zxi-device\src\views\PScan\index.ts
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-21 11:45:29
+ * @FilePath: \zxi-surface\src\views\PScan\index.ts
  * @Description: 
  */
 import { CustomTheme } from '@/types'
@@ -53,7 +53,8 @@ import { ReceiveDataOptions, makeSpectrumData, ReceiveData } from '@/server'
 import { setLinkTrigger } from '@/types'
 import { ElMessage } from 'element-plus'
 import { useSample } from './components/useSample'
-import { Sundry, ToExport } from '@/helper'
+import { Sundry } from '@/helper'
+import { ToExport } from "helper/dataExports/index";
 
 /**
  * @description: 后端信号识别频率接口
@@ -333,14 +334,16 @@ export function usePScan () {
       ToExport.addDom('占用度图像', dom1, 2)
     } else {
       // 移除
-      ToExport.delData(2)
+      // ToExport.delData(2)
+      ToExport.deleteData(2)
     }
     // 识别结果
     if (autoThreshold.value.signals.length > 0) {
       const result = Sundry.formatSignal(autoThreshold.value.signals)
       ToExport.addTable(`${result.title}`, result.headers, result.formatData, 3)
     } else {
-      ToExport.delData(3)
+      // ToExport.delData(3)
+      ToExport.deleteData(3)
     }
     
     ToExport.addText('GPS信息', serverStore.s_serverStateInfo.gpsLocation.locationResult , 4)

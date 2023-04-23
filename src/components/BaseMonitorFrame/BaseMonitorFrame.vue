@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-08 14:13:59
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-23 13:56:44
+ * @LastEditTime: 2023-04-23 15:14:32
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseMonitorFrame\BaseMonitorFrame.vue
  * @Description: 
  -->
@@ -25,6 +25,13 @@ import { IServerAudioData, CustomTheme } from '@/types';
 import * as Helper from '@/helper'
 import { ElMessageBox, ElNotification } from 'element-plus';
 import BaseMask from "@/components/BaseMask/BaseMask.vue";
+
+defineProps({
+  /** 
+   * @description: 默认使用导出功能
+   */    
+  useExport: { default: true }
+})
 
 const route = useRoute()
 
@@ -134,7 +141,7 @@ onBeforeUnmount(() => {
     </BaseDialog>
     <!-- 导航弹出框 -->
     <BaseDialog v-model="navigationShow" title="控制" width="80%" key="navigation">
-      <BaseNavigation class="navigation" />
+      <BaseNavigation :useExport="useExport" class="navigation" />
     </BaseDialog>
     <!-- 头部 -->
     <BaseTopFrame class="header">

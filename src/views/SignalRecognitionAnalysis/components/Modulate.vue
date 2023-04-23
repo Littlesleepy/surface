@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-14 10:17:25
+ * @LastEditTime: 2023-04-23 14:57:33
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\components\Modulate.vue
  * @Description: 
  -->
@@ -10,10 +10,11 @@
 import { useFrameStore } from '@/store'
 import { computed, onBeforeUnmount, Ref, ref, watch } from 'vue'
 import * as Helper from 'helper/index'
-import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme } from 'mcharts/index'
+import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme, IUnit } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import { ReceiveData, ReceiveDataOptions } from '@/server'
-import { ToExport } from 'helper/index'
+// import { ToExport } from 'helper/index'
+import { ToExport } from "helper/dataExports/index";
 import { CustomTheme } from '@/types'
 
 const props = defineProps({
@@ -29,13 +30,34 @@ const scaleY = {
     return parseFloat(v.toFixed(1))
   }
 }
+
 const store = useFrameStore()
 
 const inputData1 = ref(new Map<string, ILineData>())
 
+  const scaleY1 = ref({
+  unit: 'Hz',
+  parse: (v: number) => {
+    return `频偏：${v.toFixed(1)}Hz`
+  },
+  transform: (v: number) => {
+    return parseFloat(v.toFixed(1))
+  }
+})
+
 const statistical1 = ref(new Float32Array())
 
 const inputData2 = ref(new Map<string, ILineData>())
+const scaleY2 = ref({
+  unit: 'dBuV',
+  parse: (v: number) => {
+    return `幅度：${v.toFixed(1)}dBuV`
+  },
+  transform: (v: number) => {
+    return parseFloat(v.toFixed(1))
+  }
+})
+
 
 const statistical2 = ref(new Float32Array())
 
@@ -94,29 +116,46 @@ const optionsChild: ReceiveDataOptions = new Map()
 
 
 // 瞬时频率频谱数据
-function receiveSpectrum1(
+function receiveSpectrum1 (
   key: string,
   receive1: Ref<Map<string, ILineData>>,
-  receive2: Ref<Float32Array>
+  receive2: Ref<Float32Array>,
+  scaleY?: Ref<IUnit>,
+  name = '频偏'
 ) {
   optionsChild.set(key, {
     control: (data) => {
-      const result = new Float32Array(data)
+      let v = data
+      if (scaleY) { // 修改单位
+        scaleY.value.unit = data.unit
+        
+        scaleY.value.parse = (v: number) => {
+          return `${name}：${v.toFixed(1)} ${data.unit}`
+        }
+
+        v = data.value
+      }
+
+      const result = new Float32Array(v)
       const map = new Map()
       map.set('1', { data: result, color: CustomTheme.theme.lineColorOne })
       cacheData0.set(key, map)
+
       if (props.canDraw) {
-        receive1.value = map
+        receive1.value =  map
         // 统计
         receive2.value = result
       }
     }
-  })
-
+  }) 
 }
-receiveSpectrum1('INSTANTFREQUENCYDATA', inputData1, statistical1)
+// receiveSpectrum1('INSTANTFREQUENCYDATA', inputData1, statistical1)
+// // 瞬时幅度频谱数据
+// receiveSpectrum1('INSTANTAMPLITUDEDATA', inputData2, statistical2)
+
+receiveSpectrum1('INSTANTFREQUENCYDATA', inputData1, statistical1, scaleY1)
 // 瞬时幅度频谱数据
-receiveSpectrum1('INSTANTAMPLITUDEDATA', inputData2, statistical2)
+receiveSpectrum1('INSTANTAMPLITUDEDATA', inputData2, statistical2, scaleY2, '幅度')
 // 瞬时相位频谱数据
 receiveSpectrum1('INSTANTPHASEDATA', inputData3, statistical3)
 // 瞬时包络
@@ -232,7 +271,8 @@ ToExport.beforExport.set('1', () => {
     // 标题
     ToExport.addText('', '----信号分析----', 7, {
       PDF: { contentSize: 24 },
-      Excel: { options: { size: 24 } }
+      // Excel: { options: { size: 24 } }
+      Excel: { size: 24 }
     })
       .addDom('瞬时频率', instance1.value!, 8)
       .addDom('瞬时幅度', instance2.value!, 9)
@@ -256,35 +296,19 @@ const currentTabId = ref(0)
       <BaseTabHeader class="tab-header" :headers="[
         [{ name: '时域特征', ratio: 1 }],
         [{ name: '功率谱\n二次方谱\n四次方谱\n八次方谱', ratio: 1 }],
-        [{ name: 'FM解调谱\n瞬时频率包络\n瞬时幅度包络', ratio: 1 }],
+        [{ name: '瞬时频率包络\n瞬时幅度包络\nFM解调谱', ratio: 1 }],
 
       ]" v-model="currentTabId" />
       <ZXITabs class="tabItem" :wrapperStyle="{ border: 'none' }" :hidHeader="true" v-model="currentTabId">
         <div class="time-domain">
           <div ref="instance1" class="item">
             <ZXITimeDomainLines class="level" :name="'瞬时频率'" :inputData="inputData1" :switchLever="store.s_playButton"
-              :params="params1" :capacity="0" :scaleY="{
-                unit: 'Hz',
-                parse: (v: number) => {
-                  return `频偏：${v.toFixed(1)}Hz`
-                },
-                transform: (v: number) => {
-                  return parseFloat(v.toFixed(1))
-                }
-              }" />
+              :params="params1" :capacity="0" :scaleY="scaleY1" />
             <ZXIStatisticalY class="statistical" :inputData="statistical1" :switchLever="store.s_playButton" />
           </div>
           <div ref="instance2" class="item">
             <ZXITimeDomainLines class="level" :name="'瞬时幅度'" :inputData="inputData2" :params="params1"
-              :switchLever="store.s_playButton" :capacity="0" :scaleY="{
-                unit: 'dBuV',
-                parse: (v: number) => {
-                  return `幅度：${v.toFixed(1)}dBuV`
-                },
-                transform: (v: number) => {
-                  return parseFloat(v.toFixed(1))
-                }
-              }" />
+              :switchLever="store.s_playButton" :capacity="0" :scaleY="scaleY2" />
             <ZXIStatisticalY class="statistical" :inputData="statistical2" :switchLever="store.s_playButton" />
           </div>
           <div ref="instance3" class="item">
@@ -317,13 +341,14 @@ const currentTabId = ref(0)
             :scaleY="scaleY" />
         </div>
         <div class="shunshibaoluo">
-          <ZXISpectrumLine class="spectrum" :name="'FM解调谱'" ref="instance6" :inputData="inputData6" :params="param5"
-            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
-            :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
+          
           <ZXISpectrumLine class="spectrum" ref="instance4" :name="'瞬时频率包络'" :inputData="inputData4" :params="param5"
             :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
             :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
           <ZXISpectrumLine class="spectrum" ref="instance5" :name="'瞬时幅度包络'" :inputData="inputData5" :params="param5"
+            :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
+            :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
+            <ZXISpectrumLine class="spectrum" :name="'FM解调谱'" ref="instance6" :inputData="inputData6" :params="param5"
             :switchLever="store.s_playButton" :controlBtnY="false" :setTool="[{ name: 'junzhi', value: true }]"
             :deleteTool="['pinlvhuafen']" :xScaleType="EAxisXType.range" :scaleY="scaleY" />
             

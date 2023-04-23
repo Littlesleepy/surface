@@ -147,15 +147,21 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
     <template #header-center>
     </template>
     <div class="content-XScan">
-      <ZXISpectrumScanAndFall class="spectrum-scan-and-fall" :inputData="spectrum" :params="params"
-        :switchLever="startAndStop" useSelectFrequency @selectFrequency="selectFrequency">
+      <ZXISpectrumScanAndFall 
+      class="spectrum-scan-and-fall" 
+      name=""
+      :inputData="spectrum" 
+      :params="params"
+      :switchLever="startAndStop" 
+      useSelectFrequency 
+      @selectFrequency="selectFrequency">
         <template  #header>
           <BaseParamsBranch class="params-branch0" :params="[
             [
               { name: '每跳频谱带宽', paramName: 'bandwidth', ratio: 12 },
               { name: '射频拼接带宽', paramName: 'rfbandwidth', ratio: 12 },
-              { name: '每跳测量时间', paramName: 'smtime', ratio: 12 },
-              { name: '返回数据间隔时间', paramName: 'holdtime', ratio: 12 },
+              { name: '每跳测量时间(ms)', paramName: 'smtime', ratio: 12 },
+              { name: '返回数据间隔时间(ms)', paramName: 'holdtime', ratio: 12 },
             ]
           ]" :master="master" />
         </template>
@@ -209,7 +215,7 @@ const { trigger, changeFrequency, markers, selectFrequency } = useSingleMeasure(
   // padding: @btnSpace;
   height: 100%;
   display: flex;
-  padding-left: @btnSpace;
+  padding-left: 4.5rem;
 }
 
 .params-branch1 {

@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-19 15:40:40
+ * @LastEditTime: 2023-04-23 15:10:49
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -17,7 +17,8 @@ import { makeSpectrumData, ReceiveData, ReceiveDataOptions } from '@/server'
 import { ISpectrumInputData, ESwitchState, IITUData, IModulateData, IHighlightItem, ZXISpectrumScanAndFallType, ZXILevel, UseTheme, ILevelData, IIQData, ZXIIQVector } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import BaseLink from '@/components/BaseLink/BaseLink.vue'
-import { Sundry, ToExport } from 'helper/index'
+import { Sundry } from 'helper/index'
+import { ToExport } from "helper/dataExports/index";
 import { useRoute } from 'vue-router'
 
 const store = useFrameStore()
@@ -221,8 +222,9 @@ const spInstance0 = ref<ZXISpectrumScanAndFallType>()
 const spInstance1 = ref<ZXISpectrumScanAndFallType>()
 
 ToExport.beforExport.set('0', () => {
-  ToExport.DATA.clear()
-  ToExport.DOM.clear()
+  // ToExport.DATA.clear()
+  // ToExport.DOM.clear()
+  ToExport.reset()
   if (levelInput.value.size > 0) ToExport.addDom('电平图', levleInstance.value!.root!, 3)
   // 参数
   const r = Sundry.formatParams(route.meta.functionKey!)
@@ -252,6 +254,7 @@ ToExport.beforExport.set('0', () => {
 
 const tabId = ref(0)
 const firstTabId = ref(0)
+
 
 const master = ref<BaseParamsType>()
 </script>

@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3939323 */
-  src: url('iconfont.woff2?t=1681971844132') format('woff2'),
-       url('iconfont.woff?t=1681971844132') format('woff'),
-       url('iconfont.ttf?t=1681971844132') format('truetype');
+  src: url('iconfont.woff2?t=1682068987342') format('woff2'),
+       url('iconfont.woff?t=1682068987342') format('woff'),
+       url('iconfont.ttf?t=1682068987342') format('truetype');
 }
 
 .iconfont {
@@ -13,20 +13,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-daochu1:before {
+  content: "\e60f";
+}
+
 .icon-taiyang1:before {
   content: "\e67b";
-}
-
-.icon-moonyueliang:before {
-  content: "\e6dd";
-}
-
-.icon-suntaiyang:before {
-  content: "\e6e7";
-}
-
-.icon-yejianmoshi:before {
-  content: "\e872";
 }
 
 .icon-danpinshuju:before {
@@ -37,24 +29,12 @@
   content: "\e637";
 }
 
-.icon-yejianmoshi1:before {
-  content: "\e608";
-}
-
-.icon-huancun:before {
-  content: "\ef93";
-}
-
 .icon--huancunguanli:before {
   content: "\e64e";
 }
 
 .icon-zanting1:before {
   content: "\e611";
-}
-
-.icon-taiyang:before {
-  content: "\e697";
 }
 
 .icon-icon-taikong2:before {
@@ -65,20 +45,8 @@
   content: "\e601";
 }
 
-.icon-suoding:before {
-  content: "\e602";
-}
-
-.icon-jiesuo:before {
-  content: "\e603";
-}
-
 .icon-jiesuo1:before {
   content: "\e636";
-}
-
-.icon-caidanguanli:before {
-  content: "\e66b";
 }
 
 .icon-suoding1:before {
@@ -89,20 +57,8 @@
   content: "\e657";
 }
 
-.icon-caidan:before {
-  content: "\e638";
-}
-
 .icon-xiangjipaizhao:before {
   content: "\e64b";
-}
-
-.icon-yejian:before {
-  content: "\e712";
-}
-
-.icon-tianqitaiyangqichuang:before {
-  content: "\e713";
 }
 
 .icon-shuaxin:before {

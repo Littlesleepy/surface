@@ -14,7 +14,8 @@ import { ISpectrumInputData, IHighlightItem, ZXISpectrumAndFall, EAxisXType, IIT
 import { ElMessage } from 'element-plus'
 
 import { setLinkTrigger } from '@/types'
-import { ToExport } from '@/helper/dataExport'
+// import { ToExport } from '@/helper/dataExport'
+import { ToExport } from "helper/dataExports/index";
 import { Sundry } from '@/helper'
 
 export function useSingleMeasure () {
@@ -197,8 +198,9 @@ export function useSingleMeasure () {
   })
 
   ToExport.beforExport.set('params', () => {
-    ToExport.DATA.clear()
-    ToExport.DOM.clear()
+    // ToExport.DATA.clear()
+    // ToExport.DOM.clear()
+    ToExport.reset()
     // 参数
     const result = Sundry.formatParams(route.meta.functionKey!)
     ToExport.addTable(result.title, result.headers, result.formatData, 0)
