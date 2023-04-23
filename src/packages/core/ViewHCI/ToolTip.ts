@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-01-31 15:55:11
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-23 15:39:30
+ * @LastEditTime: 2023-04-23 16:04:03
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\core\ViewHCI\ToolTip.ts
  * @Description: 
  */
@@ -437,7 +437,7 @@ export class ToolTip implements IViewHCI {
 
   private mousedown = (e: MouseEvent) => {
     if (this.options.lock || e.buttons !== 1 || this.lockByKeyboard) return
-    this.mouseActivation = true
+    this.mouseActivation = true 
 
     const _position = this.event.positionTrans(e)
     this.active(_position)
