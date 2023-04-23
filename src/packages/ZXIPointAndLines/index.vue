@@ -1,7 +1,7 @@
 <!--
  * @Author: shiershao
  * @Date: 2022-04-26 16:02:21
- * @LastEditTime: 2023-02-08 17:17:33
+ * @LastEditTime: 2023-04-23 16:41:05
  * @Description: 多条线段带节点图
  * 
 -->
@@ -167,10 +167,14 @@ function render () {
     let fenceIndex, end
 
     renderCtx.clearScreen()
+    toolTip.magnetGroup = []
     for (const [, item] of cutData.value) {
       fenceIndex = baseFence.visibleIndex.min
       end = baseFence.visibleIndex.max + 1
       if (end > item.data.length) end = item.data.length
+
+      // 是否加入磁吸组
+      if (item.magnet) toolTip.magnetGroup.push(item.data)
 
       // 构造Y坐标集合
       for (; fenceIndex < end; fenceIndex++) {
@@ -200,6 +204,12 @@ function render () {
       }
     }
 
+    if (toolTip.magnetGroup.length === 0) {
+      for (const [, item] of cutData.value) {
+        toolTip.magnetGroup = [item.data]
+      }
+    }
+
     scene.value.render2D()
   }
 }
@@ -214,7 +224,7 @@ watch(cutData, (v) => {
     if (toolTip) {
       toolTip.setOptions({
         infoTag: {
-          width: dataSize > 1 ? 200 : 130
+          width: dataSize > 1 ? 250 : 180
         }
       })
     }
@@ -307,9 +317,13 @@ onMounted(() => {
     toolTip = new ToolTip(scene.value, {
       type: ToolTip.VERTICAL,
       infoTag: {
-        width: 100,
+        width: 150,
         height: 36
       }
+    })
+
+    toolTip.afterActive.set('spectrum', (p) => {
+      toolTipPosition.value = p.offsetMiddlePCTX
     })
 
     toolTip.afterTrigger.set('spectrum', (p) => {
@@ -381,11 +395,12 @@ defineExpose({
     <div class="point-and-line-container">
       <div class="header">
         <span v-if="name">{{name}}</span>
-        <el-tooltip content="数据点数" effect="light" placement="bottom">
-          <el-select style="width:80px;" v-model="dataPoint">
-            <el-option v-for="item in dataPointSelect" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-tooltip>
+        <ZXISelect style="width: 200px;" name="绘制点数" v-model="dataPoint">
+          <el-option v-for="item in dataPointSelect" :key="item.value" :label="item.label" :value="item.value" />
+        </ZXISelect>
+        <div class="slot">
+          <slot />
+        </div>
       </div>
       <!-- 频谱 -->
       <div class="second-row">
@@ -396,7 +411,7 @@ defineExpose({
           :scale="scaleY"
           :defaultValue="spectrumYvalue"
           :scene="scene"
-          :scaleNumWidth="50" />
+          :scaleNumWidth="70" />
         <div class="second-column">
           <div class="canvas-father">
             <div class="mount" ref="sceneDom"></div>
@@ -417,6 +432,7 @@ defineExpose({
 </template>
 
 <style scoped lang="less">
+@import url('../assets/styles/theme.less');
 .point-and-line-container{
   width: 100%;
   height: 100%;
@@ -426,13 +442,18 @@ defineExpose({
   box-sizing: border-box;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
-    height: 35px;
     display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
     color: v-bind('UseTheme.theme.var.color');
-    line-height: 35px;
     span{
       padding: 0 10px;
-      font-size: 12px;
+      font-size: @font20;
+    }
+    .slot{
+      height: 100%;
+      flex: auto;
     }
   }
   .second-row{
@@ -441,7 +462,7 @@ defineExpose({
     .axis-Y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 28px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;

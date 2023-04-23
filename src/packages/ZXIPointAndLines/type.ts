@@ -21,6 +21,10 @@ export interface IPointAndLineData {
    * @description: 圆点半径px
    */  
   pointRadius?: number
+  /**
+   * @description: 是否加入磁吸
+   */
+  magnet?: boolean
 }
 
 /**

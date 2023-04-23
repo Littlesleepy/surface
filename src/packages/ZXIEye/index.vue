@@ -1,14 +1,13 @@
 <!--
  * @Author: shiershao
  * @Date: 2022-04-26 16:02:21
- * @LastEditTime: 2023-02-08 13:54:52
+ * @LastEditTime: 2023-04-23 16:46:32
  * @Description: 眼图
  * 
 -->
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, PropType, ref, watch, reactive, watchEffect } from 'vue'
-import { ElTooltip, ElSelect, ElOption, Effect } from 'element-plus'
 import { IAxisXValue, IAxisYValue, EAxisXType, ESwitchState } from '../types'
 import { IEyeData, IEyePool } from './type'
 import { Canvas, Engine, IPositionResult, Scene, ToolTip } from '../core'
@@ -261,12 +260,16 @@ onMounted(() => {
     toolTip = new ToolTip(scene.value, {
       type: ToolTip.CROSS,
       infoTag: {
-        width: 110,
+        width: 130,
         height: 56
       }
     })
 
-    toolTip.afterTrigger.set('spectrum', (p: IPositionResult) => {
+    toolTip.afterActive.set('spectrum', (p) => {
+      toolTipPosition.value = p
+    })
+
+    toolTip.afterTrigger.set('spectrum', (p) => {
       toolTipPosition.value = p
     })
 
@@ -324,21 +327,18 @@ defineExpose({
     <div class="eye-image-container">
       <div class="header">
         <span>{{name}}</span>
-        <el-tooltip content="数据类型" :effect="Effect.LIGHT" placement="bottom">
-          <el-select size="small" class="select" v-model="eyeType">
-            <el-option v-for="item in eyetypes" :key="item.label" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-tooltip>
-        <el-tooltip content="码元周期" :effect="Effect.LIGHT" placement="bottom">
-          <el-select size="small" class="select" v-model="symbloCycle">
-            <el-option v-for="item in symbloCycles" :key="item.label" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-tooltip>
-        <el-tooltip content="累加次数" :effect="Effect.LIGHT" placement="bottom">
-          <el-select size="small" class="select" v-model="eyeCount">
-            <el-option v-for="item in eyeCounts" :key="item.label" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-tooltip>
+        <ZXISelect style="width: 200px;" name="数据类型" v-model="eyeType">
+          <el-option v-for="item in eyetypes" :key="item.label" :label="item.label" :value="item.value" />
+        </ZXISelect>
+        <ZXISelect style="width: 160px;margin: 0 5px;" name="码元周期" v-model="symbloCycle">
+          <el-option v-for="item in symbloCycles" :key="item.label" :label="item.label" :value="item.value" />
+        </ZXISelect>
+        <ZXISelect style="width: 200px;" name="累加次数" v-model="eyeCount">
+          <el-option v-for="item in eyeCounts" :key="item.label" :label="item.label" :value="item.value" />
+        </ZXISelect>
+        <div class="slot">
+          <slot />
+        </div>
       </div>
       <div class="second-row">
         <ZXIAxisY
@@ -375,17 +375,18 @@ defineExpose({
   box-sizing: border-box;
   background-color: v-bind('UseTheme.theme.var.backgroundColor');
   .header{
-    height: 35px;
     display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    box-sizing: border-box;
     color: v-bind('UseTheme.theme.var.color');
-    line-height: 35px;
     span{
       padding: 0 10px;
-      font-size: 12px;
+      font-size: @font20;
     }
-    .select{
-      width: 80px;
-      margin-right: 10px;
+    .slot{
+      height: 100%;
+      flex: auto;
     }
   }
   .second-row{
@@ -394,7 +395,7 @@ defineExpose({
     .axis-y{
       padding-top: 1px;
       box-sizing: border-box;
-      padding-bottom: 28px;
+      padding-bottom: 33px;
     }
     .second-column{
       flex: auto;
