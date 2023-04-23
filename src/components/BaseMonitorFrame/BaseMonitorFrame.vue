@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-08 14:13:59
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-23 13:56:44
+ * @LastEditTime: 2023-04-23 15:14:32
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\components\BaseMonitorFrame\BaseMonitorFrame.vue
  * @Description: 
  -->

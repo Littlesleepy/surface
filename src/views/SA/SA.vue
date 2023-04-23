@@ -1,9 +1,15 @@
 <!--
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-21 11:53:32
+<<<<<<< HEAD
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-23 17:00:34
+ * @LastEditTime: 2023-04-23 17:08:31
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
+=======
+ * @LastEditors: 十二少 1484744996@qq.com
+ * @LastEditTime: 2023-04-23 16:24:58
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\views\SA\SA.vue
+>>>>>>> origin/master
  * @Description: 
  -->
  <script setup lang="ts">
@@ -345,18 +351,13 @@
     padding-left: 0;
     box-sizing: border-box;
     margin-left: 5px;
-    // border-left: v-bind('CustomTheme.theme.districtBorder');
+    border-left: v-bind('CustomTheme.theme.districtBorder');
 
     display: flex;
     flex-direction: column;
     height: 100%;
-    aspect-ratio: 1/2;
+    // aspect-ratio: 1/2;
     
-    // .parm{
-    //   height: 40px;
-    //   margin-bottom: 5px;
-    // }
-      
     .iq-vector-image,.eye-image{
       height: 50%;
       flex: 1;
