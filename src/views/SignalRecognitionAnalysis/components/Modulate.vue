@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 15:48:35
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 16:31:38
+ * @LastEditTime: 2023-04-23 14:57:33
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\components\Modulate.vue
  * @Description: 
  -->
@@ -10,7 +10,7 @@
 import { useFrameStore } from '@/store'
 import { computed, onBeforeUnmount, Ref, ref, watch } from 'vue'
 import * as Helper from 'helper/index'
-import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme } from 'mcharts/index'
+import { EAxisXType, ESwitchState, ILineData, ISpectrumParams, ZXISpectrumLineType, UseTheme, IUnit } from 'mcharts/index'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
 import { ReceiveData, ReceiveDataOptions } from '@/server'
 // import { ToExport } from 'helper/index'
@@ -30,13 +30,34 @@ const scaleY = {
     return parseFloat(v.toFixed(1))
   }
 }
+
 const store = useFrameStore()
 
 const inputData1 = ref(new Map<string, ILineData>())
 
+  const scaleY1 = ref({
+  unit: 'Hz',
+  parse: (v: number) => {
+    return `频偏：${v.toFixed(1)}Hz`
+  },
+  transform: (v: number) => {
+    return parseFloat(v.toFixed(1))
+  }
+})
+
 const statistical1 = ref(new Float32Array())
 
 const inputData2 = ref(new Map<string, ILineData>())
+const scaleY2 = ref({
+  unit: 'dBuV',
+  parse: (v: number) => {
+    return `幅度：${v.toFixed(1)}dBuV`
+  },
+  transform: (v: number) => {
+    return parseFloat(v.toFixed(1))
+  }
+})
+
 
 const statistical2 = ref(new Float32Array())
 
@@ -95,31 +116,46 @@ const optionsChild: ReceiveDataOptions = new Map()
 
 
 // 瞬时频率频谱数据
-function receiveSpectrum1(
+function receiveSpectrum1 (
   key: string,
   receive1: Ref<Map<string, ILineData>>,
-  receive2: Ref<Float32Array>
+  receive2: Ref<Float32Array>,
+  scaleY?: Ref<IUnit>,
+  name = '频偏'
 ) {
   optionsChild.set(key, {
     control: (data) => {
-      const result = new Float32Array(data)
+      let v = data
+      if (scaleY) { // 修改单位
+        scaleY.value.unit = data.unit
+        
+        scaleY.value.parse = (v: number) => {
+          return `${name}：${v.toFixed(1)} ${data.unit}`
+        }
+
+        v = data.value
+      }
+
+      const result = new Float32Array(v)
       const map = new Map()
       map.set('1', { data: result, color: CustomTheme.theme.lineColorOne })
       cacheData0.set(key, map)
+
       if (props.canDraw) {
-        receive1.value = map
+        receive1.value =  map
         // 统计
         receive2.value = result
-        console.log(data);
-        
       }
     }
-  })
-
+  }) 
 }
-receiveSpectrum1('INSTANTFREQUENCYDATA', inputData1, statistical1)
+// receiveSpectrum1('INSTANTFREQUENCYDATA', inputData1, statistical1)
+// // 瞬时幅度频谱数据
+// receiveSpectrum1('INSTANTAMPLITUDEDATA', inputData2, statistical2)
+
+receiveSpectrum1('INSTANTFREQUENCYDATA', inputData1, statistical1, scaleY1)
 // 瞬时幅度频谱数据
-receiveSpectrum1('INSTANTAMPLITUDEDATA', inputData2, statistical2)
+receiveSpectrum1('INSTANTAMPLITUDEDATA', inputData2, statistical2, scaleY2, '幅度')
 // 瞬时相位频谱数据
 receiveSpectrum1('INSTANTPHASEDATA', inputData3, statistical3)
 // 瞬时包络
@@ -267,28 +303,12 @@ const currentTabId = ref(0)
         <div class="time-domain">
           <div ref="instance1" class="item">
             <ZXITimeDomainLines class="level" :name="'瞬时频率'" :inputData="inputData1" :switchLever="store.s_playButton"
-              :params="params1" :capacity="0" :scaleY="{
-                unit: 'Hz',
-                parse: (v: number) => {
-                  return `频偏：${v.toFixed(1)}Hz`
-                },
-                transform: (v: number) => {
-                  return parseFloat(v.toFixed(1))
-                }
-              }" />
+              :params="params1" :capacity="0" :scaleY="scaleY1" />
             <ZXIStatisticalY class="statistical" :inputData="statistical1" :switchLever="store.s_playButton" />
           </div>
           <div ref="instance2" class="item">
             <ZXITimeDomainLines class="level" :name="'瞬时幅度'" :inputData="inputData2" :params="params1"
-              :switchLever="store.s_playButton" :capacity="0" :scaleY="{
-                unit: 'dBuV',
-                parse: (v: number) => {
-                  return `幅度：${v.toFixed(1)}dBuV`
-                },
-                transform: (v: number) => {
-                  return parseFloat(v.toFixed(1))
-                }
-              }" />
+              :switchLever="store.s_playButton" :capacity="0" :scaleY="scaleY2" />
             <ZXIStatisticalY class="statistical" :inputData="statistical2" :switchLever="store.s_playButton" />
           </div>
           <div ref="instance3" class="item">

@@ -10,6 +10,9 @@
     "XScan": {
       "smtime": 30,
       "holdtime": 30
+    },
+    "SignalRecognitionAnalysis":{
+      "chiqdata":true
     }
   },
   "map": {

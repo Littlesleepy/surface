@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 11:45:36
+ * @LastEditTime: 2023-04-23 15:10:49
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -254,6 +254,7 @@ ToExport.beforExport.set('0', () => {
 
 const tabId = ref(0)
 const firstTabId = ref(0)
+
 
 const master = ref<BaseParamsType>()
 </script>
