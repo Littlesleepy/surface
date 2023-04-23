@@ -1,9 +1,9 @@
 <!--
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-11-23 10:26:24
- * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-21 16:30:22
- * @FilePath: \zxi-surface\src\views\CIQStream\components\TimeFrequency.vue
+ * @LastEditors: 十二少 1484744996@qq.com
+ * @LastEditTime: 2023-04-23 15:06:39
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\views\CIQStream\components\TimeFrequency.vue
  * @Description: 时频特征
  -->
 
@@ -13,7 +13,7 @@ import { ToExport } from "helper/dataExports/index";
 import { ReceiveData, ReceiveDataOptions, makeSpectrumData } from '@/server'
 import { useFrameStore } from '@/store'
 import { computed, onBeforeUnmount, PropType, Ref, ref, watch, watchEffect } from 'vue'
-import { ESwitchState, IIQData, INoSampleLinesPool, ISpectrumInputData, Scene, ZXIIQVector, ZXISpectrumAndFall, UseTheme } from 'mcharts/index'
+import { ESwitchState, IIQData, INoSampleLinesPool, ISpectrumInputData, Scene, ZXIIQVectorType, ZXISpectrumAndFallType, UseTheme, IUnit } from 'mcharts/index'
 import { IIQAnalysis } from '..'
 import { CustomTheme } from '@/types'
 import BaseTabHeader from 'cp/BaseTabHeader/BaseTabHeader.vue'
@@ -68,8 +68,26 @@ const iqData = ref<IIQData>({
 
 /**...........................时域分析结果........................... */
 const inputData1 = ref(new Map())
+const scaleY1 = ref({
+  unit: 'Hz',
+  parse: (v: number) => {
+    return `频偏：${v.toFixed(1)}Hz`
+  },
+  transform: (v: number) => {
+    return parseFloat(v.toFixed(1))
+  }
+})
 
 const inputData2 = ref(new Map())
+const scaleY2 = ref({
+  unit: 'dBuV',
+  parse: (v: number) => {
+    return `幅度：${v.toFixed(1)}dBuV`
+  },
+  transform: (v: number) => {
+    return parseFloat(v.toFixed(1))
+  }
+})
 
 const inputData3 = ref(new Map())
 
@@ -86,10 +104,23 @@ const defaultValueX = computed(() => {
 
 // 瞬时频率频谱数据
 function receiveSpectrum (
-  data: Array<number>,
-  receive: Ref<Map<string, { data: Float32Array, color: Float32Array }>>
+  data: { value: Array<number>, unit: string } | Array<number>,
+  receive: Ref<Map<string, { data: Float32Array, color: Float32Array }>>,
+  scaleY?: Ref<IUnit>,
+  name = '频偏'
 ) {
-  const result = new Float32Array(data)
+  let v: any = data
+  if (scaleY && 'unit' in data) { // 修改单位
+    scaleY.value.unit = data.unit
+    
+    scaleY.value.parse = (v: number) => {
+      return `${name}：${v.toFixed(1)} ${data.unit}`
+    }
+
+    v = data.value
+  }
+
+  const result = new Float32Array(v)
   const map = new Map()
   map.set('1', { data: result, color: CustomTheme.theme.lineColorOne })
   receive.value =  map
@@ -152,8 +183,8 @@ watch(() => props.inputData, (v) => {
     caculateParams(v.realTimeSpectrum.span / 1000)
     spectrum.value = [{ time: new Date(v.realTimeSpectrum.time).getTime(), data: new Float32Array(v.realTimeSpectrum.data) }]
 
-    receiveSpectrum(v.measureTimeDomainData.instantFrequencies, inputData1)
-    receiveSpectrum(v.measureTimeDomainData.instantAmplitudes, inputData2)
+    receiveSpectrum(v.measureTimeDomainData.instantFrequencies, inputData1, scaleY1)
+    receiveSpectrum(v.measureTimeDomainData.instantAmplitudes, inputData2, scaleY2, '幅度')
     receiveSpectrum(v.measureTimeDomainData.instantPhases, inputData3)
 
     clear.value = true
@@ -195,8 +226,8 @@ options.set('DATA', { children: optionsChild })
 ReceiveData.add(options)
 
 // 导出结果
-const spSpectrum = ref<InstanceType<typeof ZXISpectrumAndFall>>()
-const spIQVector = ref<InstanceType<typeof ZXIIQVector>>()
+const spSpectrum = ref<ZXISpectrumAndFallType>()
+const spIQVector = ref<ZXIIQVectorType>()
 const timeCeliang = ref<HTMLDivElement>()
 
 ToExport.beforExport.set('1', () => {
@@ -285,15 +316,7 @@ const defaultValueY = { max: 60, min: -50 }
         :scaleX="scaleX"
         :toolTip="{ width: 460 }"
         :scaleNumWidthY="95"
-        :scaleY="{
-          unit: 'Hz',
-          parse: (v: number) => {
-            return `频偏：${v.toFixed(1)}Hz`
-          },
-          transform: (v: number) => {
-            return parseFloat(v.toFixed(1))
-          }
-        }"
+        :scaleY="scaleY1"
         @scene="getScene1"/>
       <ZXITimeDomainLines
         class="level"
@@ -305,15 +328,7 @@ const defaultValueY = { max: 60, min: -50 }
         :toolTip="{ width: 460 }"
         :scaleX="scaleX"
         :scaleNumWidthY="95"
-        :scaleY="{
-          unit: 'dBuV',
-          parse: (v: number) => {
-            return `幅度：${v.toFixed(1)}dBuV`
-          },
-          transform: (v: number) => {
-            return parseFloat(v.toFixed(1))
-          }
-        }"
+        :scaleY="scaleY2"
         @scene="getScene2"/>
       <ZXITimeDomainLines
         class="level"

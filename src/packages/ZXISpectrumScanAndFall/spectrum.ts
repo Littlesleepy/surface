@@ -2,7 +2,7 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-01-31 15:55:11
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-20 13:39:39
+ * @LastEditTime: 2023-04-23 14:56:29
  * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXISpectrumScanAndFall\spectrum.ts
  * @Description: 
  */
@@ -265,7 +265,6 @@ export function spectrum (
 
   let toolTip: ToolTip
 
-  let magnetGroup: Array<Float32Array> = []
   /**
    * @description: 禁用toolTip的信息计算
    */  
@@ -533,7 +532,7 @@ export function spectrum (
               lineProgram.add(line.mesh)
               SpectrumData.getSamplingData(usingData.value.data, samplingData, fence)
 
-              magnetGroup = [samplingData]
+              toolTip.magnetGroup = [samplingData]
               setPeakIcon(samplingData)
             } else {
               lineProgram.remove(line.mesh)
@@ -581,7 +580,7 @@ export function spectrum (
         if (btnValues.zhuzhuangtu) {
           const  samplingData = rectangle.samplingData
           SpectrumData.getSamplingData(usingData.value.data, samplingData, fence)
-          magnetGroup = [samplingData]
+          toolTip.magnetGroup = [samplingData]
 
           let currentValue = 0, startIndex = 0, colorIndex = 0
           const rectangle_a_position = rectangle.a_position, rectangle_a_color = rectangle.a_color
@@ -1249,7 +1248,7 @@ export function spectrum (
           // 双击位置显示
           dblclickTag.append()
           dblclickTag.setPosition({ offsetX, offsetY: 0 }, fence)
-          const result = dblclickTag.magnetByMax(fence, magnetGroup)
+          const result = dblclickTag.magnetByMax(fence, toolTip.magnetGroup!)
 
           if (result) {
             const fenceIndex = result.fenceIndex!
@@ -1581,10 +1580,7 @@ export function spectrum (
       }
 
       toolTip.afterActive.set('spectrum', (p) => {
-        const r = toolTip.magnetByMax(spectrumScene.value!.fence!, magnetGroup)
-        if (r) {
-          toolTipPosition.value = r.offsetMiddlePCTX
-        }
+        toolTipPosition.value = p.offsetMiddlePCTX
       })
 
       toolTip.afterTrigger.set('spectrum', (p: IPositionResult) => {

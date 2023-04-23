@@ -2,8 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-09 14:55:45
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-13 13:39:55
- * @FilePath: \zxi-device\src\views\CIQStream\CIQStream.vue
+ * @LastEditTime: 2023-04-21 15:34:29
+ * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\views\CIQStream\CIQStream.vue
  * @Description:
  -->
 
@@ -397,6 +397,7 @@ const optionsChild: ReceiveDataOptions = new Map()
 // 时域数据
 optionsChild.set('IQTIMEDOMAIN', {
   control: (data) => {
+    console.log(data)
     // 补一个点
     data.data.push(data.data[data.data.length - 1])
     const result = new Float32Array(data.data)
