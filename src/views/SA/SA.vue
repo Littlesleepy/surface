@@ -3,7 +3,7 @@
  * @Date: 2023-04-21 11:53:32
 <<<<<<< HEAD
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-23 17:08:31
+ * @LastEditTime: 2023-04-23 17:30:11
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
 =======
  * @LastEditors: 十二少 1484744996@qq.com
@@ -263,8 +263,18 @@
             :master="master" />
         </template>
     </ZXISpectrumAndFall>
-    <div class="base-tabs">
+    <ZXIIQVector
+          class="iq-vector-image"
+          ref="spIQVector"
+          :inputData="iqData"
+          :name="'星座图'"
+          :switchLever="store.s_playButton" />
+   
+      </div>
+      <div class="center-right">
+        <div class="base-tabs">
         <BaseTabHeader class="tab-nav" :headers="[
+            [{ name: '眼图', ratio: 1 }],
             [{ name: '最终流码图', ratio: 1 }],
             [{ name: '码元列表', ratio: 1 }],
             [{ name: '判决前码流图', ratio: 1 }],
@@ -275,6 +285,11 @@
           :wrapperStyle="{ border: 'none' }"
           :hidHeader="true"
           v-model="tabId">
+          <ZXIEye
+            :inputData="eyeData"
+            ref="spEye"
+            class="eye-image"
+            :switchLever="store.s_playButton" />
           <ZXIPointAndLines
             class="lable-content"
             ref="plInstance0"
@@ -288,10 +303,9 @@
             ref="plInstance1"
             :inputData="symbefData"
             :switchLever="store.s_playButton"/>
+      
         </ZXITabs>
       </div>
-      </div>
-      <div class="center-right">
         <!-- <div class="parm">
           <BaseParamsBranch
             class="params-branch0"
@@ -302,17 +316,13 @@
             ]"
             :master="master" />
         </div> -->
-        <ZXIIQVector
+        <!-- <ZXIIQVector
           class="iq-vector-image"
           ref="spIQVector"
           :inputData="iqData"
           :name="'星座图'"
-          :switchLever="store.s_playButton" />
-          <ZXIEye
-          :inputData="eyeData"
-          ref="spEye"
-          class="eye-image"
-          :switchLever="store.s_playButton" />
+          :switchLever="store.s_playButton" /> -->
+          
       </div>
     
      </div>
@@ -338,12 +348,17 @@
   box-sizing: border-box;
   // padding: @btnSpace;
   display: flex;
+  flex-direction: column;
   .center-left{
     padding: @btnSpace;
     flex: auto;
-    // width: 70%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    border-bottom: v-bind('CustomTheme.theme.districtBorder');
+    // height: 50%;
+    .iq-vector-image{
+      aspect-ratio: 1/1;
+    }
     
   }
   .center-right{
@@ -351,11 +366,12 @@
     padding-left: 0;
     box-sizing: border-box;
     margin-left: 5px;
-    border-left: v-bind('CustomTheme.theme.districtBorder');
+    // border-left: v-bind('CustomTheme.theme.districtBorder');
 
     display: flex;
     flex-direction: column;
-    height: 100%;
+    // height: 100%;
+    flex: auto;
     // aspect-ratio: 1/2;
     
     .iq-vector-image,.eye-image{
@@ -363,15 +379,11 @@
       flex: 1;
       // aspect-ratio: 1/1;
     }
-    :deep(.eye-image-container){
-      padding: 0;
-      
-    }
+
   }
 
   .spectrum-and-fall{
-    height: 50%;
-    
+    flex: auto;
   }
   .base-tabs{
     flex: auto;
