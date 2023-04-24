@@ -3,7 +3,7 @@
  * @Date: 2023-04-21 11:53:32
 <<<<<<< HEAD
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-24 10:34:54
+ * @LastEditTime: 2023-04-24 09:16:22
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
 =======
  * @LastEditors: 十二少 1484744996@qq.com
@@ -203,6 +203,12 @@
  })
 
  const master = ref<BaseParamsType>()
+
+//  onMounted(()=>{
+//   console.log(master.value?.elements);
+  
+//  })
+ 
  onBeforeUnmount(() => {
    CustomTheme.off(themeKey)
  })

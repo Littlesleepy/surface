@@ -2,8 +2,8 @@
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2022-10-11 16:56:55
  * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-24 09:40:59
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\packages\ZXIStatisticalY\index.vue
+ * @LastEditTime: 2023-02-08 13:53:11
+ * @FilePath: \zxi-deviced:\Zzy\project\zcharts\packages\ZXIStatisticalY\index.vue
  * @Description: 
  -->
 
@@ -195,7 +195,7 @@ onMounted(() => {
     toolTip = new ToolTip(scene.value, {
       type: ToolTip.TRANSVERSE,
       infoTag: {
-        width: 150,
+        width: 120,
         height: 36
       }
     })

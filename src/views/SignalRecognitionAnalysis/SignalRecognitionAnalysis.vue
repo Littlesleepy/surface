@@ -1,9 +1,9 @@
 <!--
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-24 09:27:26
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-23 15:10:49
+ * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
 <script setup lang='ts'>
@@ -335,6 +335,7 @@ const master = ref<BaseParamsType>()
                 ref="spIQVector" 
                 class="iq-vector-image" 
                 :name="'IQ矢量图'" 
+                :pointRadius="7"
                 :inputData="iqData"
                 :switchLever="startAndStop"
                  />
