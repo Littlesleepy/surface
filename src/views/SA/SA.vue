@@ -1,15 +1,9 @@
 <!--
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-21 11:53:32
-<<<<<<< HEAD
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-23 17:30:11
+ * @LastEditTime: 2023-04-23 17:36:29
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
-=======
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-04-23 16:24:58
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\src\views\SA\SA.vue
->>>>>>> origin/master
  * @Description: 
  -->
  <script setup lang="ts">
@@ -287,6 +281,7 @@
           v-model="tabId">
           <ZXIEye
             :inputData="eyeData"
+            name=""
             ref="spEye"
             class="eye-image"
             :switchLever="store.s_playButton" />
@@ -364,6 +359,7 @@
   .center-right{
     padding: @btnSpace;
     padding-left: 0;
+    padding-right: @btnSpace;
     box-sizing: border-box;
     margin-left: 5px;
     // border-left: v-bind('CustomTheme.theme.districtBorder');
@@ -392,6 +388,7 @@
       max-width: 150px;
     }
     .tab-panes{
+      padding-left: @btnSpace;
       .lable-content{
         position: absolute;
         width: 100%;
