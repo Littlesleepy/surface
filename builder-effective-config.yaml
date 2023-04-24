@@ -1,0 +1,33 @@
+directories:
+  output: release/${version}
+  buildResources: build
+productName: PM360
+appId: zxi.pm360.app
+asar: true
+icon: public/pm360.ico
+files:
+  - filter:
+      - dist-electron
+      - dist
+extraFiles:
+  - from: dist/config.json
+mac:
+  artifactName: ${productName}_${version}.${ext}
+  target:
+    - dmg
+win:
+  icon: public/pm360.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: ${productName}_${version}.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: false
+  installerIcon: public/pm360.ico
+  uninstallerIcon: public/pm360.ico
+  installerHeader: public/pm360.ico
+electronVersion: 23.2.2

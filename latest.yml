@@ -1,0 +1,8 @@
+version: 2.0.0
+files:
+  - url: PM360_2.0.0.exe
+    sha512: cOUX6UWQk9SECLnyuhbMDuj1YsoI8u6f310GBlM1afZu+PYcXb5SNGxw0Zd4aTpcQqKgJYQqH2UayBnbUkW6Mw==
+    size: 76096458
+path: PM360_2.0.0.exe
+sha512: cOUX6UWQk9SECLnyuhbMDuj1YsoI8u6f310GBlM1afZu+PYcXb5SNGxw0Zd4aTpcQqKgJYQqH2UayBnbUkW6Mw==
+releaseDate: '2023-04-24T06:44:12.799Z'
