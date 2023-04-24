@@ -2,7 +2,7 @@
  * @Author: 九璃怀特 1599130621@qq.com
  * @Date: 2023-04-07 11:06:54
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-23 15:10:49
+ * @LastEditTime: 2023-04-24 10:58:53
  * @FilePath: \zxi-surface\src\views\SignalRecognitionAnalysis\SignalRecognitionAnalysis.vue
  * @Description: 
  -->
@@ -335,7 +335,6 @@ const master = ref<BaseParamsType>()
                 ref="spIQVector" 
                 class="iq-vector-image" 
                 :name="'IQ矢量图'" 
-                :pointRadius="7"
                 :inputData="iqData"
                 :switchLever="startAndStop"
                  />
