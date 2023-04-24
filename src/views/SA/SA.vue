@@ -3,7 +3,7 @@
  * @Date: 2023-04-21 11:53:32
 <<<<<<< HEAD
  * @LastEditors: 九璃怀特 1599130621@qq.com
- * @LastEditTime: 2023-04-23 17:36:29
+ * @LastEditTime: 2023-04-24 09:16:22
  * @FilePath: \zxi-surface\src\views\SA\SA.vue
 =======
  * @LastEditors: 十二少 1484744996@qq.com
@@ -240,38 +240,38 @@
             :master="master" />
     </template>
      <div class="SA">
-      <div class="center-left">
+      <div class="center-top">
         <ZXISpectrumAndFall
-      class="spectrum-and-fall"
-      ref="spInstnce"
-      name=""
-      :params="params"
-      :inputData="spectrum"
-      :setTool="[{ name: 'pubutu', value: false }]"
-      :switchLever="store.s_playButton"
-      :markers="markers"
-      @selectFrequency="selectFrequency" >
-        <template #header>
-          <BaseParamsBranch
-            class="params-branch0"
-            :params="[
-              [
-                { name: '频率', paramName: 'frequency', ratio: 11 },
-                { name: '带宽', paramName: 'bandwidth', ratio: 11 },
-              ]
-            ]"
-            :master="master" />
-        </template>
-    </ZXISpectrumAndFall>
-    <ZXIIQVector
-          class="iq-vector-image"
-          ref="spIQVector"
-          :inputData="iqData"
-          :name="'星座图'"
-          :switchLever="store.s_playButton" />
-   
+          class="spectrum-and-fall"
+          ref="spInstnce"
+          name=""
+          :params="params"
+          :inputData="spectrum"
+          :setTool="[{ name: 'pubutu', value: false }]"
+          :switchLever="store.s_playButton"
+          :markers="markers"
+          @selectFrequency="selectFrequency" >
+          <template #header>
+            <BaseParamsBranch
+              class="params-branch0"
+              :params="[
+                [
+                  { name: '频率', paramName: 'frequency', ratio: 11 },
+                  { name: '带宽', paramName: 'bandwidth', ratio: 11 },
+                ]
+              ]"
+              :master="master" />
+          </template>
+        </ZXISpectrumAndFall>
+        <ZXIIQVector
+              class="iq-vector-image"
+              ref="spIQVector"
+              :inputData="iqData"
+              :name="'星座图'"
+              :switchLever="store.s_playButton" />
+    
       </div>
-      <div class="center-right">
+      <div class="center-bottom">
         <div class="base-tabs">
         <BaseTabHeader class="tab-nav" :headers="[
             [{ name: '眼图', ratio: 1 }],
@@ -307,23 +307,7 @@
       
         </ZXITabs>
       </div>
-        <!-- <div class="parm">
-          <BaseParamsBranch
-            class="params-branch0"
-            :params="[
-              [
-                { name: '码元速率', paramName: 'baudrate', ratio: 11 },
-              ]
-            ]"
-            :master="master" />
-        </div> -->
-        <!-- <ZXIIQVector
-          class="iq-vector-image"
-          ref="spIQVector"
-          :inputData="iqData"
-          :name="'星座图'"
-          :switchLever="store.s_playButton" /> -->
-          
+      
       </div>
     
      </div>
@@ -347,69 +331,56 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  // padding: @btnSpace;
   display: flex;
   flex-direction: column;
-  .center-left{
+  .center-top{
     padding: @btnSpace;
-    flex: auto;
     display: flex;
     flex-direction: row;
     border-bottom: v-bind('CustomTheme.theme.districtBorder');
-    // height: 50%;
+    height: 50%;
+    .spectrum-and-fall{
+      flex: auto;
+    }
     .iq-vector-image{
+      height: 100%;
       aspect-ratio: 1/1;
     }
     
   }
-  .center-right{
+  .center-bottom{
     padding: @btnSpace;
-    padding-left: 0;
-    padding-right: @btnSpace;
     box-sizing: border-box;
-    margin-left: 5px;
-    // border-left: v-bind('CustomTheme.theme.districtBorder');
-
     display: flex;
     flex-direction: column;
-    // height: 100%;
     flex: auto;
-    // aspect-ratio: 1/2;
-    
-    .iq-vector-image,.eye-image{
-      height: 50%;
-      flex: 1;
-      // aspect-ratio: 1/1;
-    }
-
-  }
-
-  .spectrum-and-fall{
-    flex: auto;
-  }
-  .base-tabs{
-    flex: auto;
-    display: flex;
-    .tab-nav{
-      max-width: 150px;
-    }
-    .tab-panes{
-      padding-left: @btnSpace;
-      .lable-content{
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        .symaftStr{
-          box-sizing: border-box;
-          padding: 5px;
-          font-size: 1.475rem;
-          color: v-bind('UseTheme.theme.var.color');
-        }
+    .base-tabs{
+      flex: auto;
+      display: flex;
+      .tab-nav{
+        max-width: 150px;
       }
+      .tab-panes{
+        padding-left: @btnSpace;
+        .lable-content{
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          .symaftStr{
+            box-sizing: border-box;
+            padding: @btnSpace;
+            font-size: 2rem;
+            color: v-bind('UseTheme.theme.var.color');
+          }
+        }
     }
   }
+  }
+
+ 
+  
  }
 
  
