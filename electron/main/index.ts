@@ -1,15 +1,24 @@
 /**
+ * @Author: 九璃怀特 1599130621@qq.com
+ * @Date: 2023-04-06 10:25:56
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-25 14:50:54
+ * @FilePath: \zxi-surface\electron\main\index.ts
+ * @Description: 
+ */
+/**
  * @Author: 十二少 1484744996@qq.com
  * @Date: 2023-03-07 11:09:39
- * @LastEditors: 十二少 1484744996@qq.com
- * @LastEditTime: 2023-03-14 11:00:58
- * @FilePath: \zxi-deviced:\Zzy\project\zxi-surface\electron\main\index.ts
+ * @LastEditors: 九璃怀特 1599130621@qq.com
+ * @LastEditTime: 2023-04-24 16:49:57
+ * @FilePath: \zxi-surface\electron\main\index.ts
  * @Description: 
  */
 
 import { app, BrowserWindow, shell, ipcMain, screen } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
+import { update } from './update'
 import { useIpcMain } from './useIpcMain'
 
 // The built directory structure
@@ -103,6 +112,7 @@ async function createWindow() {
 
 app.whenReady().then(() => {
   createWindow()
+  update(win)
 })
 
 app.on('window-all-closed', () => {

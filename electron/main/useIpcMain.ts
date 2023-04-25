@@ -42,7 +42,7 @@ export function useIpcMain() {
  * @description: 读取配置文件
  * @return {Promise<string>}
  */
-async function useConfig() {
+export async function useConfig() {
   let filePath = "";
   if (app.isPackaged) {
     // 生产环境
